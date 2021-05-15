@@ -21,7 +21,7 @@ use Illuminate\Support\Facades\Route;
 Route::group([
     'prefix' => 'auth'
         ], function () {
-    Route::post('login', 'UserController@login');
+    Route::post('login', 'AuthController@login');
     Route::group([
         'middleware' => 'auth:api'
             ], function() {
@@ -31,7 +31,7 @@ Route::group([
 });
 
 Route::group(['middleware' => 'auth.jwt'], function () {
-    Route::get('hello', 'UserController@hello');
+    Route::get('hello', 'AuthController@hello');
 });
 
 Route::group([

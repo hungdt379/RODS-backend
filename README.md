@@ -28,3 +28,9 @@ composer install (sudo docker-compose exec app composer install)
 php artisan key:generate (sudo docker-compose exec app php artisan key:generate)
 ```
 
+- Run seeder to create user admin and fake data role - permissions
+```
+composer dump-autoload
+php artisan db:seed
+```
+- Enjoy it!

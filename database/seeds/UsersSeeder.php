@@ -16,22 +16,20 @@ class UsersSeeder extends Seeder
         $role = DB::table('roles')->select('id')->first();
         DB::table('users')->truncate();
         DB::table('users')->insert([
-            'full_name' => 'Administrator',
-            'email' => 'admin@vieted.com',
-            'password'  => Hash::make('123456'),
-            'is_active' => true,
+            'full_name' => 'Dang The Hung',
+            'username' => 'hungdt',
+            'password'  => Hash::make('123'),
+            'is_active' => false,
             'created_at' => \Carbon\Carbon::now()->toDateTimeString(),
             'updated_at' => \Carbon\Carbon::now()->toDateTimeString(),
-            'deleted_at' => null
         ]);
         DB::table('users')->insert([
-            'full_name' => 'LMS',
-            'email' => 'lms@vieted.com',
-            'password'  => Hash::make('123456'),
-            'is_active' => true,
+            'full_name' => 'Nguyen Huy Hoang',
+            'username' => 'hoangnh',
+            'password'  => Hash::make('123'),
+            'is_active' => false,
             'created_at' => \Carbon\Carbon::now()->toDateTimeString(),
             'updated_at' => \Carbon\Carbon::now()->toDateTimeString(),
-            'deleted_at' => null
         ]);
     }
 }
