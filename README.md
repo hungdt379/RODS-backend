@@ -27,21 +27,4 @@ composer install (sudo docker-compose exec app composer install)
 ```
 php artisan key:generate (sudo docker-compose exec app php artisan key:generate)
 ```
-- Migrate tables
-```
-php artisan migrate
-```
-- Install passport
-```
-php artisan passport:install
-```
-- Fix passport MongoDB
-```
-php artisan fix:passport
-```
-- Run seeder to create user admin and fake data role - permissions
-```
-composer dump-autoload
-php artisan db:seed
-```
-- Enjoy it!
+
