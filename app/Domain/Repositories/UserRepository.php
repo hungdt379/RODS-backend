@@ -34,4 +34,6 @@ class CustomerRepository extends BaseRepository
     {
         return $this->query()->where('id', $userId)->lockForUpdate()->first();
     }
+
+
 }
