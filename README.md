@@ -10,7 +10,7 @@
 
 - Clone source code
 ```
-git clone https://git.ntq.solutions/hoai.tran/backend-apis-vieted.git
+git clone https://github.com/hungdt379/RODS-backend.git
 ```
 - Create mongoDB database
 - Copy `.env` file from `.env.example`
@@ -30,7 +30,6 @@ php artisan key:generate (sudo docker-compose exec app php artisan key:generate)
 
 - Run seeder to create user admin and fake data role - permissions
 ```
-composer dump-autoload
 php artisan db:seed
 ```
 - Enjoy it!
