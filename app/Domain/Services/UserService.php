@@ -17,12 +17,5 @@ class UserService
         $this->userRepository = $userRepository;
     }
 
-    public function append($token)
-    {
-        $user = JWTAuth::user();
-        User::where('_id', $user->_id)->push('remember_token', [$token]);
 
-        $this->userRepository->append($user);
-
-    }
 }

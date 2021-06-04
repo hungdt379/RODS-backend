@@ -39,6 +39,7 @@ class AuthController extends Controller
         $input = $request->only('username', 'password');
         $params = $request->all();
 
+
         if (!$token = JWTAuth::attempt($params)) {
 
             return response()->json([
@@ -49,7 +50,8 @@ class AuthController extends Controller
 
 
         if (JWTAuth::user()->role == 't') {
-            $this->userService->append($token);
+
+            User::where('_id', JWTAuth::user()->_id)->push('remember_token', [$token]);
         }
 
         return $this->dataWithToken($token);

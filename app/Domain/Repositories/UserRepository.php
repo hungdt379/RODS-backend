@@ -8,8 +8,5 @@ class UserRepository
 {
 
 
-    public function append($user)
-    {
-        $user->save();
-    }
+
 }
