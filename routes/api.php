@@ -22,6 +22,7 @@ Route::group([
     'prefix' => 'auth'
         ], function () {
     Route::post('login', 'AuthController@login');
+    Route::post('login-table', 'AuthController@loginForTable');
     Route::group([
         'middleware' => 'auth:api'
             ], function() {

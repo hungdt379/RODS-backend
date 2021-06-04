@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Domain\Repositories\UserRepository;
 use App\Traits\ApiResponse;
 use App\Domain\Services\UserService;
 use JWTAuth;
@@ -14,10 +15,13 @@ class AuthController extends Controller
     use ApiResponse;
 
     private $userService;
+    private $userRepository;
 
-    public function __construct(UserService $userService)
+    public function __construct(UserService $userService, UserRepository $userRepository)
     {
         $this->userService = $userService;
+        $this->userRepository = $userRepository;
+
     }
 
     public function dataWithToken($token)
@@ -49,12 +53,33 @@ class AuthController extends Controller
         }
 
 
-        if (JWTAuth::user()->role == 't') {
+        return $this->dataWithToken($token);
+    }
 
-            User::where('_id', JWTAuth::user()->_id)->push('remember_token', [$token]);
+    public function loginForTable(Request $request)
+    {
+        $params = $request->all();
+
+        if (!$token = JWTAuth::attempt($params)) {
+
+            return response()->json([
+                'status' => false,
+                'message' => 'Invalid Email or Password',
+            ], 401);
         }
 
-        return $this->dataWithToken($token);
+
+        if (JWTAuth::user()->is_active == 'true') {
+            if (JWTAuth::user()->role == 't') {
+                $this->userRepository->append($token);
+            }
+            return $this->dataWithToken($token);
+        }
+
+        return response()->json([
+            'status' => false,
+            'message' => 'Table is closed',
+        ], 401);
     }
 
     public function hello()
