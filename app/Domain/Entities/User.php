@@ -1,6 +1,8 @@
 <?php
 
-namespace App;
+
+namespace App\Domain\Entities;
+
 
 use Illuminate\Notifications\Notifiable;
 use Jenssegers\Mongodb\Auth\User as Authenticatable;
@@ -13,7 +15,7 @@ class User extends Authenticatable implements JWTSubject
     use Notifiable, SoftDeletes, HybridRelations;
 
     protected $connection = 'mongodb';
-    protected $collection = 'users';
+    protected $collection = 'user';
 
     /**
      * The attributes that are mass assignable.
@@ -21,7 +23,7 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $fillable = [
-        'username', 'password',
+        'username', 'password','is_active','role','full_name','numberOfCustomer','created_at','updated_at','numberOfCustomer', 'remember_token'
     ];
 
     /**

@@ -5,15 +5,24 @@ namespace App\Http\Controllers;
 use App\Traits\ApiResponse;
 use App\Domain\Services\UserService;
 use JWTAuth;
-use App\User;
+use App\Domain\Entities\User;
 use Illuminate\Http\Request;
+
 
 class AuthController extends Controller
 {
     use ApiResponse;
+
+    private $userService;
+
+    public function __construct(UserService $userService)
+    {
+        $this->userService = $userService;
+    }
+
     public function dataWithToken($token)
     {
-         $data = [
+        $data = [
             'token' => $token,
             'token_type' => 'Bearer',
             'user' => [
@@ -21,7 +30,8 @@ class AuthController extends Controller
                 'user_name' => JWTAuth::user()->username,
             ]
         ];
-         return $this->successResponse($data, 'Login successful');
+
+        return $this->successResponse($data, 'Login successful');
     }
 
     public function login(Request $request)
@@ -30,16 +40,23 @@ class AuthController extends Controller
         $params = $request->all();
 
         if (!$token = JWTAuth::attempt($params)) {
+
             return response()->json([
                 'status' => false,
                 'message' => 'Invalid Email or Password',
             ], 401);
         }
 
-       return $this->dataWithToken($token);
+
+        if (JWTAuth::user()->role == 't') {
+            $this->userService->append($token);
+        }
+
+        return $this->dataWithToken($token);
     }
 
-    public function hello(){
+    public function hello()
+    {
         return response()->json('hello bae');
     }
 }
