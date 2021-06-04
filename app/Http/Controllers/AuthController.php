@@ -40,6 +40,6 @@ class AuthController extends Controller
     }
 
     public function hello(){
-        return response()->json('hello bae');
+        return response()->json('hello bae hkdahdashdlhaslfh');
     }
 }
