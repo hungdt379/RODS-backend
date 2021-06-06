@@ -5,10 +5,20 @@ namespace App\Domain\Services;
 
 
 use App\Domain\Entities\User;
+use App\Domain\Repositories\UserRepository;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class UserService
 {
-    public function login($username, $password){
-       return User::where('username', $username)->where('password', (int) $password)->first();
+    private $userRepository;
+
+    public function __construct(UserRepository $userRepository)
+    {
+        $this->userRepository = $userRepository;
     }
+
+    public function appendRememberToken($token, $userID){
+        $this->userRepository->appendRememberToken($token, $userID);
+    }
+
 }

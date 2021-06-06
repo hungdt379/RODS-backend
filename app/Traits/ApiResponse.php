@@ -31,7 +31,7 @@ trait ApiResponse
         ], 200);
     }
 
-    public function errorResponse($message, $data = null, $status = false)
+    public function errorResponse($message, $data = null, $status = false, $errorCode)
     {
         if (is_null($data))
             $data = new \stdClass();
@@ -40,6 +40,6 @@ trait ApiResponse
             'message' => $message,
             'data' => $data,
             'ts' => time()
-        ], 200);
+        ], $errorCode);
     }
 }
