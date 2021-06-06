@@ -47,7 +47,7 @@ class UsersSeeder extends Seeder
             'full_name' => 'Bàn 1',
             'username' => 'MB01',
             'password'  => Hash::make('123'),
-            'is_active' => false,
+            'is_active' => true,
             'role' => 't',
             'number_of_customer' => 0,
             'remember_token' => [],
