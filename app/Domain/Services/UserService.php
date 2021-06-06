@@ -17,5 +17,8 @@ class UserService
         $this->userRepository = $userRepository;
     }
 
+    public function appendRememberToken($token, $userID){
+        $this->userRepository->appendRememberToken($token, $userID);
+    }
 
 }

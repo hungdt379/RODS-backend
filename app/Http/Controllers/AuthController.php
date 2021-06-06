@@ -15,13 +15,10 @@ class AuthController extends Controller
     use ApiResponse;
 
     private $userService;
-    private $userRepository;
 
-    public function __construct(UserService $userService, UserRepository $userRepository)
+    public function __construct(UserService $userService)
     {
         $this->userService = $userService;
-        $this->userRepository = $userRepository;
-
     }
 
     public function dataWithToken($token)
@@ -32,6 +29,7 @@ class AuthController extends Controller
             'user' => [
                 'user_id' => JWTAuth::user()->_id,
                 'user_name' => JWTAuth::user()->username,
+                'number_of_customer' => JWTAuth::user()->number_of_customer
             ]
         ];
 
@@ -40,18 +38,15 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        $input = $request->only('username', 'password');
         $params = $request->all();
 
-
         if (!$token = JWTAuth::attempt($params)) {
-
-            return response()->json([
-                'status' => false,
-                'message' => 'Invalid Email or Password',
-            ], 401);
+            return $this->errorResponse('Invalid Email or Password',null, false,401);
         }
 
+        if (JWTAuth::user()->role == 't'){
+            return $this->errorResponse('Access denied',null, false,401);
+        }
 
         return $this->dataWithToken($token);
     }
@@ -61,25 +56,16 @@ class AuthController extends Controller
         $params = $request->all();
 
         if (!$token = JWTAuth::attempt($params)) {
-
-            return response()->json([
-                'status' => false,
-                'message' => 'Invalid Email or Password',
-            ], 401);
+            return $this->errorResponse('Invalid Email or Password',null, false,401);
         }
 
-
-        if (JWTAuth::user()->is_active == 'true') {
-            if (JWTAuth::user()->role == 't') {
-                $this->userRepository->append($token);
-            }
-            return $this->dataWithToken($token);
+        if (JWTAuth::user()->is_active != 'true' || JWTAuth::user()->role != 't'){
+            return $this->errorResponse('Access denied',null, false,401);
         }
 
-        return response()->json([
-            'status' => false,
-            'message' => 'Table is closed',
-        ], 401);
+        $user = JWTAuth::user();
+        $this->userService->appendRememberToken($token, $user->_id);
+        return $this->dataWithToken($token);
     }
 
     public function hello()
