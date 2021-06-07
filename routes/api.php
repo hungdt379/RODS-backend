@@ -35,7 +35,7 @@ Route::group([
     'prefix' => 'waiter'
 ], function () {
     Route::group(['middleware' => 'auth.jwt'], function () {
-        Route::get('table', 'UserController@getlistTable');
+        Route::get('tables', 'UserController@getlistTable');
     });
 
 });
