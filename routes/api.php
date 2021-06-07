@@ -20,15 +20,24 @@ use Illuminate\Support\Facades\Route;
 
 Route::group([
     'prefix' => 'auth'
-        ], function () {
+], function () {
     Route::post('login', 'AuthController@login');
     Route::post('login/table', 'AuthController@loginForTable');
     Route::group([
         'middleware' => 'auth:api'
-            ], function() {
+    ], function () {
         Route::get('logout', 'AuthController@logout');
         Route::get('user', 'AuthController@user');
     });
+});
+
+Route::group([
+    'prefix' => 'waiter'
+], function () {
+    Route::group(['middleware' => 'auth.jwt'], function () {
+        Route::get('table', 'UserController@getlistTable');
+    });
+
 });
 
 Route::group(['middleware' => 'auth.jwt'], function () {
