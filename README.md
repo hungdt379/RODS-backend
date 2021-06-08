@@ -32,4 +32,9 @@ php artisan key:generate (sudo docker-compose exec app php artisan key:generate)
 ```
 php artisan db:seed
 ```
+- Seeding category and menu
+```
+php artisan db:seed --class=Category
+php artisan db:seed --class=Menu
+```
 - Enjoy it!
