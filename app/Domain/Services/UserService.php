@@ -17,7 +17,8 @@ class UserService
         $this->userRepository = $userRepository;
     }
 
-    public function appendRememberToken($token, $userID){
+    public function appendRememberToken($token, $userID)
+    {
         $this->userRepository->appendRememberToken($token, $userID);
     }
 
@@ -26,4 +27,16 @@ class UserService
         return $this->userRepository->getListTable($param['pageSize']);
     }
 
+    public function getUserById($id){
+        return $this->userRepository->getUserById($id);
+    }
+
+    public function openTable($param)
+    {
+        $updateUser = $this->getUserById($param['id']);
+        $updateUser->is_active = 'true';
+        $updateUser->number_of_customer=(int)$param['number_of_customer'];
+
+        return $this->userRepository->update($updateUser);
+    }
 }
