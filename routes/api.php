@@ -24,10 +24,10 @@ Route::group([
     Route::post('login', 'AuthController@login');
     Route::post('login/table', 'AuthController@loginForTable');
     Route::group([
-        'middleware' => 'auth:api'
+        'middleware' => 'auth.jwt'
     ], function () {
         Route::get('logout', 'AuthController@logout');
-        Route::get('user', 'AuthController@user');
+        Route::get('user', 'AuthController@index');
     });
 });
 
