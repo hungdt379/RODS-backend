@@ -37,4 +37,12 @@ class UserController extends Controller
         return $this->successResponse('', 'Open table successfully');
 
     }
+
+    public function closeTable()
+    {
+        $param = request()->all();
+        $this->userService->closeTable($param);
+        return $this->successResponse('', 'Close table successfully');
+
+    }
 }

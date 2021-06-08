@@ -39,4 +39,13 @@ class UserService
 
         return $this->userRepository->update($updateUser);
     }
+
+    public function closeTable($param)
+    {
+        $updateUser = $this->getUserById($param['id']);
+        $updateUser->is_active = false;
+        $updateUser->number_of_customer=0;
+
+        return $this->userRepository->update($updateUser);
+    }
 }
