@@ -32,6 +32,15 @@ Route::group([
 });
 
 Route::group([
+    'prefix' => 'customer'
+], function () {
+    Route::group(['middleware' => 'auth.jwt'], function () {
+        Route::get('categories', 'CategoryController@getAllCategory');
+    });
+
+});
+
+Route::group([
     'prefix' => 'waiter'
 ], function () {
     Route::group(['middleware' => 'auth.jwt'], function () {

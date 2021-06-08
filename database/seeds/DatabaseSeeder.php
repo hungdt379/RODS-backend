@@ -12,6 +12,6 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         //TODO: can change Role permission to using laravel packages
-        $this->call(UsersSeeder::class);
+        //$this->call(UsersSeeder::class);
     }
 }
