@@ -19,9 +19,9 @@ class UserRepository
             ->paginate((int)$pageSize);
     }
 
-    public function getUserById($id)
+    public function getUserById($userID)
     {
-        return User::where('_id', $id)->first();
+        return User::where('_id', $userID)->first();
     }
 
     public function update($user)

@@ -27,8 +27,8 @@ class UserService
         return $this->userRepository->getListTable($param['pageSize']);
     }
 
-    public function getUserById($id){
-        return $this->userRepository->getUserById($id);
+    public function getUserById($userID){
+        return $this->userRepository->getUserById($userID);
     }
 
     public function openTable($param)
