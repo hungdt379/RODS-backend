@@ -21,4 +21,9 @@ class UserService
         $this->userRepository->appendRememberToken($token, $userID);
     }
 
+    public function getListTable($param)
+    {
+        return $this->userRepository->getListTable($param['pageSize']);
+    }
+
 }
