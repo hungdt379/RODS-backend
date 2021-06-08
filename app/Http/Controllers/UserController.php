@@ -26,8 +26,7 @@ class UserController extends Controller
     public function getListTable()
     {
         $param = request()->all();
-        $pageSize = (int)$param['pageSize'];
-        $data = $this->userService->getListTable($pageSize);
-        return $this->successResponseWithPaging($data->items(), 'Success', $data->currentPage(), $pageSize, $data->total());
+        $data = $this->userService->getListTable($param);
+        return $this->successResponseWithPaging($data->items(), 'Success', $data->currentPage(), $param['pageSize'], $data->total());
     }
 }
