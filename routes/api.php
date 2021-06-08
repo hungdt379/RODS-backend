@@ -36,6 +36,7 @@ Route::group([
 ], function () {
     Route::group(['middleware' => 'auth.jwt'], function () {
         Route::get('tables', 'UserController@getlistTable');
+        Route::post('table/open', 'UserController@openTable');
     });
 
 });

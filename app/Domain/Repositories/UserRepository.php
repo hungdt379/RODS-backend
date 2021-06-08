@@ -18,4 +18,14 @@ class UserRepository
         return User::where('role', 't')
             ->paginate((int)$pageSize);
     }
+
+    public function getUserById($userID)
+    {
+        return User::where('_id', $userID)->first();
+    }
+
+    public function update($user)
+    {
+        return $user->save();
+    }
 }

@@ -29,4 +29,12 @@ class UserController extends Controller
         $data = $this->userService->getListTable($param);
         return $this->successResponseWithPaging($data->items(), 'Success', $data->currentPage(), $param['pageSize'], $data->total());
     }
+
+    public function openTable()
+    {
+        $param = request()->all();
+        $this->userService->openTable($param);
+        return $this->successResponse('', 'Open table successfully');
+
+    }
 }
