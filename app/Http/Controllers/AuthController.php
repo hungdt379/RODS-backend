@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Domain\Repositories\UserRepository;
+
 use App\Traits\ApiResponse;
 use App\Domain\Services\UserService;
 use JWTAuth;
-use App\Domain\Entities\User;
 use Illuminate\Http\Request;
 
 
@@ -41,26 +40,33 @@ class AuthController extends Controller
         $params = $request->all();
 
         if (!$token = JWTAuth::attempt($params)) {
-            return $this->errorResponse('Invalid Email or Password',null, false,401);
+            return $this->errorResponse('Invalid Email or Password', null, false, 401);
         }
 
-        if (JWTAuth::user()->role == 't'){
-            return $this->errorResponse('Access denied',null, false,401);
+        if (JWTAuth::user()->role == 't') {
+            return $this->errorResponse('Access denied', null, false, 401);
         }
 
         return $this->dataWithToken($token);
     }
+
+    public function logout()
+    {
+        auth()->logout();
+        return $this->successResponse('', 'User logged out successfully');
+    }
+
 
     public function loginForTable(Request $request)
     {
         $params = $request->all();
 
         if (!$token = JWTAuth::attempt($params)) {
-            return $this->errorResponse('Invalid Email or Password',null, false,401);
+            return $this->errorResponse('Invalid Email or Password', null, false, 401);
         }
 
-        if (JWTAuth::user()->is_active != 'true' || JWTAuth::user()->role != 't'){
-            return $this->errorResponse('Access denied',null, false,401);
+        if (JWTAuth::user()->is_active != 'true' || JWTAuth::user()->role != 't') {
+            return $this->errorResponse('Access denied', null, false, 401);
         }
 
         $user = JWTAuth::user();

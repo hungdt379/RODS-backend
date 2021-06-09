@@ -47,6 +47,7 @@ Route::group([
         Route::get('tables', 'UserController@getlistTable');
         Route::post('table/open', 'UserController@openTable');
         Route::post('table/close', 'UserController@closeTable');
+        Route::post('table/test', 'UserController@test');
     });
 
 });
