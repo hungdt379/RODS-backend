@@ -41,14 +41,21 @@ class AuthController extends Controller
         $params = $request->all();
 
         if (!$token = JWTAuth::attempt($params)) {
-            return $this->errorResponse('Invalid Email or Password',null, false,401);
+            return $this->errorResponse('Invalid Email or Password', null, false, 401);
         }
 
-        if (JWTAuth::user()->role == 't'){
-            return $this->errorResponse('Access denied',null, false,401);
+        if (JWTAuth::user()->role == 't') {
+            return $this->errorResponse('Access denied', null, false, 401);
         }
 
         return $this->dataWithToken($token);
+    }
+
+    public function logout()
+    {
+        auth()->logout();
+
+        return $this->successResponse('', 'Logout successfully');
     }
 
     public function loginForTable(Request $request)
@@ -56,11 +63,11 @@ class AuthController extends Controller
         $params = $request->all();
 
         if (!$token = JWTAuth::attempt($params)) {
-            return $this->errorResponse('Invalid Email or Password',null, false,401);
+            return $this->errorResponse('Invalid Email or Password', null, false, 401);
         }
 
-        if (JWTAuth::user()->is_active != 'true' || JWTAuth::user()->role != 't'){
-            return $this->errorResponse('Access denied',null, false,401);
+        if (JWTAuth::user()->is_active != 'true' || JWTAuth::user()->role != 't') {
+            return $this->errorResponse('Access denied', null, false, 401);
         }
 
         $user = JWTAuth::user();
