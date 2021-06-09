@@ -15,7 +15,6 @@ class Menu extends Seeder
     public function run()
     {
         $combo = Category::where('name', 'combo')->first();
-        $extra = Category::where('name', 'extra')->first();
         $drink = Category::where('name', 'drink')->first();
         $fastFood = Category::where('name', 'fast')->first();
         DB::table('menu')->truncate();
@@ -49,7 +48,7 @@ class Menu extends Seeder
             'description' => null,
             'image' => 'http://165.227.99.160/image/lau.png',
             'hotpot' => false,
-            'category_id' => $extra->_id
+            'category_id' => $combo->_id
         ]);
         DB::table('menu')->insert([
             'name' => 'Khoai lang kén',

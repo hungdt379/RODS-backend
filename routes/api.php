@@ -24,10 +24,9 @@ Route::group([
     Route::post('login', 'AuthController@login');
     Route::post('login/table', 'AuthController@loginForTable');
     Route::group([
-        'middleware' => 'auth:api'
+        'middleware' => 'auth.jwt'
     ], function () {
         Route::get('logout', 'AuthController@logout');
-        Route::get('user', 'AuthController@user');
     });
 });
 
@@ -36,6 +35,7 @@ Route::group([
 ], function () {
     Route::group(['middleware' => 'auth.jwt'], function () {
         Route::get('categories', 'CategoryController@getAllCategory');
+        Route::get('menu', 'MenuController@getMenu');
     });
 
 });
@@ -50,8 +50,5 @@ Route::group([
 
 });
 
-Route::group(['middleware' => 'auth.jwt'], function () {
-    Route::get('hello', 'AuthController@hello');
-});
 
 
