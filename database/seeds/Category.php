@@ -17,9 +17,6 @@ class Category extends Seeder
             'name' => 'combo',
         ]);
         DB::table('category')->insert([
-            'name' => 'extra',
-        ]);
-        DB::table('category')->insert([
             'name' => 'drink',
         ]);
         DB::table('category')->insert([
