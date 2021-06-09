@@ -51,5 +51,15 @@ Route::group([
 
 });
 
+Route::group([
+    'prefix' => 'receptionist'
+], function () {
+    Route::group(['middleware' => 'auth.jwt'], function () {
+        Route::get('feedback', 'FeedbackController@getAllFeedback');
+
+    });
+
+});
+
 
 

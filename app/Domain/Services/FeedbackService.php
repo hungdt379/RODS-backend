@@ -21,6 +21,13 @@ class FeedbackService
         $this->feedbackRepository = $feedbackRepository;
     }
 
+
+    public function getAllFeedback($param)
+    {
+        var_dump($param);
+        return $this->feedbackRepository->getAllFeedback($param['pageSize']);
+    }
+
     public function addFeedback($param)
     {
         $feedback = new Feedback();
