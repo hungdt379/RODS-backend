@@ -36,7 +36,7 @@ Route::group([
     Route::group(['middleware' => 'auth.jwt'], function () {
         Route::get('categories', 'CategoryController@getAllCategory');
         Route::get('menu', 'MenuController@getMenu');
-        Route::get('feedback', 'FeedbackController@addfeedback');
+        Route::post('feedback', 'FeedbackController@addfeedback');
     });
 
 });

@@ -24,7 +24,6 @@ class FeedbackService
     public function addFeedback($param)
     {
         $feedback = new Feedback();
-        var_dump($param);
         $feedback->rate_service = $param['rateService'];
         $feedback->rate_dish = $param['rateDish'];
         $feedback->content = $param['content'];

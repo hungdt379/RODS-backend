@@ -26,7 +26,7 @@ class FeedbackController extends Controller
         $param = request()->all();
         $this->feedbackService->addFeedback($param);
 
-        return $this->successResponse('', 'Gui feedback thanh cong, Cam on quy khach');
+        return $this->successResponse('', 'Successfully');
     }
 
 }
