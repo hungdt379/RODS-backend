@@ -27,16 +27,17 @@ class MenuService
         $this->orderRepository = $orderRepository;
     }
 
-    public function getMenu($tableID){
+    public function getMenu($tableID)
+    {
         $checkExistingOrder = $this->orderRepository->checkExistingOrderInTable($tableID);
-        if (!$checkExistingOrder){
+        if (!$checkExistingOrder) {
             $menu['combo'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getCombo()->_id);
             $menu['drink'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getDink()->_id);
             $menu['fast'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getFast()->_id);
-        }else{
-            if ($checkExistingOrder[0]['combo']['hotpot']){
+        } else {
+            if ($checkExistingOrder[0]['combo']['hotpot']) {
                 $menu['combo'] = $this->menuRepository->getMenuComboNoHotpotAfterOrder($checkExistingOrder[0]['combo']['_id']);
-            }else{
+            } else {
                 $menu['combo'] = $this->menuRepository->getMenuComboHasHotpotAfterOrder($checkExistingOrder[0]['combo']['_id']);
             }
             $menu['drink'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getDink()->_id);
@@ -44,4 +45,11 @@ class MenuService
         }
         return $menu;
     }
+
+
+    public function getDetailMenuByID($id)
+    {
+        return $this->menuRepository->getDetailMenuByID($id);
+    }
+
 }
