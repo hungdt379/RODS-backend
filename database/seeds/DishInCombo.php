@@ -19,23 +19,23 @@ class DishInCombo extends Seeder
         DB::table('dish_in_combo')->truncate();
         DB::table('dish_in_combo')->insert([
             'pid' => [$combo1->_id, $combo2->_id, $combo3->_id],
-            'name' => 'Ba chi bo'
+            'name' => 'Ba chỉ bò'
         ]);
         DB::table('dish_in_combo')->insert([
             'pid' => [$combo1->_id, $combo2->_id, $combo3->_id],
-            'name' => 'Ba chi lon'
+            'name' => 'Ba chỉ lợn'
         ]);
         DB::table('dish_in_combo')->insert([
             'pid' => [$combo1->_id, $combo2->_id, $combo3->_id],
-            'name' => 'Xuc xich'
+            'name' => 'Xúc xích'
         ]);
         DB::table('dish_in_combo')->insert([
             'pid' => [$combo1->_id, $combo2->_id, $combo3->_id],
-            'name' => 'Sun'
+            'name' => 'Sụn'
         ]);
         DB::table('dish_in_combo')->insert([
             'pid' => [$combo1->_id, $combo2->_id, $combo3->_id],
-            'name' => 'Bap bo'
+            'name' => 'Bắp bò'
         ]);
         DB::table('dish_in_combo')->insert([
             'pid' => [$combo1->_id, $combo2->_id, $combo3->_id],
@@ -43,27 +43,27 @@ class DishInCombo extends Seeder
         ]);
         DB::table('dish_in_combo')->insert([
             'pid' => [$combo1->_id, $combo2->_id, $combo3->_id],
-            'name' => 'Rau cu qua'
+            'name' => 'Rau củ quả'
         ]);
         DB::table('dish_in_combo')->insert([
             'pid' => [$combo2->_id, $combo3->_id],
-            'name' => 'Ga'
+            'name' => 'Gà'
         ]);
         DB::table('dish_in_combo')->insert([
             'pid' => [$combo2->_id, $combo3->_id],
-            'name' => 'Muc'
+            'name' => 'Mực'
         ]);
         DB::table('dish_in_combo')->insert([
             'pid' => [$combo2->_id, $combo3->_id],
-            'name' => 'Tom'
+            'name' => 'Tôm'
         ]);
         DB::table('dish_in_combo')->insert([
             'pid' => [$combo2->_id, $combo3->_id],
-            'name' => 'Bach tuoc'
+            'name' => 'Bạch tuộc'
         ]);
         DB::table('dish_in_combo')->insert([
             'pid' => [$hotpot->_id],
-            'name' => 'Mi tom'
+            'name' => 'Mì tôm'
         ]);
     }
 }

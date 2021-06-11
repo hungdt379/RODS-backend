@@ -28,7 +28,7 @@ class MenuRepository
         return Menu::where('_id', $comboID)->orWhere('name', 'like', 'Lẩu')->get();
     }
 
-    public function getDetailMenuByID($id)
+    public function getDetailItemByID($id)
     {
         return Menu::where('_id',$id)
             ->get();

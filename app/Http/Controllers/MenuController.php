@@ -34,7 +34,7 @@ class MenuController
         return $this->successResponse($data, 'Success');
     }
 
-    public function getDetailMenu()
+    public function getDetailItem()
     {
         $param = request()->all();
         if ($param['category_name'] == 'combo'){
@@ -42,7 +42,7 @@ class MenuController
             return $this->successResponseWithPaging($data->items(), 'Success', $data->currentPage(), $param['pageSize'], $data->total());
         }
 
-        $data = $this->menuService->getDetailMenuByID($param['id']);
+        $data = $this->menuService->getDetailItemByID($param['id']);
 
         return $this->successResponse($data, 'Success');
     }
