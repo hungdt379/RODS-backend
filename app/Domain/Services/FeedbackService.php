@@ -24,7 +24,6 @@ class FeedbackService
 
     public function getAllFeedback($param)
     {
-        var_dump($param);
         return $this->feedbackRepository->getAllFeedback($param['pageSize']);
     }
 

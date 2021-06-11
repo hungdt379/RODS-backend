@@ -12,9 +12,10 @@ class Category extends Seeder
      */
     public function run()
     {
+
         DB::table('category')->truncate();
         DB::table('category')->insert([
-            'name' => 'combo',
+            'name' => 'combo'
         ]);
         DB::table('category')->insert([
             'name' => 'drink',

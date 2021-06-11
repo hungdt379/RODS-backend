@@ -19,6 +19,7 @@ class Menu extends Seeder
         $fastFood = Category::where('name', 'fast')->first();
         DB::table('menu')->truncate();
         DB::table('menu')->insert([
+
             'name' => 'Combo nướng 129k',
             'cost' => 129000,
             'description' => null,
@@ -27,6 +28,7 @@ class Menu extends Seeder
             'category_id' => $combo->_id
         ]);
         DB::table('menu')->insert([
+
             'name' => 'Combo nướng 169k',
             'cost' => 169000,
             'description' => null,
@@ -35,6 +37,7 @@ class Menu extends Seeder
             'category_id' => $combo->_id
         ]);
         DB::table('menu')->insert([
+
             'name' => 'Combo lẩu nướng 209k',
             'cost' => 209000,
             'description' => null,
