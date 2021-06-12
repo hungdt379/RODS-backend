@@ -28,8 +28,8 @@ class MenuRepository
         return Menu::where('_id', $comboID)->orWhere('name', 'like', 'Lẩu')->get();
     }
 
-    public function getItemByName($itemName){
-        return Menu::where('name', 'LIKE', "%{$itemName}%")
+    public function getItemByName($q){
+        return Menu::where('name', 'LIKE', "%{$q}%")
             ->get();
     }
 

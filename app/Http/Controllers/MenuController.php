@@ -49,7 +49,7 @@ class MenuController
 
     public function searchItem(){
         $param =request()->all();
-        $data = $this->menuService->getItemByName($param['name']);
+        $data = $this->menuService->getItemByName($param['q']);
 
         return $this->successResponse($data, 'Success');
     }

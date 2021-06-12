@@ -64,7 +64,7 @@ Route::group([
 
 
 Route::group(['middleware' => 'auth.jwt'], function () {
-    Route::post('search', 'MenuController@searchItem');
+    Route::get('search', 'MenuController@searchItem');
 });
 
 
