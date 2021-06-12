@@ -42,7 +42,7 @@ class MenuRepository
 
                     [
                         '$lookup' => [
-                            'as' => 'output',
+                            'as' => 'category',
                             'from' => 'category',
                             'foreignField' => '_id',
                             'localField' => 'category_id'
