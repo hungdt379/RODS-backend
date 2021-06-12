@@ -29,6 +29,7 @@ class AuthController extends Controller
             'user' => [
                 'user_id' => JWTAuth::user()->_id,
                 'user_name' => JWTAuth::user()->username,
+                'role' => JWTAuth::user()->role,
                 'number_of_customer' => JWTAuth::user()->number_of_customer
             ]
         ];
@@ -41,11 +42,11 @@ class AuthController extends Controller
         $params = $request->all();
 
         if (!$token = JWTAuth::attempt($params)) {
-            return $this->errorResponse('Invalid Email or Password',null, false,401);
+            return $this->errorResponse('Invalid Email or Password', null, false, 401);
         }
 
-        if (JWTAuth::user()->role == 't'){
-            return $this->errorResponse('Access denied',null, false,401);
+        if (JWTAuth::user()->role == 't') {
+            return $this->errorResponse('Access denied', null, false, 401);
         }
 
         return $this->dataWithToken($token);
@@ -56,11 +57,11 @@ class AuthController extends Controller
         $params = $request->all();
 
         if (!$token = JWTAuth::attempt($params)) {
-            return $this->errorResponse('Invalid Email or Password',null, false,401);
+            return $this->errorResponse('Invalid Email or Password', null, false, 401);
         }
 
-        if (JWTAuth::user()->is_active != 'true' || JWTAuth::user()->role != 't'){
-            return $this->errorResponse('Access denied',null, false,401);
+        if (JWTAuth::user()->is_active != 'true' || JWTAuth::user()->role != 't') {
+            return $this->errorResponse('Access denied', null, false, 401);
         }
 
         $user = JWTAuth::user();
