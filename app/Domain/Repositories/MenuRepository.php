@@ -49,11 +49,11 @@ class MenuRepository
                         ]
                     ],
 
-                    ['$unwind' => '$output'],
+                    ['$unwind' => '$category'],
                     ['$match' => [
-                        '$or' =>
+                        '$or' =>[
                             ['name' => ['$regex' => $name, '$options' => 'i']
-                            ]
+                            ]]
                     ]
                     ]
                 ]);
