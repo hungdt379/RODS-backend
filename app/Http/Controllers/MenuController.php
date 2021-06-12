@@ -46,4 +46,11 @@ class MenuController
 
         return $this->successResponse($data, 'Success');
     }
+
+    public function searchItem(){
+        $param =request()->all();
+        $data = $this->menuService->getItemByName($param['name']);
+
+        return $this->successResponse($data, 'Success');
+    }
 }

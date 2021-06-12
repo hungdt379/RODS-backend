@@ -47,6 +47,10 @@ class MenuService
     }
 
 
+    public function getItemByName($name){
+        return $this->menuRepository->getItemByName($name);
+    }
+
     public function getDetailItemByID($id)
     {
         return $this->menuRepository->getDetailItemByID($id);
