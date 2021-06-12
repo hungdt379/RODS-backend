@@ -35,7 +35,14 @@ class UserService
     {
         $updateUser = $this->getUserById($param['id']);
         $updateUser->is_active = true;
-        $updateUser->number_of_customer=(int)$param['number_of_customer'];
+        $updateUser->number_of_customer=(int)$param['numberOfCustomer'];
+
+        return $this->userRepository->update($updateUser);
+    }
+
+    public function updateNumberOfCustomer($param){
+        $updateUser = $this->getUserById($param['tableID']);
+        $updateUser->number_of_customer=(int)$param['numberOfCustomer'];
 
         return $this->userRepository->update($updateUser);
     }
