@@ -29,6 +29,7 @@ class AuthController extends Controller
             'user' => [
                 'user_id' => JWTAuth::user()->_id,
                 'user_name' => JWTAuth::user()->username,
+                'role' => JWTAuth::user()->role,
                 'number_of_customer' => JWTAuth::user()->number_of_customer
             ]
         ];
