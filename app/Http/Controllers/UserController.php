@@ -35,6 +35,11 @@ class UserController extends Controller
         $param = request()->all();
         $this->userService->openTable($param);
         return $this->successResponse('', 'Open table successfully');
+    }
 
+    public function updateNumberOfCustomer(){
+        $param = request()->all();
+        $this->userService->updateNumberOfCustomer($param);
+        return $this->successResponse('', 'Update successfully');
     }
 }

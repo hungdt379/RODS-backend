@@ -39,4 +39,11 @@ class UserService
 
         return $this->userRepository->update($updateUser);
     }
+
+    public function updateNumberOfCustomer($param){
+        $updateUser = $this->getUserById($param['tableID']);
+        $updateUser->number_of_customer=(int)$param['number_of_customer'];
+
+        return $this->userRepository->update($updateUser);
+    }
 }
