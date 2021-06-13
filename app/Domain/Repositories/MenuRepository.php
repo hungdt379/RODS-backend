@@ -30,7 +30,12 @@ class MenuRepository
 
     public function getItemByName($name)
     {
-        return Menu::where('name' , 'LIKE','%'.$name.'%')->get();
+        return Menu::where('name', 'LIKE', '%' . $name . '%')->get();
+    }
+
+    public function getItemByID($id)
+    {
+        return Menu::where('_id', $id)->get();
     }
 
     public function getDetailItemByID($id)
@@ -45,6 +50,8 @@ class MenuRepository
                         ]
                     ],
 
+                    ['$match' => ['_id' => $id]],
+
                     [
                         '$lookup' => [
                             'as' => 'category',
@@ -55,12 +62,12 @@ class MenuRepository
                     ],
 
                     ['$unwind' => '$category'],
-                    ['$match' => ['_id' => $id]]
+
 
 
                 ]);
 
-        })->toArray();
+        });
     }
 
 
