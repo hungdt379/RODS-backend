@@ -37,12 +37,22 @@ class MenuController
     public function getDetailItem()
     {
         $param = request()->all();
-        if ($param['category_name'] == 'combo'){
-            $data = $this->dishInComboService->getDishesByCombo($param);
-            return $this->successResponseWithPaging($data->items(), 'Success', $data->currentPage(), $param['pageSize'], $data->total());
-        }
+        $check = $this->menuService->isCombo($param['id']);
 
         $data = $this->menuService->getDetailItemByID($param['id']);
+        if ($check) {
+            $dishInCombo = $this->dishInComboService->getDishesByCombo($param['id']);
+            $data['dish_in_combo']=$dishInCombo;
+            return $this->successResponse($data, 'Success');
+        }
+
+        return $this->successResponse($data, 'Success');
+    }
+
+    public function searchItem()
+    {
+        $param = request()->all();
+        $data = $this->menuService->getItemByName($param['q']);
 
         return $this->successResponse($data, 'Success');
     }

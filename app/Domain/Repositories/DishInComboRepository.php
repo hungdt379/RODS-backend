@@ -8,9 +8,9 @@ use App\Domain\Entities\DishInCombo;
 
 class DishInComboRepository
 {
-    public function getDishesByCombo($comboID, $pageSize)
+    public function getDishesByCombo($comboID)
     {
         return DishInCombo::where('pid', $comboID)
-            ->paginate((int)$pageSize);
+            ->get();
     }
 }

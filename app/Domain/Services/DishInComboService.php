@@ -19,8 +19,8 @@ class DishInComboService
         $this->dishInComboRepository = $dishInComboRepository;
     }
 
-    public function getDishesByCombo($param)
+    public function getDishesByCombo($comboID)
     {
-        return $this->dishInComboRepository->getDishesByCombo($param['id'], $param['pageSize']);
+        return $this->dishInComboRepository->getDishesByCombo($comboID);
     }
 }

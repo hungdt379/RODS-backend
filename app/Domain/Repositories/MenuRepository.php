@@ -28,10 +28,39 @@ class MenuRepository
         return Menu::where('_id', $comboID)->orWhere('name', 'like', 'Lẩu')->get();
     }
 
+    public function getItemByName($name)
+    {
+        return Menu::where('name', 'LIKE', '%' . $name . '%')->get();
+    }
+
     public function getDetailItemByID($id)
     {
-        return Menu::where('_id',$id)
-            ->get();
+        return Menu::raw(function ($collection) use ($id) {
+            return $collection->aggregate(
+                [
+                    [
+                        '$addFields' => [
+                            'category_id' => ['$toObjectId' => '$category_id'],
+                            '_id' => ['$toString' => '$_id'],
+                        ]
+                    ],
+
+                    ['$match' => ['_id' => $id]],
+
+                    [
+                        '$lookup' => [
+                            'as' => 'category',
+                            'from' => 'category',
+                            'foreignField' => '_id',
+                            'localField' => 'category_id'
+                        ]
+                    ],
+
+                    ['$unwind' => '$category'],
+
+                ]);
+
+        });
     }
 
 

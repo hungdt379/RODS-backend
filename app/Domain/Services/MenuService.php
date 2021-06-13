@@ -5,6 +5,7 @@ namespace App\Domain\Services;
 
 
 use App\Domain\Repositories\CategoryRepository;
+use App\Domain\Repositories\DishInComboRepository;
 use App\Domain\Repositories\MenuRepository;
 use App\Domain\Repositories\OrderRepository;
 
@@ -13,19 +14,23 @@ class MenuService
     private $menuRepository;
     private $categoryRepository;
     private $orderRepository;
+    private $dishInComboRepository;
 
     /**
      * MenuService constructor.
-     * @param MenuRepository $menuRepository
-     * @param CategoryRepository $categoryRepository
-     * @param OrderRepository $orderRepository
+     * @param $menuRepository
+     * @param $categoryRepository
+     * @param $orderRepository
+     * @param $dishInComboRepository
      */
-    public function __construct(MenuRepository $menuRepository, CategoryRepository $categoryRepository, OrderRepository $orderRepository)
+    public function __construct(MenuRepository $menuRepository, CategoryRepository $categoryRepository, OrderRepository $orderRepository, DishInComboRepository $dishInComboRepository)
     {
         $this->menuRepository = $menuRepository;
         $this->categoryRepository = $categoryRepository;
         $this->orderRepository = $orderRepository;
+        $this->dishInComboRepository = $dishInComboRepository;
     }
+
 
     public function getMenu($tableID)
     {
@@ -47,9 +52,24 @@ class MenuService
     }
 
 
+    public function getItemByName($name)
+    {
+        return $this->menuRepository->getItemByName($name);
+    }
+
     public function getDetailItemByID($id)
     {
         return $this->menuRepository->getDetailItemByID($id);
+    }
+
+    public function isCombo($id)
+    {
+        $item = $this->getDetailItemByID($id);
+
+        if ($item[0]['category']['name'] == 'combo') {
+            return true;
+        }
+        return false;
     }
 
 }
