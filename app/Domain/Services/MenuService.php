@@ -23,7 +23,7 @@ class MenuService
      * @param $orderRepository
      * @param $dishInComboRepository
      */
-    public function __construct(MenuRepository $menuRepository,CategoryRepository $categoryRepository,OrderRepository $orderRepository,DishInComboRepository $dishInComboRepository)
+    public function __construct(MenuRepository $menuRepository, CategoryRepository $categoryRepository, OrderRepository $orderRepository, DishInComboRepository $dishInComboRepository)
     {
         $this->menuRepository = $menuRepository;
         $this->categoryRepository = $categoryRepository;
@@ -62,10 +62,6 @@ class MenuService
         return $this->menuRepository->getDetailItemByID($id);
     }
 
-    public function getItemByID($id){
-        return $this->menuRepository->getItemByID($id);
-    }
-
     public function isCombo($id)
     {
         $item = $this->getDetailItemByID($id);
@@ -73,7 +69,6 @@ class MenuService
         if ($item[0]['category']['name'] == 'combo') {
             return true;
         }
-
         return false;
     }
 

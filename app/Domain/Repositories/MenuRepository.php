@@ -33,11 +33,6 @@ class MenuRepository
         return Menu::where('name', 'LIKE', '%' . $name . '%')->get();
     }
 
-    public function getItemByID($id)
-    {
-        return Menu::where('_id', $id)->get();
-    }
-
     public function getDetailItemByID($id)
     {
         return Menu::raw(function ($collection) use ($id) {
@@ -62,8 +57,6 @@ class MenuRepository
                     ],
 
                     ['$unwind' => '$category'],
-
-
 
                 ]);
 
