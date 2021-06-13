@@ -30,7 +30,12 @@ class MenuRepository
 
     public function getItemByName($name)
     {
-        return Menu::raw(function ($collection) use ($name) {
+        return Menu::where('name' , 'LIKE','%'.$name.'%')->get();
+    }
+
+    public function getDetailItemByID($id)
+    {
+        return Menu::raw(function ($collection) use ($id) {
             return $collection->aggregate(
                 [
                     [
@@ -50,23 +55,12 @@ class MenuRepository
                     ],
 
                     ['$unwind' => '$category'],
-                    ['$match' => [
-                        '$or' =>[
-                            ['name' => ['$regex' => $name, '$options' => 'i']
-                            ]]
-                    ]
-                    ]
+                    ['$match' => ['_id' => $id]]
+
+
                 ]);
 
-        });
-
-
-    }
-
-    public function getDetailItemByID($id)
-    {
-        return Menu::where('_id', $id)
-            ->get();
+        })->toArray();
     }
 
 

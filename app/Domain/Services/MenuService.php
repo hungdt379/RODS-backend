@@ -47,13 +47,24 @@ class MenuService
     }
 
 
-    public function getItemByName($name){
+    public function getItemByName($name)
+    {
         return $this->menuRepository->getItemByName($name);
     }
 
     public function getDetailItemByID($id)
     {
         return $this->menuRepository->getDetailItemByID($id);
+    }
+
+    public function isCombo($id)
+    {
+        $item = $this->getDetailItemByID($id);
+        if ($item[0]['category']['name'] == 'combo') {
+            return true;
+        }
+
+        return false;
     }
 
 }
