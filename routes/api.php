@@ -48,6 +48,7 @@ Route::group([
     Route::group(['middleware' => 'auth.jwt'], function () {
         Route::get('tables', 'UserController@getlistTable');
         Route::post('table/open', 'UserController@openTable');
+        Route::post('table/close', 'UserController@closeTable');
         Route::post('table/update', 'UserController@updateNumberOfCustomer');
     });
 
