@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Domain\Services\UserService;
 use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
+use JWTAuth;
 
 class UserController extends Controller
 {
@@ -37,7 +38,24 @@ class UserController extends Controller
         return $this->successResponse('', 'Open table successfully');
     }
 
-    public function updateNumberOfCustomer(){
+    public function closeTable()
+    {
+        $param = request()->all();
+        $user = $this->userService->getUserById($param['table_id']);
+        $ctoken = JWTAuth::getToken();
+        foreach ($user['remember_token'] as $token) {
+            if ($token != $ctoken) {
+                JWTAuth::setToken($token);
+                JWTAuth::invalidate();
+            }
+        }
+        JWTAuth::setToken($ctoken);
+        $this->userService->deleteRememberToken($user);
+        return $this->successResponse(null, 'Close table successful');
+    }
+
+    public function updateNumberOfCustomer()
+    {
         $param = request()->all();
         $this->userService->updateNumberOfCustomer($param);
         return $this->successResponse('', 'Update successfully');
