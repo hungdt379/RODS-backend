@@ -51,7 +51,6 @@ Route::group([
         Route::post('table/close', 'UserController@closeTable');
         Route::post('table/update', 'UserController@updateNumberOfCustomer');
     });
-
 });
 
 Route::group([
@@ -59,9 +58,7 @@ Route::group([
 ], function () {
     Route::group(['middleware' => 'auth.jwt'], function () {
         Route::get('feedback', 'FeedbackController@getAllFeedback');
-
     });
-
 });
 
 
