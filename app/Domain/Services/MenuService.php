@@ -35,7 +35,7 @@ class MenuService
     public function getMenu($tableID)
     {
         $checkExistingOrder = $this->orderRepository->checkExistingOrderInTable($tableID);
-        if (!$checkExistingOrder) {
+        if ($checkExistingOrder != null) {
             $menu['combo'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getCombo()->_id);
             $menu['drink'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getDink()->_id);
             $menu['fast'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getFast()->_id);
