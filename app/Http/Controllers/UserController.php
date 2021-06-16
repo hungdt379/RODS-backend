@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 
 use App\Domain\Services\UserService;
 use App\Traits\ApiResponse;
-use Illuminate\Http\Request;
 use JWTAuth;
 
 class UserController extends Controller
@@ -27,14 +26,14 @@ class UserController extends Controller
     public function getListTable()
     {
         $param = request()->all();
-        $data = $this->userService->getListTable($param);
+        $data = $this->userService->getListTable($param['pageSize']);
         return $this->successResponseWithPaging($data->items(), 'Success', $data->currentPage(), $param['pageSize'], $data->total());
     }
 
     public function openTable()
     {
         $param = request()->all();
-        $this->userService->openTable($param);
+        $this->userService->openTable($param['table_id'], $param['number_of_customer']);
         return $this->successResponse('', 'Open table successfully');
     }
 
@@ -57,7 +56,7 @@ class UserController extends Controller
     public function updateNumberOfCustomer()
     {
         $param = request()->all();
-        $this->userService->updateNumberOfCustomer($param);
+        $this->userService->updateNumberOfCustomer($param['table_id'], $param['number_of_customer']);
         return $this->successResponse('', 'Update successfully');
     }
 }

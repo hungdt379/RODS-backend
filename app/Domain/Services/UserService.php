@@ -4,9 +4,7 @@
 namespace App\Domain\Services;
 
 
-use App\Domain\Entities\User;
 use App\Domain\Repositories\UserRepository;
-use Tymon\JWTAuth\Facades\JWTAuth;
 
 class UserService
 {
@@ -22,9 +20,9 @@ class UserService
         $this->userRepository->appendRememberToken($token, $userID);
     }
 
-    public function getListTable($param)
+    public function getListTable($pageSize)
     {
-        return $this->userRepository->getListTable($param['pageSize']);
+        return $this->userRepository->getListTable($pageSize);
     }
 
     public function getUserById($userID)
@@ -32,11 +30,11 @@ class UserService
         return $this->userRepository->getUserById($userID);
     }
 
-    public function openTable($param)
+    public function openTable($userID, $numberOfCustomer)
     {
-        $updateUser = $this->getUserById($param['table_id']);
+        $updateUser = $this->getUserById($userID);
         $updateUser->is_active = true;
-        $updateUser->number_of_customer = (int)$param['number_of_customer'];
+        $updateUser->number_of_customer = (int)$numberOfCustomer;
 
         return $this->userRepository->update($updateUser);
     }
@@ -48,10 +46,10 @@ class UserService
         return $this->userRepository->update($user);
     }
 
-    public function updateNumberOfCustomer($param)
+    public function updateNumberOfCustomer($userID, $numberOfCustomer)
     {
-        $updateUser = $this->getUserById($param['table_id']);
-        $updateUser->number_of_customer = (int)$param['number_of_customer'];
+        $updateUser = $this->getUserById($userID);
+        $updateUser->number_of_customer = (int) $numberOfCustomer;
 
         return $this->userRepository->update($updateUser);
     }

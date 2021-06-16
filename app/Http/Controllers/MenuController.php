@@ -42,7 +42,7 @@ class MenuController
         $data = $this->menuService->getDetailItemByID($param['id']);
         if ($check) {
             $dishInCombo = $this->dishInComboService->getDishesByCombo($param['id']);
-            $data['dish_in_combo']=$dishInCombo;
+            $data['dish_in_combo'] = $dishInCombo;
             return $this->successResponse($data, 'Success');
         }
 
