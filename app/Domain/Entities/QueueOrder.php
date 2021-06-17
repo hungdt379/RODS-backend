@@ -21,7 +21,6 @@ class QueueOrder extends Model
         'extra_combo',
         'side_dish_drink',
         'total_cost',
-        'note',
         'ts'
     ];
 }

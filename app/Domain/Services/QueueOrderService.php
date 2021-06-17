@@ -40,7 +40,6 @@ class QueueOrderService
         $queueOrder->combo = json_decode($param['combo']);
         $queueOrder->side_dish_drink = json_decode($param['side_dish_drink']);
         $queueOrder->total_cost = $param['total_cost'];
-        $queueOrder->note = $param['note'];
         $queueOrder->ts = time();
 
         return $this->queueOrderRepository->insert($queueOrder);
