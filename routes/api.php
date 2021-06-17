@@ -18,6 +18,8 @@ use Illuminate\Support\Facades\Route;
 //    return $request->user();
 //});
 
+Route::get('test', 'NotificationController@testSaveDataToFireBase');
+
 Route::group([
     'prefix' => 'auth'
 ], function () {
@@ -38,6 +40,7 @@ Route::group([
         Route::get('menu', 'MenuController@getMenu');
         Route::get('menu/item/detail', 'MenuController@getDetailItem');
         Route::post('feedback', 'FeedbackController@addfeedback');
+        Route::post('call/waiter', 'NotificationController@callWaiterNotification');
     });
 
 });
