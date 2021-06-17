@@ -27,11 +27,11 @@ class OrderController extends Controller
         $param = request()->all();
         $check = $this->orderService->checkExistQueueOrderInTable($param['table_id']);
         if (!$check) {
-            $data = $this->orderService->insertToOrder($param);
+            $data = $this->orderService->insertToQueueOrder($param);
             return $this->successResponse($data, 'Success');
         }
 
-        return $this->errorResponse('Table exist queue order', $check, false, 405);
+        return $this->errorResponse('Table exist queue order', null, false, 405);
     }
 
     public function getQueueOrderByTableID()

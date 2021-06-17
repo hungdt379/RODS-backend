@@ -9,7 +9,6 @@ use Jenssegers\Mongodb\Eloquent\Model;
 class Order extends Model
 {
     const ORDER_STATUS_CONFIRMED = 'confirmed';
-    const ORDER_STATUS_QUEUE = 'queue';
     const ORDER_STATUS_COMPLETED = 'completed';
 
     protected $connection = 'mongodb';

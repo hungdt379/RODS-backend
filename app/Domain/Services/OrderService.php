@@ -5,7 +5,9 @@ namespace App\Domain\Services;
 
 
 use App\Domain\Entities\Order;
+use App\Domain\Entities\QueueOrder;
 use App\Domain\Repositories\OrderRepository;
+
 
 class OrderService
 {
@@ -29,21 +31,21 @@ class OrderService
         return true;
     }
 
-    public function insertToOrder($param)
+    public function insertToQueueOrder($param)
     {
-        $order = new Order();
+        $queueOrder = new QueueOrder();
 
-        $order->number_of_customer = $param['number_of_customer'];
-        $order->table_id = $param['table_id'];
-        $order->table_name = $param['table_name'];
-        $order->status = $param['status'];
-        $order->combo = json_decode($param['combo']);
-        $order->side_dish_drink = json_decode($param['side_dish_drink']);
-        $order->total_cost = $param['total_cost'];
-        $order->note = $param['note'];
-        $order->ts = time();
+        $queueOrder->number_of_customer = $param['number_of_customer'];
+        $queueOrder->table_id = $param['table_id'];
+        $queueOrder->table_name = $param['table_name'];
+        $queueOrder->status = $param['status'];
+        $queueOrder->combo = json_decode($param['combo']);
+        $queueOrder->side_dish_drink = json_decode($param['side_dish_drink']);
+        $queueOrder->total_cost = $param['total_cost'];
+        $queueOrder->note = $param['note'];
+        $queueOrder->ts = time();
 
-        return $this->orderRepository->insert($order);
+        return $this->orderRepository->insert($queueOrder);
     }
 
     public function getQueueOrderByTableID($tableID)

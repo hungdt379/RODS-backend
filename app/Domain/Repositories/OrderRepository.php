@@ -5,6 +5,9 @@ namespace App\Domain\Repositories;
 
 
 use App\Domain\Entities\Order;
+use App\Domain\Entities\QueueOrder;
+
+
 
 class OrderRepository
 {
@@ -15,14 +18,14 @@ class OrderRepository
     }
 
 
-    public function insert($order)
+    public function insert($model)
     {
-        return $order->save();
+        return $model->save();
     }
 
     public function getQueueOrderByTableID($tableID)
     {
-        return Order::where([['status', Order::ORDER_STATUS_QUEUE], ['table_id', $tableID]])
+        return QueueOrder::where([['status', QueueOrder::QUEUE_ORDER_STATUS_QUEUED], ['table_id', $tableID]])
             ->get();
     }
 
