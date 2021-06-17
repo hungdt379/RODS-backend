@@ -18,7 +18,6 @@ use Illuminate\Support\Facades\Route;
 //    return $request->user();
 //});
 
-Route::get('test', 'NotificationController@testSaveDataToFireBase');
 
 Route::group([
     'prefix' => 'auth'
