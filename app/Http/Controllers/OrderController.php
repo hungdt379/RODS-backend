@@ -22,24 +22,4 @@ class OrderController extends Controller
         $this->orderService = $orderService;
     }
 
-    public function sendOrder()
-    {
-        $param = request()->all();
-        $check = $this->orderService->checkExistQueueOrderInTable($param['table_id']);
-        if (!$check) {
-            $data = $this->orderService->insertToQueueOrder($param);
-            return $this->successResponse($data, 'Success');
-        }
-
-        return $this->errorResponse('Table exist queue order', null, false, 405);
-    }
-
-    public function getQueueOrderByTableID()
-    {
-        $param = request()->all();
-        $data = $this->orderService->getQueueOrderByTableID($param['table_id']);
-
-        return $this->successResponse($data, 'Success');
-    }
-
 }

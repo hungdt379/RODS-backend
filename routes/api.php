@@ -38,7 +38,7 @@ Route::group([
         Route::get('menu', 'MenuController@getMenu');
         Route::get('menu/item/detail', 'MenuController@getDetailItem');
         Route::post('feedback', 'FeedbackController@addfeedback');
-        Route::post('order/send', 'OrderController@sendOrder');
+        Route::post('order/send', 'QueueOrderController@sendOrder');
     });
 
 });
@@ -51,7 +51,7 @@ Route::group([
         Route::post('table/open', 'UserController@openTable');
         Route::post('table/close', 'UserController@closeTable');
         Route::post('table/update', 'UserController@updateNumberOfCustomer');
-        Route::get('table/order/queue/view', 'OrderController@getQueueOrderByTableID');
+        Route::get('table/order/queue/view', 'QueueOrderController@getQueueOrderByTableID');
     });
 });
 

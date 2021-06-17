@@ -17,16 +17,4 @@ class OrderRepository
             ->where('table_id', $tableID)->get();
     }
 
-
-    public function insert($model)
-    {
-        return $model->save();
-    }
-
-    public function getQueueOrderByTableID($tableID)
-    {
-        return QueueOrder::where([['status', QueueOrder::QUEUE_ORDER_STATUS_QUEUED], ['table_id', $tableID]])
-            ->get();
-    }
-
 }
