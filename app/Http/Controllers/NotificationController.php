@@ -38,23 +38,4 @@ class NotificationController extends Controller
         return $this->successResponse('', 'Success');
     }
 
-    public function testSaveDataToFireBase()
-    {
-        //request()->all();
-        $data = [
-            'name' => 'kakak',
-            'email' => '1234'
-        ];
-//        $push = $this->database->getReference('/test')->set([
-//            'name' => 'kakak',
-//            'email' => 'dang the hung'
-//        ]);
-        $push = $this->database->getReference('/call_waiter')
-            ->orderByChild('user_id_read')
-            ->equalTo('60bcd6ef911e000042003ec5_false')
-            ->getSnapshot()->getValue();
-
-        //$push = $this->database->getReference('/call_waiter/60bcd6ef911e000042003ec5')->set(['read' => true]);
-        return response()->json($push);
-    }
 }

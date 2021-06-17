@@ -26,7 +26,7 @@ class NotificationService
         $callWaiterNotifcation->user_id = $user->_id;
         $callWaiterNotifcation->user_fulname = $user->full_name;
         $callWaiterNotifcation->read = false;
-        $callWaiterNotifcation->title = $param['title'];
+        $callWaiterNotifcation->title = 'Gọi phục vụ';
         $callWaiterNotifcation->content = $param['content'];
         $callWaiterNotifcation->ts = time();
         $this->notificationRepository->insertMongo($callWaiterNotifcation);
@@ -35,7 +35,7 @@ class NotificationService
             'user_id' => $user->_id,
             'user_fullname' => $user->full_name,
             'read' => false,
-            'title' => $param['title'],
+            'title' => 'Gọi phục vụ',
             'content' => $param['content'],
             'ts' => time(),
             'user_id_read' => $user->_id . '_false'
