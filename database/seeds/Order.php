@@ -16,17 +16,35 @@ class Order extends Seeder
             'number_of_customer' => 5,
             'table_id' => '60bcd6ef911e000042003ec5',
             'table_name' => 'Bàn 1',
-            'status' => 'confirmed',
+            'status' => 'queue',
             'combo' => [
                 '_id' => '60c083b9ee26000095002fd2',
                 'name' => 'Combo nướng 129k',
                 'cost' => 129000,
-                'description' => null,
-                'image' => 'http://165.227.99.160/image/nuong-129.png',
-                'hotpot' => true,
-                'category_id' => '60c083b495040000200069a2'
+                'dish_in_combo' => [
+                    'dish1' => 'bo',
+                    'dish2' => 'lon'
+                ]
             ],
-            'total_cost' => 129000*5,
+            'side_dish_drink' => [
+                'item1' => [
+                    '_id' => '60c244acc861000091001536',
+                    'name' => 'Khoai Lang Kén',
+                    'cost' => 30000,
+                    'qty' => 1,
+                    'note' => 'abc',
+                    'total_cost' => 30000 * 1
+                ],
+                'item2' => [
+                    '_id' => '60c244acc86100009100153a',
+                    'name' => 'bia',
+                    'cost' => 15000,
+                    'qty' => 1,
+                    'note' => 'bac',
+                    'total_cost' => 15000 * 1
+                ]
+            ],
+            'total_cost' => 129000 * 5 + 30000 * 1 + 15000 * 1,
             'note' => 'abc',
             'ts' => time()
         ]);

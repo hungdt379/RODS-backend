@@ -38,6 +38,7 @@ Route::group([
         Route::get('menu', 'MenuController@getMenu');
         Route::get('menu/item/detail', 'MenuController@getDetailItem');
         Route::post('feedback', 'FeedbackController@addfeedback');
+        Route::post('order/send', 'OrderController@sendOrder');
     });
 
 });
