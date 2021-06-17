@@ -20,6 +20,15 @@ class OrderService
         $this->orderRepository = $orderRepository;
     }
 
+    public function checkExistQueueOrderInTable($tableID)
+    {
+        $order = $this->orderRepository->getQueueOrderByTableID($tableID)->toArray();
+        if ($order == []) {
+            return false;
+        }
+        return true;
+    }
+
     public function insertToOrder($param)
     {
         $order = new Order();
@@ -37,5 +46,9 @@ class OrderService
         return $this->orderRepository->insert($order);
     }
 
+    public function getQueueOrderByTableID($tableID)
+    {
+        return $this->orderRepository->getQueueOrderByTableID($tableID);
+    }
 
 }

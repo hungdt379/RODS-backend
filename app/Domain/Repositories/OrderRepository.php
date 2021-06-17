@@ -14,10 +14,16 @@ class OrderRepository
             ->where('table_id', $tableID)->get();
     }
 
+
     public function insert($order)
     {
         return $order->save();
     }
 
+    public function getQueueOrderByTableID($tableID)
+    {
+        return Order::where([['status', Order::ORDER_STATUS_QUEUE], ['table_id', $tableID]])
+            ->get();
+    }
 
 }

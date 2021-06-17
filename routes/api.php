@@ -51,6 +51,7 @@ Route::group([
         Route::post('table/open', 'UserController@openTable');
         Route::post('table/close', 'UserController@closeTable');
         Route::post('table/update', 'UserController@updateNumberOfCustomer');
+        Route::get('table/order/queue/view', 'OrderController@getQueueOrderByTableID');
     });
 });
 
