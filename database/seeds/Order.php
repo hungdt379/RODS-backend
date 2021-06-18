@@ -14,13 +14,14 @@ class Order extends Seeder
         DB::table('order')->truncate();
         DB::table('order')->insert([
             'number_of_customer' => 5,
-            'table_id' => '60bcd6ef911e000042003ec5',
+            'table_id' => '60bf956e37610000b8004ec5',
             'table_name' => 'Bàn 1',
             'status' => 'queue',
             'combo' => [
-                '_id' => '60c083b9ee26000095002fd2',
+                '_id' => '60c244acc861000091001532',
                 'name' => 'Combo nướng 129k',
                 'cost' => 129000,
+                'hotpot' => false,
                 'dish_in_combo' => [
                     'dish1' => 'bo',
                     'dish2' => 'lon'
