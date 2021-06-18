@@ -39,6 +39,7 @@ Route::group([
         Route::get('menu/item/detail', 'MenuController@getDetailItem');
         Route::post('feedback', 'FeedbackController@addfeedback');
         Route::post('order/send', 'QueueOrderController@sendOrder');
+        Route::post('call/waiter', 'NotificationController@callWaiterNotification');
     });
 
 });

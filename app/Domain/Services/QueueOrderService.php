@@ -37,10 +37,16 @@ class QueueOrderService
         $queueOrder->table_id = $param['table_id'];
         $queueOrder->table_name = $param['table_name'];
         $queueOrder->status = $param['status'];
-        $queueOrder->combo = json_decode($param['combo']);
-        $queueOrder->side_dish_drink = json_decode($param['side_dish_drink']);
+        if(isset($param['combo'])){
+            $queueOrder->combo = json_decode($param['combo']);
+        }
+        if(isset($param['side_dish_drink'])){
+            $queueOrder->side_dish_drink = json_decode($param['side_dish_drink']);
+        }
+        if(isset($param['hotpot'])){
+            $queueOrder->hotpot = json_decode($param['hotpot']);
+        }
         $queueOrder->total_cost = $param['total_cost'];
-        $queueOrder->note = $param['note'];
         $queueOrder->ts = time();
 
         return $this->queueOrderRepository->insert($queueOrder);

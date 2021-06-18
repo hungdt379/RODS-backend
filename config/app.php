@@ -164,7 +164,7 @@ return [
         Jenssegers\Mongodb\MongodbServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
         Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
-
+        Kreait\Laravel\Firebase\ServiceProvider::class,
         /*
          * Package Service Providers...
          */
