@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class Order extends Seeder
+class QueueOrder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -11,17 +11,16 @@ class Order extends Seeder
      */
     public function run()
     {
-        DB::table('order')->truncate();
-        DB::table('order')->insert([
+        DB::table('queue_order')->truncate();
+        DB::table('queue_order')->insert([
             'number_of_customer' => 5,
-            'table_id' => '60bf956e37610000b8004ec5',
+            'table_id' => '60bcd6ef911e000042003ec5',
             'table_name' => 'Bàn 1',
             'status' => 'queue',
             'combo' => [
-                '_id' => '60c244acc861000091001532',
+                '_id' => '60c083b9ee26000095002fd2',
                 'name' => 'Combo nướng 129k',
                 'cost' => 129000,
-                'hotpot' => false,
                 'dish_in_combo' => [
                     'dish1' => 'bo',
                     'dish2' => 'lon'

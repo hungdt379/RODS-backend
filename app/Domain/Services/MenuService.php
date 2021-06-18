@@ -34,18 +34,24 @@ class MenuService
 
     public function getMenu($tableID)
     {
-        $checkExistingOrder = $this->orderRepository->checkExistingOrderInTable($tableID);
-        if (!isset($checkExistingOrder)) {
+        $checkExistingOrder = $this->orderRepository->checkExistingOrderInTable($tableID)->toArray();
+        if (($checkExistingOrder) == []) {
             $menu['combo'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getCombo()->_id);
             $menu['drink'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getDink()->_id);
             $menu['fast'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getFast()->_id);
         } else {
-            if ($checkExistingOrder[0]['combo']['hotpot']) {
-                $menu['combo'] = $this->menuRepository->getMenuComboNoHotpotAfterOrder($checkExistingOrder[0]['combo']['_id']);
+            if ($checkExistingOrder[0]['combo']['hotpot'] == false) {
+                $menu['combo']['detail'] = $this->menuRepository->getComboByID($checkExistingOrder[0]['combo']['_id']);
+                $menu['combo']['dish_in_combo'] = $this->dishInComboRepository->getDishesByCombo($checkExistingOrder[0]['combo']['_id']);
+                $menu['combo']['detail'][0]['cost'] = 0;
+
             } else {
-                $menu['combo'] = $this->menuRepository->getMenuComboHasHotpotAfterOrder($checkExistingOrder[0]['combo']['_id']);
+                $menu['combo']['detail'] = $this->menuRepository->getComboByID($checkExistingOrder[0]['combo']['_id']);
+                $menu['combo']['dish_in_combo'] = $this->dishInComboRepository->getDishesByCombo($checkExistingOrder[0]['combo']['_id']);
+                $menu['hotpot'] = $this->menuRepository->getHotpot();
+                $menu['combo']['detail'][0]['cost'] = 0;
             }
-            $menu['combo'][0]['cost'] = 0;
+
             $menu['drink'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getDink()->_id);
             $menu['fast'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getFast()->_id);
         }

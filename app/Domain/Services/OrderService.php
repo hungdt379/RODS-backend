@@ -4,7 +4,10 @@
 namespace App\Domain\Services;
 
 
+use App\Domain\Entities\Order;
+use App\Domain\Entities\QueueOrder;
 use App\Domain\Repositories\OrderRepository;
+
 
 class OrderService
 {
