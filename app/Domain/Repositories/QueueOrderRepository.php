@@ -19,4 +19,9 @@ class QueueOrderRepository
         return QueueOrder::where([['status', QueueOrder::QUEUE_ORDER_STATUS_QUEUED], ['table_id', $tableID]])
             ->get();
     }
+
+    public function delete($id)
+    {
+        return QueueOrder::where('_id', $id)->delete();
+    }
 }

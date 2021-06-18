@@ -41,4 +41,11 @@ class QueueOrderController extends Controller
         return $this->successResponse($data, 'Success');
     }
 
+    public function cancelQueueOrder(){
+        $param = request()->all();
+        $this->queueOrderService->delete($param['id']);
+
+        return $this->successResponse('', 'Success');
+    }
+
 }
