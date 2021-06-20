@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Domain\Repositories\UserRepository;
 use App\Traits\ApiResponse;
 use App\Domain\Services\UserService;
+use PDF;
+use Illuminate\Support\Facades\Storage;
 use JWTAuth;
 use App\Domain\Entities\User;
 use Illuminate\Http\Request;
@@ -78,6 +80,11 @@ class AuthController extends Controller
 
     public function hello()
     {
-        return response()->json('hello bae');
+        $pdf = PDF::loadHTML('<h1>Test</h1> ');
+        $nameFile = '_' . time() . '.pdf';
+        //return response()->file($pdf);
+        Storage::disk('public')->put($nameFile, $pdf->output());
+        $url = asset('upload/' . $nameFile);
+
     }
 }

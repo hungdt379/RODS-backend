@@ -70,6 +70,8 @@ Route::group(['middleware' => 'auth.jwt'], function () {
     Route::get('search', 'MenuController@searchItem');
 });
 
+Route::get('testPDF', 'AuthController@hello');
+
 
 
 
