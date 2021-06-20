@@ -22,12 +22,12 @@ use Illuminate\Support\Facades\Route;
 Route::group([
     'prefix' => 'auth'
 ], function () {
-    Route::post('login', 'AuthController@login');
+    Route::post('login', 'AuthController@login')->name('login');
     Route::post('login/table', 'AuthController@loginForTable');
     Route::group([
         'middleware' => 'auth.jwt'
     ], function () {
-        Route::get('logout', 'AuthController@logout');
+        Route::get('logout', 'AuthController@logout')->name('logout');
     });
 });
 
@@ -36,7 +36,7 @@ Route::group([
 ], function () {
     Route::group(['middleware' => 'auth.jwt'], function () {
         Route::get('categories', 'CategoryController@getAllCategory');
-        Route::get('menu', 'MenuController@getMenu');
+        Route::get('menu', 'MenuController@getMenu')->name('menu');
         Route::get('menu/item/detail', 'MenuController@getDetailItem');
         Route::post('feedback', 'FeedbackController@addfeedback');
         Route::post('call/waiter', 'NotificationController@callWaiterNotification');
