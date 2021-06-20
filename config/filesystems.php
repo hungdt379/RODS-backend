@@ -48,12 +48,21 @@ return [
             'root' => storage_path('php'),
         ],
 
+        // save file to public
         'public' => [
             'driver' => 'local',
-            'root' => storage_path('php/public'),
-            'url' => env('APP_URL').'/storage',
+            'root' => public_path() . '/export',
+            'url' => env('APP_URL').'/public',
             'visibility' => 'public',
         ],
+
+        // save file to storage
+//        'public' => [
+//            'driver' => 'local',
+//            'root' => storage_path('php/public'),
+//            'url' => env('APP_URL').'/storage',
+//            'visibility' => 'public',
+//        ],
 
         's3' => [
             'driver' => 's3',

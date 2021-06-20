@@ -80,11 +80,14 @@ class AuthController extends Controller
 
     public function hello()
     {
-        $pdf = PDF::loadHTML('<h1>Test</h1> ');
+        // 1 milimet = 2.838 point
+
+        $customPaper = array(0,0,567.00,283.80); // (10*20 cm)
+        $pdf = PDF::loadHTML('<h1>Test</h1> ')->setPaper($customPaper, 'landscape');
         $nameFile = '_' . time() . '.pdf';
         //return response()->file($pdf);
         Storage::disk('public')->put($nameFile, $pdf->output());
-        $url = asset('upload/' . $nameFile);
-
+        $url = asset('export/' . $nameFile);
+        return response()->json($url);
     }
 }
