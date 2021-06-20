@@ -5,9 +5,12 @@ namespace App\Http\Controllers;
 
 
 use App\Domain\Services\OrderService;
+use App\Traits\ApiResponse;
 
 class OrderController extends Controller
 {
+    use ApiResponse;
+
     private $orderService;
 
     /**

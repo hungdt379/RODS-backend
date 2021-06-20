@@ -18,7 +18,6 @@ use Illuminate\Support\Facades\Route;
 //    return $request->user();
 //});
 
-
 Route::group([
     'prefix' => 'auth'
 ], function () {
@@ -39,6 +38,7 @@ Route::group([
         Route::get('menu', 'MenuController@getMenu')->name('menu');
         Route::get('menu/item/detail', 'MenuController@getDetailItem');
         Route::post('feedback', 'FeedbackController@addfeedback');
+        Route::post('order/send', 'QueueOrderController@sendOrder');
         Route::post('call/waiter', 'NotificationController@callWaiterNotification');
     });
 
@@ -52,6 +52,8 @@ Route::group([
         Route::post('table/open', 'UserController@openTable');
         Route::post('table/close', 'UserController@closeTable');
         Route::post('table/update', 'UserController@updateNumberOfCustomer');
+        Route::get('table/order/queue/view', 'QueueOrderController@getQueueOrderByTableID');
+        Route::get('table/order/queue/cancel', 'QueueOrderController@cancelQueueOrder');
     });
 });
 

@@ -16,16 +16,17 @@ class MenuRepository
         return Menu::where('category_id', $categoryID)->where('name', 'not like', 'Lẩu')->get();
     }
 
-    // có lẩu
-    public function getMenuComboHasHotpotAfterOrder($comboID)
+
+    public function getHotpot()
     {
-        return Menu::where('_id', $comboID)->get();
+        return Menu::Where('name', 'like', 'Lẩu')->get();
     }
 
-    // không lẩu
-    public function getMenuComboNoHotpotAfterOrder($comboID)
+
+    public function getComboByID($comboID)
     {
-        return Menu::where('_id', $comboID)->orWhere('name', 'like', 'Lẩu')->get();
+        return Menu::where('_id', $comboID)->get();
+
     }
 
     public function getItemByName($name)
