@@ -57,6 +57,7 @@ class MenuController
         return $this->successResponse($data, 'Success');
     }
 
+    // day là code của thịnh viết lên trên function này
     public function searchItem123()
     {
         $param = request()->all();
