@@ -8,13 +8,15 @@ use Jenssegers\Mongodb\Eloquent\Model;
 
 class Notification extends Model
 {
-    const TITLE_CALL_WAITER = 'Gọi phục vụ';
-    const TITLE_CALL_PAYMENT = 'Gọi thanh toán';
-    const TITLE_CONFIRMED_ORDER = 'Nhân viên đã xác nhận món mới';
-    const CUSTOMER_TITLE = [
-        self::TITLE_CALL_WAITER,
-        self::TITLE_CALL_PAYMENT,
-    ];
+    const TITLE_CALL_WAITER_VN = 'Gọi phục vụ';
+    const TITLE_CALL_PAYMENT_VN = 'Gọi thanh toán';
+    const TITLE_SEND_ORDER_VN = 'Đặt món';
+    const TITLE_CONFIRMED_ORDER_VN = 'Nhân viên đã xác nhận món mới';
+
+    const TITLE_CALL_WAITER_EN = 'call-waiter';
+    const TITLE_CALL_PAYMENT_EN = 'call-payment';
+    const TITLE_SEND_ORDER_EN = 'send-order';
+    const TITLE_CONFIRMED_ORDER_EN = 'confirmed-order';
 
     const RECEIVER_WAITER = 'waiter';
     const RECEIVER_RECEPTIONIST = 'receptionist';
@@ -23,10 +25,6 @@ class Notification extends Model
         self::RECEIVER_RECEPTIONIST,
         self::RECEIVER_KITCHEN_MANAGER
     ];
-
-    const REFERENCE_CALL_WAITER = 'call_waiter/';
-    const REFERENCE_CALL_PAYMENT = 'call_payment/';
-    const REFERENCE_CONFIRMED_ORDER = 'confirmed_order/';
 
     protected $connection = 'mongodb';
     protected $collection = 'notification';

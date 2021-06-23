@@ -18,11 +18,9 @@ class NotificationRepository
         $this->database = app('firebase.database');
     }
 
-    public function checkQueueNotification($ref, $user)
+    public function checkQueueNotification($ref)
     {
         return $this->database->getReference($ref)
-            ->orderByChild('user_id_read')
-            ->equalTo($user->id . '_false')
             ->getSnapshot()->getValue();
     }
 
@@ -39,6 +37,18 @@ class NotificationRepository
     public function getNotificationByReceiver($receiver, $pageSize)
     {
         return Notification::where('receiver', $receiver)->paginate((int)$pageSize);
+    }
+
+    public function removeReferenceAfterRead($ref)
+    {
+        return $this->database->getReference($ref)->remove();
+    }
+
+    public function getNotificationByTableId($tableID, $pageSize)
+    {
+        return Notification::where('user_id', $tableID)
+            ->where('receiver', Notification::RECEIVER_WAITER)
+            ->paginate((int) $pageSize);
     }
 
 }
