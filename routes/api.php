@@ -39,8 +39,7 @@ Route::group([
         Route::get('menu/item/detail', 'MenuController@getDetailItem');
         Route::post('feedback', 'FeedbackController@addfeedback');
         Route::post('order/send', 'QueueOrderController@sendOrder');
-        Route::post('call/waiter', 'NotificationController@notificationFromCustomer');
-        Route::post('call/payment', 'NotificationController@notificationFromCustomer');
+        Route::post('call/waiter', 'NotificationController@callWaiterNotification');
     });
 
 });
@@ -54,6 +53,7 @@ Route::group([
         Route::post('table/close', 'UserController@closeTable');
         Route::post('table/update', 'UserController@updateNumberOfCustomer');
         //Route::get('table/notifications', 'NotificationController@getAllNotification');
+        Route::get('table/id', 'UserController@getTableById');
         Route::get('table/order/queue/view', 'QueueOrderController@getQueueOrderByTableID');
         Route::get('table/order/queue/cancel', 'QueueOrderController@cancelQueueOrder');
     });
@@ -64,17 +64,9 @@ Route::group([
 ], function () {
     Route::group(['middleware' => 'auth.jwt'], function () {
         Route::get('feedback', 'FeedbackController@getAllFeedback');
-        Route::get('notifications', 'NotificationController@getAllNotification');
     });
 });
 
-Route::group([
-    'prefix' => 'kitchen'
-], function () {
-    Route::group(['middleware' => 'auth.jwt'], function () {
-        Route::get('notifications', 'NotificationController@getAllNotification');
-    });
-});
 
 Route::group(['middleware' => 'auth.jwt'], function () {
     Route::get('search', 'MenuController@searchItem');
