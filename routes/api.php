@@ -40,6 +40,11 @@ Route::group([
         Route::post('feedback', 'FeedbackController@addfeedback');
         Route::post('order/send', 'QueueOrderController@sendOrder');
         Route::post('call/waiter', 'NotificationController@callWaiterNotification');
+        Route::get('cart', 'CartController@show');
+        Route::post('cart/item/add', 'CartController@addProducts');
+        Route::post('cart/item/delete', 'CartController@deleteItemInCart');
+
+
     });
 
 });
