@@ -31,18 +31,25 @@ class UserController extends Controller
         return $this->successResponseWithPaging($data->items(), 'Success', $data->currentPage(), $param['pageSize'], $data->total());
     }
 
-    public function getTableById(){
+    public function getTableById()
+    {
         $param = request()->all();
         $validator = Validator::make($param, [
-           'table_id' => 'required|alpha_num|max:30'
+            'table_id' => 'required|alpha_num|max:30'
         ]);
 
-        if ($validator->fails()){
-            $this->errorResponse('', null, false, 400);
+        if ($validator->fails()) {
+            return $this->errorResponse('Invalid param', null, false, 400);
         }
 
         $data = $this->userService->getUserById($param['table_id']);
+
+        if ($data == null){
+            return $this->errorResponse('Table is not exist', '', false,404);
+        }
+
         return $this->successResponse($data, 'Success');
+
     }
 
     public function openTable()
