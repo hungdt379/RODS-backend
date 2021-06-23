@@ -13,14 +13,17 @@ class UserController extends Controller
     use ApiResponse;
 
     private $userService;
+    private $cartController;
 
     /**
      * UserController constructor.
      * @param $userService
+     * @param $cartController
      */
-    public function __construct(UserService $userService)
+    public function __construct(UserService $userService,CartController $cartController)
     {
         $this->userService = $userService;
+        $this->cartController = $cartController;
     }
 
 
@@ -55,8 +58,10 @@ class UserController extends Controller
     public function openTable()
     {
         $param = request()->all();
-        $this->userService->openTable($param['table_id'], $param['number_of_customer']);
-        return $this->successResponse('', 'Open table successfully');
+        $table = $this->userService->openTable($param['table_id'], $param['number_of_customer']);
+        $cart = $this->cartController->store($param['table_id']);
+        $data =['table' => $table, 'cart' => $cart];
+        return $this->successResponse($data, 'Open table successfully');
     }
 
     public function closeTable()
