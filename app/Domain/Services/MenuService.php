@@ -73,6 +73,9 @@ class MenuService
 
         $item[0]['quantity'] = $cartItem['quantity'];
         $item[0]['note'] = $cartItem['note'];
+        if(isset($cartItem['dish_in_combo'])){
+            $item[0]['dish_in_combo'] = $cartItem['dish_in_combo'];
+        }
 
         return $item;
     }

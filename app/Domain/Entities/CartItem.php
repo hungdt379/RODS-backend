@@ -12,7 +12,7 @@ class CartItem extends Model
 
     protected $connection = 'mongodb';
     protected $collection = 'cart_item';
-    protected $fillable = ['product_id', 'cart_key', 'quantity', 'note'];
+    protected $fillable = ['product_id', 'cart_key', 'quantity', 'note', 'dish_in_combo'];
     // protected $primaryKey = ['cart_id', 'product_id'];
 
     public $incrementing = false;

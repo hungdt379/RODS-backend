@@ -25,7 +25,7 @@ class Cart extends Model
 //        'ts'
 //    ];
 
-    protected $fillable = ['cart_key','table_id'];
+    protected $fillable = ['cart_key','table_id', 'total_cost'];
     public $incrementing = false;
 
     public function items () {

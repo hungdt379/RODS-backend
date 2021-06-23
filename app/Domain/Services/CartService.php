@@ -24,7 +24,7 @@ class CartService
         $data = [
             'cart_key' => md5(uniqid(rand(), true)),
             'table_id' => isset($tableID) ? $tableID : null,
-
+            'total_cost' => 0
         ];
 
         $cart = new Cart($data);
@@ -34,6 +34,10 @@ class CartService
 
     public function getCartByKey($cartKey){
         return $this->cartRepository->getCartByKey($cartKey);
+    }
+
+    public function update($cart){
+        return $this->cartRepository->update($cart);
     }
 
     public function delete($cart){

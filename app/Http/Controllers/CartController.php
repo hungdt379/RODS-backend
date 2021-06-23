@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 
 
+use App\Domain\Entities\Cart;
 use App\Domain\Services\CartItemService;
 use App\Domain\Services\CartService;
 use App\Domain\Services\MenuService;
@@ -62,7 +63,8 @@ class CartController extends Controller
                 array_push($listItem, $detailItem);
                 $totalCost+= $detailItem[0]['cost'] * $detailItem[0]['quantity'];
             }
-
+            $cart['total_cost'] = $totalCost;
+            $this->cartService->update($cart);
             $data = ['cart' => $cart['cart_key'], 'item_in_cart' => $listItem, 'total_cost' => $totalCost];
             return $this->successResponse($data, 'Success');
 
@@ -112,6 +114,7 @@ class CartController extends Controller
         $productID = $param['product_id'];
         $quantity = $param['quantity'];
         $note = $param['note'];
+        $dishInCombo = isset($param['dish_in_combo']) ? $param['dish_in_combo'] : null;
         //Check if the CarKey is Valid
         $cart = $this->cartService->getCartByKey($cartKey);
         if ($cart['cart_key']== $cartKey) {
@@ -119,10 +122,10 @@ class CartController extends Controller
             $cartItem = $this->cartItemService->getItemByProductID($cartKey, $productID);
             if ($cartItem) {
                 $cartItem->quantity = $quantity;
-                $data = $this->cartItemService->updateQuantity($cartKey, $productID, $quantity);
-                return $this->successResponse($data, 'Update quantity success');
+                $data = $this->cartItemService->updateQuantity($cartKey, $productID, $quantity, $dishInCombo);
+                return $this->successResponse($data, 'Update success');
             } else {
-                $data = $this->cartItemService->addNewItem($cartKey, $productID, $quantity, $note);
+                $data = $this->cartItemService->addNewItem($cartKey, $productID, $quantity, $note, $dishInCombo);
                 return $this->successResponse($data, 'Add item Success');
             }
         } else {

@@ -19,4 +19,8 @@ class CartRepository
     public function delete($cart){
         return $cart->delete();
     }
+
+    public function update($cart){
+        return $cart->update();
+    }
 }
