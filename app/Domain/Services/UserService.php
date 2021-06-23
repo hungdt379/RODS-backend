@@ -41,10 +41,11 @@ class UserService
         return $updateUser;
     }
 
-    public function deleteRememberToken($user)
+    public function closeTable($user)
     {
         $user['remember_token'] = [];
         $user->is_active = false;
+        $user->number_of_customer = 0;
         return $this->userRepository->update($user);
     }
 

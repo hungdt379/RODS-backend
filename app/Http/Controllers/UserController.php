@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use App\Domain\Services\UserService;
 use App\Traits\ApiResponse;
+use Illuminate\Support\Facades\Validator;
 use JWTAuth;
 
 class UserController extends Controller
@@ -12,17 +13,14 @@ class UserController extends Controller
     use ApiResponse;
 
     private $userService;
-    private $cartController;
 
     /**
      * UserController constructor.
      * @param $userService
-     * @param $cartController
      */
-    public function __construct(UserService $userService,CartController $cartController)
+    public function __construct(UserService $userService)
     {
         $this->userService = $userService;
-        $this->cartController = $cartController;
     }
 
 
@@ -33,13 +31,32 @@ class UserController extends Controller
         return $this->successResponseWithPaging($data->items(), 'Success', $data->currentPage(), $param['pageSize'], $data->total());
     }
 
+    public function getTableById()
+    {
+        $param = request()->all();
+        $validator = Validator::make($param, [
+            'table_id' => 'required|alpha_num|max:30'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->errorResponse('Invalid param', null, false, 400);
+        }
+
+        $data = $this->userService->getUserById($param['table_id']);
+
+        if ($data == null){
+            return $this->errorResponse('Table is not exist', '', false,404);
+        }
+
+        return $this->successResponse($data, 'Success');
+
+    }
+
     public function openTable()
     {
         $param = request()->all();
-        $table = $this->userService->openTable($param['table_id'], $param['number_of_customer']);
-        $cart = $this->cartController->store($param['table_id']);
-        $data =['table' => $table, 'cart' => $cart];
-        return $this->successResponse($data, 'Open table successfully');
+        $this->userService->openTable($param['table_id'], $param['number_of_customer']);
+        return $this->successResponse('', 'Open table successfully');
     }
 
     public function closeTable()
@@ -54,8 +71,8 @@ class UserController extends Controller
             }
         }
         JWTAuth::setToken($ctoken);
+        $this->userService->closeTable($user);
         $this->cartController->destroy();
-        $this->userService->deleteRememberToken($user);
         return $this->successResponse(null, 'Close table successful');
     }
 
