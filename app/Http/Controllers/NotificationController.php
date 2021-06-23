@@ -4,8 +4,11 @@
 namespace App\Http\Controllers;
 
 
+use App\Domain\Entities\Notification;
 use App\Domain\Services\NotificationService;
 use App\Traits\ApiResponse;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use JWTAuth;
 
 class NotificationController extends Controller
@@ -13,7 +16,6 @@ class NotificationController extends Controller
     use ApiResponse;
 
     private $notificationService;
-    protected $database;
 
     /**
      * NotificationController constructor.
@@ -22,20 +24,92 @@ class NotificationController extends Controller
     public function __construct(NotificationService $notificationService)
     {
         $this->notificationService = $notificationService;
-        $this->database = app('firebase.database');
     }
 
-    public function callWaiterNotification()
+    public function callWaiter()
     {
         $param = request()->all();
-        $user = JWTAuth::user();
-        $checkQueue = $this->notificationService->checkQueueNotification($user);
-        if ($checkQueue) {
-            return $this->errorResponse('Your requrement is processing', null,false,202);
+
+        $validator = Validator::make($param, [
+            'content' => 'max:255'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->errorResponse('Invalid param', null, false, 400);
         }
 
-        $this->notificationService->callWaiterNotification($param, $user);
+        $user = JWTAuth::user();
+
+        $checkQueue = $this->notificationService->checkQueueNotification(Notification::RECEIVER_WAITER . '/' . $user->_id . '/' . Notification::TITLE_CALL_WAITER_EN);
+        if ($checkQueue) {
+            return $this->errorResponse('Your requirement is processing', null, false, 202);
+        }
+
+        $re = [Notification::RECEIVER_WAITER];
+        $this->notificationService->notification($param['content'], Notification::TITLE_CALL_WAITER_VN, Notification::TITLE_CALL_WAITER_EN, $user, $re);
         return $this->successResponse('', 'Success');
+    }
+
+    public function callPayment()
+    {
+        $user = JWTAuth::user();
+
+        $checkQueueWaiter = $this->notificationService->checkQueueNotification(Notification::RECEIVER_WAITER . '/' . $user->_id . '/' . Notification::TITLE_CALL_PAYMENT_EN);
+        $checkQueueReceptionist = $this->notificationService->checkQueueNotification(Notification::RECEIVER_RECEPTIONIST . '/' . $user->_id);
+        if ($checkQueueWaiter && $checkQueueReceptionist) {
+            return $this->errorResponse('Your requirement is processing', null, false, 202);
+        }
+
+        $re = [Notification::RECEIVER_WAITER, Notification::RECEIVER_RECEPTIONIST];
+        $this->notificationService->notification(null, Notification::TITLE_CALL_PAYMENT_VN, Notification::TITLE_CALL_PAYMENT_EN, $user, $re);
+        return $this->successResponse('', 'Success');
+    }
+
+    //for waiter
+    public function getNotificationOfEachTable()
+    {
+        $param = request()->all();
+
+        $validator = Validator::make($param, [
+            'table_id' => 'required|alpha_num|max:30',
+            'page' => 'required|integer|max:10',
+            'pageSize' => 'required|integer|max:10'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->errorResponse('Invalid params', null, false, 400);
+        }
+
+        $data = $this->notificationService->getNotificationOfEachTable($param['table_id'], $param['pageSize']);
+        if (sizeof($data) == 0) {
+            return $this->errorResponse('Have no notification', null, false, 404);
+        }
+
+        return $this->successResponseWithPaging($data->items(), 'Success', $data->currentPage(), $param['pageSize'], $data->total());
+
+    }
+
+    // for kitchen manager and receptionist
+    public function getAllNotification()
+    {
+        $param = request()->all();
+
+        $validator = Validator::make($param, [
+            'page' => 'required|integer|max:10',
+            'pageSize' => 'required|integer|max:10',
+            'receiver' => Rule::in(Notification::RECEIVER_ALL_NOTIFICATION)
+        ]);
+
+        if ($validator->fails()) {
+            return $this->errorResponse('Invalid params', null, false, 400);
+        }
+
+        $data = $this->notificationService->getNotificationByReceiver($param['receiver'], $param['pageSize']);
+        if (sizeof($data) == 0) {
+            return $this->errorResponse('Have no notification', null, false, 404);
+        }
+
+        return $this->successResponseWithPaging($data->items(), 'Success', $data->currentPage(), $param['pageSize'], $data->total());
     }
 
 }
