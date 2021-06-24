@@ -51,4 +51,15 @@ class NotificationRepository
             ->paginate((int) $pageSize);
     }
 
+    public function getUnreadNotificationOfWaiter($tableID){
+        return Notification::where('user_id', $tableID)
+            ->where('receiver', Notification::RECEIVER_WAITER)
+            ->where('read', false)->get();
+    }
+
+    public function getUnreadNotification($receiver){
+        return Notification::where('receiver', $receiver)
+            ->where('read', false)->get();
+    }
+
 }
