@@ -81,4 +81,20 @@ class NotificationService
         return $this->notificationRepository->getNotificationByReceiver($receiver, $pageSize);
     }
 
+    public function markAsRead($receiver, $tableId)
+    {
+        if ($receiver == Notification::RECEIVER_WAITER) {
+            $notifications = $this->notificationRepository->getUnreadNotificationOfWaiter($tableId);
+        } else {
+            $notifications = $this->notificationRepository->getUnreadNotification($receiver);
+        }
+
+        //dd($notifications);
+
+        foreach ($notifications as $notification) {
+            $notification->read = true;
+            $this->notificationRepository->insertMongo($notification);
+        }
+    }
+
 }
