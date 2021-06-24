@@ -24,7 +24,7 @@ class MenuService
      * @param $orderRepository
      * @param $dishInComboRepository
      */
-    public function __construct(MenuRepository $menuRepository, CategoryRepository $categoryRepository, OrderRepository $orderRepository, DishInComboRepository $dishInComboRepository,CartItemService $cartItemService)
+    public function __construct(MenuRepository $menuRepository, CategoryRepository $categoryRepository, OrderRepository $orderRepository, DishInComboRepository $dishInComboRepository, CartItemService $cartItemService)
     {
         $this->menuRepository = $menuRepository;
         $this->categoryRepository = $categoryRepository;
@@ -37,6 +37,7 @@ class MenuService
     public function getMenu($tableID)
     {
         $checkExistingOrder = $this->orderRepository->checkExistingOrderInTable($tableID)->toArray();
+        var_dump($checkExistingOrder[0]['combo']['_id']);
         if (($checkExistingOrder) == []) {
             $menu['combo'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getCombo()->_id);
             $menu['drink'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getDink()->_id);
@@ -66,14 +67,15 @@ class MenuService
         return $this->menuRepository->getItemByName($name);
     }
 
-    public function getItemById($cartKey, $productID)
+    public function getItemInCart($cartKey, $productID)
     {
         $item = $this->menuRepository->getItemByID($productID);
-        $cartItem = $this->cartItemService->getItemByProductID($cartKey, $productID);
+        $cartItem = $this->cartItemService->getCartItemByProductID($cartKey, $productID);
 
         $item[0]['quantity'] = $cartItem['quantity'];
         $item[0]['note'] = $cartItem['note'];
-        if(isset($cartItem['dish_in_combo'])){
+        $item[0]['total_cost'] = $cartItem['total_cost'];
+        if (isset($cartItem['dish_in_combo'])) {
             $item[0]['dish_in_combo'] = $cartItem['dish_in_combo'];
         }
 

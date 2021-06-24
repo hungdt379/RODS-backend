@@ -16,7 +16,7 @@ class CartItemRepository
         return CartItem::where('cart_key', $cartKey)->delete();
     }
 
-    public function getItemByProductID($cartKey, $productID){
+    public function getCartItemByProductID($cartKey, $productID){
         return CartItem::where(['cart_key' => $cartKey, 'product_id' => $productID])->first();
     }
 

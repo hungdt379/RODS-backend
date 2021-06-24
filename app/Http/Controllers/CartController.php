@@ -4,7 +4,6 @@
 namespace App\Http\Controllers;
 
 
-
 use App\Domain\Entities\Cart;
 use App\Domain\Services\CartItemService;
 use App\Domain\Services\CartService;
@@ -27,7 +26,7 @@ class CartController extends Controller
      * @param $cartItemService
      * @param $menuService
      */
-    public function __construct(CartService $cartService,CartItemService $cartItemService,MenuService $menuService)
+    public function __construct(CartService $cartService, CartItemService $cartItemService, MenuService $menuService)
     {
         $this->cartService = $cartService;
         $this->cartItemService = $cartItemService;
@@ -54,14 +53,13 @@ class CartController extends Controller
         $cart = $this->cartService->getCartByKey($cartKey);
 
         if ($cart['cart_key'] == $cartKey) {
-
             $cartItem = $this->cartItemService->getByCartKey($cartKey);
             $listItem = [];
             $totalCost = 0;
-            foreach ($cartItem as $item){
-                $detailItem = $this->menuService->getItemById($cartKey, $item['product_id']);
+            foreach ($cartItem as $item) {
+                $detailItem = $this->menuService->getItemInCart($cartKey, $item['product_id']);
                 array_push($listItem, $detailItem);
-                $totalCost+= $detailItem[0]['cost'] * $detailItem[0]['quantity'];
+                $totalCost += $item['total_cost'];
             }
             $cart['total_cost'] = $totalCost;
             $this->cartService->update($cart);
@@ -104,6 +102,7 @@ class CartController extends Controller
             'cart_key' => 'required',
             'product_id' => 'required',
             'quantity' => 'required|numeric|min:1|max:10',
+            'cost' => 'required|numeric'
         ]);
 
         if ($validator->fails()) {
@@ -114,18 +113,19 @@ class CartController extends Controller
         $productID = $param['product_id'];
         $quantity = $param['quantity'];
         $note = $param['note'];
+        $cost = $param['cost'];
         $dishInCombo = isset($param['dish_in_combo']) ? $param['dish_in_combo'] : null;
         //Check if the CarKey is Valid
         $cart = $this->cartService->getCartByKey($cartKey);
-        if ($cart['cart_key']== $cartKey) {
+        if ($cart['cart_key'] == $cartKey) {
             //check if the the same product is already in the Cart, if true update the quantity, if not create a new one.
-            $cartItem = $this->cartItemService->getItemByProductID($cartKey, $productID);
+            $cartItem = $this->cartItemService->getCartItemByProductID($cartKey, $productID);
             if ($cartItem) {
                 $cartItem->quantity = $quantity;
-                $data = $this->cartItemService->updateQuantity($cartKey, $productID, $quantity, $dishInCombo);
+                $data = $this->cartItemService->update($cartKey, $productID, $quantity, $note, $dishInCombo, $cost);
                 return $this->successResponse($data, 'Update success');
             } else {
-                $data = $this->cartItemService->addNewItem($cartKey, $productID, $quantity, $note, $dishInCombo);
+                $data = $this->cartItemService->addNewItem($cartKey, $productID, $quantity, $note, $dishInCombo, $cost);
                 return $this->successResponse($data, 'Add item Success');
             }
         } else {
@@ -134,7 +134,8 @@ class CartController extends Controller
 
     }
 
-    public function deleteItemInCart(){
+    public function deleteItemInCart()
+    {
         $param = request()->all();
         $validator = Validator::make($param, [
             'cart_key' => 'required',
@@ -149,7 +150,7 @@ class CartController extends Controller
         $productID = $param['product_id'];
         $cart = $this->cartService->getCartByKey($cartKey);
         if ($cart['cart_key'] == $cartKey) {
-            $cartItem = $this->cartItemService->getItemByProductID($cartKey, $productID);
+            $cartItem = $this->cartItemService->getCartItemByProductID($cartKey, $productID);
             if ($cartItem) {
                 $this->cartItemService->deleteItemInCart($cartKey, $productID);
                 return $this->successResponse(null, 'Delete Success');
