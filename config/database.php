@@ -94,11 +94,11 @@ return [
             'driver' => 'mongodb',
             'host' => env('MONGO_DB_HOST', '127.0.0.1'),
             'port' => env('MONGO_DB_PORT', 27017),
-            'database' => env('MONGO_DB_DATABASE', 'rdos_db'),
-            'username' => env('MONGO_DB_USERNAME', 'rdosuser'),
-            'password' => env('MONGO_DB_PASSWORD', 'rdos#1234'),
+            'database' => env('MONGO_DB_DATABASE', 'rdos'),
+            'username' => env('MONGO_DB_USERNAME', 'rdos'),
+            'password' => env('MONGO_DB_PASSWORD', '1234'),
             'options' => [
-                'db' => 'admin'
+                'database' => 'admin'
             ],
         ],
     ],
