@@ -49,5 +49,90 @@ class Order extends Seeder
             'note' => 'abc',
             'ts' => time()
         ]);
+
+        DB::table('order')->insert([
+            'number_of_customer' => 5,
+            'table_id' => '60bf956e37610000b8004ec5',
+            'table_name' => 'Bàn 1',
+            'status' => 'queue',
+            'combo' => [
+                '_id' => '60c244acc861000091001532',
+                'name' => 'Combo nướng 129k',
+                'cost' => 129000,
+                'hotpot' => false,
+                'dish_in_combo' => [
+                    'dish1' => 'bo',
+                    'dish2' => 'lon'
+                ]
+            ],
+            'hotpot' => [
+                '_id' => '60c244acc861000091001535',
+                'name' => 'Lẩu',
+                'cost' => 40000,
+                'dish_in_hotpot' => [
+                    'dish1' => 'rau',
+                    'dish2' => 'dau'
+                ]
+            ],
+            'side_dish_drink' => [
+                'item1' => [
+                    '_id' => '60c244acc861000091001536',
+                    'name' => 'Khoai Lang Kén',
+                    'cost' => 30000,
+                    'qty' => 1,
+                    'note' => 'abc',
+                    'total_cost' => 30000 * 1
+                ],
+                'item2' => [
+                    '_id' => '60c244acc86100009100153a',
+                    'name' => 'bia',
+                    'cost' => 15000,
+                    'qty' => 1,
+                    'note' => 'bac',
+                    'total_cost' => 15000 * 1
+                ]
+            ],
+            'total_cost' => 129000 * 5 + 30000 * 1 + 15000 * 1,
+            'note' => 'abc',
+            'ts' => time()
+        ]);
+
+        DB::table('order')->insert([
+            'number_of_customer' => 5,
+            'table_id' => '60bf956e37610000b8004ec5',
+            'table_name' => 'Bàn 1',
+            'status' => 'queue',
+            'combo' => [
+                '_id' => '60c244acc861000091001534',
+                'name' => 'Combo lẩu nướng 209k',
+                'cost' => 209000,
+                'hotpot' => false,
+                'dish_in_combo' => [
+                    'dish1' => 'bo',
+                    'dish2' => 'lon'
+                ]
+            ],
+            'side_dish_drink' => [
+                'item1' => [
+                    '_id' => '60c244acc861000091001536',
+                    'name' => 'Khoai Lang Kén',
+                    'cost' => 30000,
+                    'qty' => 1,
+                    'note' => 'abc',
+                    'total_cost' => 30000 * 1
+                ],
+                'item2' => [
+                    '_id' => '60c244acc86100009100153a',
+                    'name' => 'bia',
+                    'cost' => 15000,
+                    'qty' => 1,
+                    'note' => 'bac',
+                    'total_cost' => 15000 * 1
+                ]
+            ],
+            'total_cost' => 209000 * 5 + 30000 * 1 + 15000 * 1,
+            'note' => 'abc',
+            'ts' => time()
+        ]);
     }
 }

@@ -37,7 +37,6 @@ class MenuService
     public function getMenu($tableID)
     {
         $checkExistingOrder = $this->orderRepository->checkExistingOrderInTable($tableID)->toArray();
-        var_dump($checkExistingOrder[0]['combo']['_id']);
         if (($checkExistingOrder) == []) {
             $menu['combo'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getCombo()->_id);
             $menu['drink'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getDink()->_id);
@@ -51,10 +50,13 @@ class MenuService
             } else {
                 $menu['combo']['detail'] = $this->menuRepository->getItemByID($checkExistingOrder[0]['combo']['_id']);
                 $menu['combo']['dish_in_combo'] = $this->dishInComboRepository->getDishesByCombo($checkExistingOrder[0]['combo']['_id']);
-                $menu['hotpot'] = $this->menuRepository->getHotpot();
+                $menu['hotpot']['detail'] = $this->menuRepository->getHotpot();
+                $menu['hotpot']['dish_in_hotpot'] = $this->dishInComboRepository->getDishesByCombo($menu['hotpot']['detail'][0]['_id']);
                 $menu['combo']['detail'][0]['cost'] = 0;
             }
-
+            if (isset($checkExistingOrder[0]['hotpot'])) {
+                $menu['hotpot']['detail'][0]['cost'] = 0;
+            }
             $menu['drink'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getDink()->_id);
             $menu['fast'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getFast()->_id);
         }
