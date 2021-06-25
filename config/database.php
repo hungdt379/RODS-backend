@@ -97,7 +97,9 @@ return [
             'database' => env('MONGO_DB_DATABASE', 'rods_db'),
             'username' => env('MONGO_DB_USERNAME', 'root'),
             'password' => env('MONGO_DB_PASSWORD', 'rods#1234'),
-            'options' => [],
+            'options' => [
+                'database' => 'admin'
+            ],
         ],
     ],
 
