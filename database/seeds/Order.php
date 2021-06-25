@@ -21,7 +21,7 @@ class Order extends Seeder
                 '_id' => '60c244acc861000091001532',
                 'name' => 'Combo nướng 129k',
                 'cost' => 129000,
-                'hotpot' => false,
+                'hotpot' => true,
                 'dish_in_combo' => [
                     'dish1' => 'bo',
                     'dish2' => 'lon'
@@ -59,7 +59,7 @@ class Order extends Seeder
                 '_id' => '60c244acc861000091001532',
                 'name' => 'Combo nướng 129k',
                 'cost' => 129000,
-                'hotpot' => false,
+                'hotpot' => true,
                 'dish_in_combo' => [
                     'dish1' => 'bo',
                     'dish2' => 'lon'
