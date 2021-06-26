@@ -72,7 +72,7 @@ class MenuService
     public function getItemInCart($cartKey, $productID)
     {
         $item = $this->menuRepository->getItemByID($productID);
-        $cartItem = $this->cartItemService->getCartItemByProductID($cartKey, $productID);
+        $cartItem = $this->cartItemService->getCartItemByItemID($cartKey, $productID);
 
         $item[0]['quantity'] = $cartItem['quantity'];
         $item[0]['note'] = $cartItem['note'];

@@ -14,7 +14,7 @@ class CartItem extends Seeder
         DB::table(' cart_item')->truncate();
         DB::table('cart_item')->insert([
             'cart_key' => 'c86c8991b5baf8103c8c071f00b56e4e',
-            'product_id' => '60c244acc861000091001538',
+            'item_id' => '60c244acc861000091001538',
             'quantity' => 3,
             'note' => 'abc'
         ]);

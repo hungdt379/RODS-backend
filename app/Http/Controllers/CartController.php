@@ -4,12 +4,10 @@
 namespace App\Http\Controllers;
 
 
-use App\Domain\Entities\Cart;
 use App\Domain\Services\CartItemService;
 use App\Domain\Services\CartService;
 use App\Domain\Services\MenuService;
 use App\Traits\ApiResponse;
-use JWTAuth;
 use Illuminate\Support\Facades\Validator;
 
 class CartController extends Controller
@@ -33,12 +31,6 @@ class CartController extends Controller
         $this->menuService = $menuService;
     }
 
-
-    public function store($tableID)
-    {
-        return $this->cartService->addNewCart($tableID);
-    }
-
     public function show()
     {
         $param = request()->all();
@@ -53,11 +45,11 @@ class CartController extends Controller
         $cart = $this->cartService->getCartByKey($cartKey);
 
         if ($cart['cart_key'] == $cartKey) {
-            $cartItem = $this->cartItemService->getByCartKey($cartKey);
+            $cartItem = $this->cartItemService->getItemByCartKey($cartKey);
             $listItem = [];
             $totalCost = 0;
             foreach ($cartItem as $item) {
-                $detailItem = $this->menuService->getItemInCart($cartKey, $item['product_id']);
+                $detailItem = $this->menuService->getItemInCart($cartKey, $item['item_id']);
                 array_push($listItem, $detailItem);
                 $totalCost += $item['total_cost'];
             }
@@ -67,12 +59,12 @@ class CartController extends Controller
             return $this->successResponse($data, 'Success');
 
         } else {
-            return $this->errorResponse('The CarKey you provided does not match the Cart Key for this Cart.', null, false, 400);
+            return $this->errorResponse('The CartKey you provided does not match the Cart Key for this Cart.', null, false, 400);
         }
 
     }
 
-    public function destroy()
+    public function deleteCart()
     {
         $param = request()->all();
         $validator = Validator::make($param, [
@@ -90,7 +82,7 @@ class CartController extends Controller
             $this->cartItemService->deleteByCartKey($cartKey);
             return $this->successResponse(null, 'Delete Success');
         } else {
-            return $this->errorResponse('The CarKey you provided does not match the Cart Key for this Cart.', null, false, 400);
+            return $this->errorResponse('The CartKey you provided does not match the Cart Key for this Cart.', null, false, 400);
         }
 
     }
@@ -100,7 +92,7 @@ class CartController extends Controller
         $param = request()->all();
         $validator = Validator::make($param, [
             'cart_key' => 'required',
-            'product_id' => 'required',
+            'item_id' => 'required',
             'quantity' => 'required|numeric|min:1|max:10',
             'cost' => 'required|numeric'
         ]);
@@ -110,7 +102,7 @@ class CartController extends Controller
         }
 
         $cartKey = $param['cart_key'];
-        $productID = $param['product_id'];
+        $itemID = $param['item_id'];
         $quantity = $param['quantity'];
         $note = $param['note'];
         $cost = $param['cost'];
@@ -119,17 +111,17 @@ class CartController extends Controller
         $cart = $this->cartService->getCartByKey($cartKey);
         if ($cart['cart_key'] == $cartKey) {
             //check if the the same product is already in the Cart, if true update the quantity, if not create a new one.
-            $cartItem = $this->cartItemService->getCartItemByProductID($cartKey, $productID);
+            $cartItem = $this->cartItemService->getCartItemByItemID($cartKey, $itemID);
             if ($cartItem) {
                 $cartItem->quantity = $quantity;
-                $data = $this->cartItemService->update($cartKey, $productID, $quantity, $note, $dishInCombo, $cost);
+                $data = $this->cartItemService->update($cartKey, $itemID, $quantity, $note, $dishInCombo, $cost);
                 return $this->successResponse($data, 'Update success');
             } else {
-                $data = $this->cartItemService->addNewItem($cartKey, $productID, $quantity, $note, $dishInCombo, $cost);
+                $data = $this->cartItemService->addNewItem($cartKey, $itemID, $quantity, $note, $dishInCombo, $cost);
                 return $this->successResponse($data, 'Add item Success');
             }
         } else {
-            return $this->errorResponse('The CarKey you provided does not match the Cart Key for this Cart.', null, false, 400);
+            return $this->errorResponse('The CartKey you provided does not match the Cart Key for this Cart.', null, false, 400);
         }
 
     }
@@ -139,7 +131,7 @@ class CartController extends Controller
         $param = request()->all();
         $validator = Validator::make($param, [
             'cart_key' => 'required',
-            'product_id' => 'required',
+            'item_id' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -147,19 +139,19 @@ class CartController extends Controller
         }
 
         $cartKey = $param['cart_key'];
-        $productID = $param['product_id'];
+        $itemID = $param['item_id'];
         $cart = $this->cartService->getCartByKey($cartKey);
         if ($cart['cart_key'] == $cartKey) {
-            $cartItem = $this->cartItemService->getCartItemByProductID($cartKey, $productID);
+            $cartItem = $this->cartItemService->getCartItemByItemID($cartKey, $itemID);
             if ($cartItem) {
-                $this->cartItemService->deleteItemInCart($cartKey, $productID);
+                $this->cartItemService->deleteItemInCart($cartKey, $itemID);
                 return $this->successResponse(null, 'Delete Success');
             } else {
                 return $this->errorResponse('Not found item', null, false, 400);
             }
 
         } else {
-            return $this->errorResponse('The CarKey you provided does not match the Cart Key for this Cart.', null, false, 400);
+            return $this->errorResponse('The CartKey you provided does not match the Cart Key for this Cart.', null, false, 400);
         }
     }
 

@@ -20,9 +20,9 @@ class CartItemService
         $this->cartItemRepository = $cartItemRepository;
     }
 
-    public function getByCartKey($cartKey)
+    public function getItemByCartKey($cartKey)
     {
-        return $this->cartItemRepository->getByCartKey($cartKey);
+        return $this->cartItemRepository->getItemByCartKey($cartKey);
     }
 
     public function deleteByCartKey($cartKey)
@@ -30,14 +30,14 @@ class CartItemService
         return $this->cartItemRepository->deleteByCartKey($cartKey);
     }
 
-    public function getCartItemByProductID($cartKey, $productID)
+    public function getCartItemByItemID($cartKey, $itemID)
     {
-        return $this->cartItemRepository->getCartItemByProductID($cartKey, $productID);
+        return $this->cartItemRepository->getCartItemByItemID($cartKey, $itemID);
     }
 
-    public function update($cartKey, $productID, $quantity, $note, $dishInCombo, $cost)
+    public function update($cartKey, $itemID, $quantity, $note, $dishInCombo, $cost)
     {
-        $item = $this->cartItemRepository->getCartItemByProductID($cartKey, $productID);
+        $item = $this->cartItemRepository->getCartItemByItemID($cartKey, $itemID);
         $item['quantity'] = $quantity;
         if (isset($note)) {
             $item['note'] = $note;
@@ -51,11 +51,11 @@ class CartItemService
         return $item;
     }
 
-    public function addNewItem($cartKey, $productID, $quantity, $note, $dishInCombo, $cost)
+    public function addNewItem($cartKey, $itemID, $quantity, $note, $dishInCombo, $cost)
     {
         $data = [
             'cart_key' => $cartKey,
-            'product_id' => $productID,
+            'item_id' => $itemID,
             'quantity' => $quantity,
             'note' => $note,
             'dish_in_combo' => json_decode($dishInCombo),
@@ -67,8 +67,8 @@ class CartItemService
         return $cartItem;
     }
 
-    public function deleteItemInCart($cartKey, $productID)
+    public function deleteItemInCart($cartKey, $itemID)
     {
-        return $this->cartItemRepository->deleteItemInCart($cartKey, $productID);
+        return $this->cartItemRepository->deleteItemInCart($cartKey, $itemID);
     }
 }

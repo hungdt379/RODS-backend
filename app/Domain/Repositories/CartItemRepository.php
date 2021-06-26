@@ -8,7 +8,7 @@ use App\Domain\Entities\CartItem;
 
 class CartItemRepository
 {
-    public function getByCartKey($cartKey){
+    public function getItemByCartKey($cartKey){
         return CartItem::where('cart_key', $cartKey)->get();
     }
 
@@ -16,8 +16,8 @@ class CartItemRepository
         return CartItem::where('cart_key', $cartKey)->delete();
     }
 
-    public function getCartItemByProductID($cartKey, $productID){
-        return CartItem::where(['cart_key' => $cartKey, 'product_id' => $productID])->first();
+    public function getCartItemByItemID($cartKey, $itemID){
+        return CartItem::where(['cart_key' => $cartKey, 'item_id' => $itemID])->first();
     }
 
     public function update($item){
@@ -28,8 +28,8 @@ class CartItemRepository
         return $cartItem->save();
     }
 
-    public function deleteItemInCart($cartKey, $productID){
-       return CartItem::where(['cart_key' => $cartKey, 'product_id' => $productID])->delete();
+    public function deleteItemInCart($cartKey, $itemID){
+       return CartItem::where(['cart_key' => $cartKey, 'item_id' => $itemID])->delete();
     }
 
 }

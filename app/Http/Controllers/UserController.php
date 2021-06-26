@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 
+use App\Domain\Services\CartService;
 use App\Domain\Services\UserService;
 use App\Traits\ApiResponse;
 use Illuminate\Support\Facades\Validator;
@@ -13,16 +14,19 @@ class UserController extends Controller
     use ApiResponse;
 
     private $userService;
+    private $cartService;
     private $cartController;
 
     /**
      * UserController constructor.
      * @param $userService
+     * @param $cartService
      * @param $cartController
      */
-    public function __construct(UserService $userService,CartController $cartController)
+    public function __construct(UserService $userService,CartService $cartService,CartController $cartController)
     {
         $this->userService = $userService;
+        $this->cartService = $cartService;
         $this->cartController = $cartController;
     }
 
@@ -59,7 +63,7 @@ class UserController extends Controller
     {
         $param = request()->all();
         $table = $this->userService->openTable($param['table_id'], $param['number_of_customer']);
-        $cart = $this->cartController->store($param['table_id']);
+        $cart = $this->cartService->addNewCart($param['table_id']);
         $data =['table' => $table, 'cart' => $cart];
         return $this->successResponse($data, 'Open table successfully');
     }
@@ -77,7 +81,7 @@ class UserController extends Controller
         }
         JWTAuth::setToken($ctoken);
         $this->userService->closeTable($user);
-        $this->cartController->destroy();
+        $this->cartController->deleteCart();
         return $this->successResponse(null, 'Close table successful');
     }
 
