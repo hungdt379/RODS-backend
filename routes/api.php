@@ -60,6 +60,7 @@ Route::group([
         Route::post('table/close', 'UserController@closeTable');
         Route::post('table/update', 'UserController@updateNumberOfCustomer');
         Route::get('table/notifications', 'NotificationController@getNotificationOfEachTable');
+        Route::get('table/notifications/read', 'NotificationController@markAsReadOfWaiter');
         Route::get('table/id', 'UserController@getTableById');
         Route::get('table/order/queue/view', 'QueueOrderController@getQueueOrderByTableID');
         Route::get('table/order/queue/cancel', 'QueueOrderController@cancelQueueOrder');
@@ -72,6 +73,7 @@ Route::group([
     Route::group(['middleware' => 'auth.jwt'], function () {
         Route::get('feedback', 'FeedbackController@getAllFeedback');
         Route::get('notifications', 'NotificationController@getAllNotification');
+        Route::get('notifications/read', 'NotificationController@markAsRead');
     });
 });
 
@@ -80,6 +82,7 @@ Route::group([
 ], function () {
     Route::group(['middleware' => 'auth.jwt'], function () {
         Route::get('notifications', 'NotificationController@getAllNotification');
+        Route::get('notifications/read', 'NotificationController@markAsRead');
     });
 });
 

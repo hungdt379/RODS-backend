@@ -112,4 +112,39 @@ class NotificationController extends Controller
         return $this->successResponseWithPaging($data->items(), 'Success', $data->currentPage(), $param['pageSize'], $data->total());
     }
 
+    public function markAsReadOfWaiter()
+    {
+        $param = request()->all();
+
+        $validator = Validator::make($param, [
+            'table_id' => 'required|alpha_num|max:30'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->errorResponse('Invalid param', null, false, 400);
+        }
+
+        $this->notificationService->markAsRead(Notification::RECEIVER_WAITER, $param['table_id']);
+        return $this->successResponse('', 'Success');
+
+    }
+
+    // for receptionist and kitchen manager
+    public function markAsRead()
+    {
+        $param = request()->all();
+
+        $validator = Validator::make($param, [
+            'receiver' => Rule::in(Notification::RECEIVER_ALL_NOTIFICATION)
+        ]);
+
+        if ($validator->fails()) {
+            return $this->errorResponse('Invalid param', null, false, 400);
+        }
+
+        $this->notificationService->markAsRead($param['receiver'], '');
+        return $this->successResponse('', 'Success');
+
+    }
+
 }

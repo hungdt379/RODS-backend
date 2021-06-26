@@ -23,7 +23,7 @@ class UserController extends Controller
      * @param $cartService
      * @param $cartController
      */
-    public function __construct(UserService $userService,CartService $cartService,CartController $cartController)
+    public function __construct(UserService $userService, CartService $cartService, CartController $cartController)
     {
         $this->userService = $userService;
         $this->cartService = $cartService;
@@ -51,8 +51,8 @@ class UserController extends Controller
 
         $data = $this->userService->getUserById($param['table_id']);
 
-        if ($data == null){
-            return $this->errorResponse('Table is not exist', '', false,404);
+        if ($data == null) {
+            return $this->errorResponse('Table is not exist', '', false, 404);
         }
 
         return $this->successResponse($data, 'Success');
@@ -62,9 +62,21 @@ class UserController extends Controller
     public function openTable()
     {
         $param = request()->all();
+        $validator = Validator::make($param, [
+            'table_id' => 'required|alpha_num|max:30',
+            'number_of_customer' => 'required|integer'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->errorResponse('Invalid params', null, false, 400);
+        }
+
+        if ($param['number_of_customer'] > 8 || $param['number_of_customer'] < 1) {
+            return $this->errorResponse('Number of customer must be greater or equal 1 and less or equal 8', null, false, 400);
+        }
+
         $this->userService->openTable($param['table_id'], $param['number_of_customer']);
         $this->cartService->addNewCart($param['table_id']);
-
         return $this->successResponse(null, 'Open table successfully');
     }
 
