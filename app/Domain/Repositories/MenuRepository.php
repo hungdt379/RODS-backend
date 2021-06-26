@@ -23,9 +23,9 @@ class MenuRepository
     }
 
 
-    public function getComboByID($comboID)
+    public function getItemByID($id)
     {
-        return Menu::where('_id', $comboID)->get();
+        return Menu::where('_id', $id)->get();
 
     }
 

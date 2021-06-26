@@ -62,8 +62,16 @@ class DishInCombo extends Seeder
             'name' => 'Bạch tuộc'
         ]);
         DB::table('dish_in_combo')->insert([
-            'pid' => [$hotpot->_id],
+            'pid' => [$hotpot->_id, $combo3->_id],
             'name' => 'Mì tôm'
+        ]);
+        DB::table('dish_in_combo')->insert([
+            'pid' => [$hotpot->_id, $combo3->_id],
+            'name' => 'Rau'
+        ]);
+        DB::table('dish_in_combo')->insert([
+            'pid' => [$hotpot->_id, $combo3->_id],
+            'name' => 'Đậu'
         ]);
     }
 }

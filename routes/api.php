@@ -41,6 +41,12 @@ Route::group([
         Route::post('order/send', 'QueueOrderController@sendOrder');
         Route::post('call/waiter', 'NotificationController@callWaiter');
         Route::post('call/payment', 'NotificationController@callPayment');
+        Route::post('call/waiter', 'NotificationController@callWaiterNotification');
+        Route::get('cart', 'CartController@show');
+        Route::post('cart/item/add', 'CartController@addProducts');
+        Route::post('cart/item/delete', 'CartController@deleteItemInCart');
+
+
     });
 
 });
@@ -85,6 +91,7 @@ Route::group(['middleware' => 'auth.jwt'], function () {
 });
 
 Route::get('testPDF', 'AuthController@hello');
+
 
 
 

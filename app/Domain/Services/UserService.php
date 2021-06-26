@@ -10,6 +10,7 @@ class UserService
 {
     private $userRepository;
 
+
     public function __construct(UserRepository $userRepository)
     {
         $this->userRepository = $userRepository;
@@ -35,8 +36,9 @@ class UserService
         $updateUser = $this->getUserById($userID);
         $updateUser->is_active = true;
         $updateUser->number_of_customer = (int)$numberOfCustomer;
+        $this->userRepository->update($updateUser);
 
-        return $this->userRepository->update($updateUser);
+        return $updateUser;
     }
 
     public function closeTable($user)
