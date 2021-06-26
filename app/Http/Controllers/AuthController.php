@@ -44,7 +44,7 @@ class AuthController extends Controller
         $params = $request->all();
 
         if (!$token = JWTAuth::attempt($params)) {
-            return $this->errorResponse('Invalid Email or Password', null, false, 401);
+            return $this->errorResponse('Invalid Username or Password', null, false, 401);
         }
 
         if (JWTAuth::user()->role == 't') {
@@ -66,7 +66,7 @@ class AuthController extends Controller
         $params = $request->all();
 
         if (!$token = JWTAuth::attempt($params)) {
-            return $this->errorResponse('Invalid Email or Password', null, false, 401);
+            return $this->errorResponse('Invalid Username or Password', null, false, 401);
         }
 
         if (JWTAuth::user()->is_active != 'true' || JWTAuth::user()->role != 't') {
