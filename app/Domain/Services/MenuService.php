@@ -69,10 +69,10 @@ class MenuService
         return $this->menuRepository->getItemByName($name);
     }
 
-    public function getDetailItemInCart($cartKey, $itemID)
+    public function getDetailItemInCart($tableID, $itemID)
     {
         $item = $this->menuRepository->getItemByID($itemID);
-        $cartItem = $this->cartItemService->getCartItemByItemID($cartKey, $itemID);
+        $cartItem = $this->cartItemService->getCartItemByItemID($tableID, $itemID);
 
         $item[0]['quantity'] = $cartItem['quantity'];
         $item[0]['note'] = $cartItem['note'];

@@ -20,27 +20,29 @@ class CartService
         $this->cartRepository = $cartRepository;
     }
 
-    public function addNewCart($tableID){
+    public function addNewCart($tableID)
+    {
         $data = [
-            'cart_key' => md5(uniqid(rand(), true)),
             'table_id' => isset($tableID) ? $tableID : null,
             'total_cost' => 0
         ];
-
         $cart = new Cart($data);
-        $this->cartRepository->insert($cart);
-        return $cart;
+
+        return $this->cartRepository->insert($cart);
     }
 
-    public function getCartByKey($cartKey){
-        return $this->cartRepository->getCartByKey($cartKey);
+    public function getCartByTableID($tableID)
+    {
+        return $this->cartRepository->getCartByTableID($tableID);
     }
 
-    public function update($cart){
+    public function update($cart)
+    {
         return $this->cartRepository->update($cart);
     }
 
-    public function delete($cart){
+    public function delete($cart)
+    {
         return $this->cartRepository->delete($cart);
     }
 

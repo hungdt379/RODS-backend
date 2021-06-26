@@ -62,10 +62,10 @@ class UserController extends Controller
     public function openTable()
     {
         $param = request()->all();
-        $table = $this->userService->openTable($param['table_id'], $param['number_of_customer']);
-        $cart = $this->cartService->addNewCart($param['table_id']);
-        $data =['table' => $table, 'cart' => $cart];
-        return $this->successResponse($data, 'Open table successfully');
+        $this->userService->openTable($param['table_id'], $param['number_of_customer']);
+        $this->cartService->addNewCart($param['table_id']);
+
+        return $this->successResponse(null, 'Open table successfully');
     }
 
     public function closeTable()
