@@ -49,7 +49,7 @@ class CartController extends Controller
             $listItem = [];
             $totalCost = 0;
             foreach ($cartItem as $item) {
-                $detailItem = $this->menuService->getItemInCart($cartKey, $item['item_id']);
+                $detailItem = $this->menuService->getDetailItemInCart($cartKey, $item['item_id']);
                 array_push($listItem, $detailItem);
                 $totalCost += $item['total_cost'];
             }
