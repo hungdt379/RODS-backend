@@ -12,8 +12,8 @@ class CartRepository
         return $cart->save();
     }
 
-    public function getCartByKey($cartKey){
-        return Cart::where('cart_key', $cartKey)->first();
+    public function getCartByTableID($tableID){
+        return Cart::where('table_id', $tableID)->first();
     }
 
     public function delete($cart){

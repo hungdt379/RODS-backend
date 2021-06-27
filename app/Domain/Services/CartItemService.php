@@ -20,24 +20,24 @@ class CartItemService
         $this->cartItemRepository = $cartItemRepository;
     }
 
-    public function getItemByCartKey($cartKey)
+    public function getCartItemByTableID($tableID)
     {
-        return $this->cartItemRepository->getItemByCartKey($cartKey);
+        return $this->cartItemRepository->getCartItemByTableID($tableID);
     }
 
-    public function deleteByCartKey($cartKey)
+    public function deleteCartItemByTableID($tableID)
     {
-        return $this->cartItemRepository->deleteByCartKey($cartKey);
+        return $this->cartItemRepository->deleteCartItemByTableID($tableID);
     }
 
-    public function getCartItemByItemID($cartKey, $itemID)
+    public function getCartItemByItemID($tableID, $itemID)
     {
-        return $this->cartItemRepository->getCartItemByItemID($cartKey, $itemID);
+        return $this->cartItemRepository->getCartItemByItemID($tableID, $itemID);
     }
 
-    public function update($cartKey, $itemID, $quantity, $note, $dishInCombo, $cost)
+    public function update($tableID, $itemID, $quantity, $note, $dishInCombo, $cost)
     {
-        $item = $this->cartItemRepository->getCartItemByItemID($cartKey, $itemID);
+        $item = $this->cartItemRepository->getCartItemByItemID($tableID, $itemID);
         $item['quantity'] = $quantity;
         if (isset($note)) {
             $item['note'] = $note;
@@ -46,15 +46,14 @@ class CartItemService
             $item['dish_in_combo'] = json_decode($dishInCombo);
         }
         $item['total_cost'] = (int)$cost * (int)$quantity;
-        $this->cartItemRepository->update($item);
 
-        return $item;
+        return $this->cartItemRepository->update($item);;
     }
 
-    public function addNewItem($cartKey, $itemID, $quantity, $note, $dishInCombo, $cost)
+    public function addNewItem($tableID, $itemID, $quantity, $note, $dishInCombo, $cost)
     {
         $data = [
-            'cart_key' => $cartKey,
+            'table_id' => $tableID,
             'item_id' => $itemID,
             'quantity' => $quantity,
             'note' => $note,
@@ -62,13 +61,12 @@ class CartItemService
             'total_cost' => (int)$cost * (int)$quantity
         ];
         $cartItem = new CartItem($data);
-        $this->cartItemRepository->insert($cartItem);
 
-        return $cartItem;
+        return $this->cartItemRepository->insert($cartItem);
     }
 
-    public function deleteItemInCart($cartKey, $itemID)
+    public function deleteItemInCart($tableID, $itemID)
     {
-        return $this->cartItemRepository->deleteItemInCart($cartKey, $itemID);
+        return $this->cartItemRepository->deleteItemInCart($tableID, $itemID);
     }
 }

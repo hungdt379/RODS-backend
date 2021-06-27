@@ -12,6 +12,6 @@ class Cart extends Model
     protected $collection = 'cart';
 
 
-    protected $fillable = ['cart_key','table_id', 'total_cost'];
+    protected $fillable = ['table_id', 'total_cost'];
 
 }

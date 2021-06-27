@@ -9,6 +9,7 @@ use App\Domain\Services\CartService;
 use App\Domain\Services\MenuService;
 use App\Traits\ApiResponse;
 use Illuminate\Support\Facades\Validator;
+use JWTAuth;
 
 class CartController extends Controller
 {
@@ -33,65 +34,37 @@ class CartController extends Controller
 
     public function show()
     {
-        $param = request()->all();
-        $validator = Validator::make($param, [
-            'cart_key' => 'required',
-        ]);
+        $tableID = JWTAuth::user()->_id;
+        $cart = $this->cartService->getCartByTableID($tableID);
 
-        if ($validator->fails()) {
-            return $this->errorResponse($validator->errors(), null, false, 400);
+        $cartItem = $this->cartItemService->getCartItemByTableID($tableID);
+        $listItem = [];
+        $totalCost = 0;
+        foreach ($cartItem as $item) {
+            $detailItem = $this->menuService->getDetailItemInCart($tableID, $item['item_id']);
+            array_push($listItem, $detailItem);
+            $totalCost += $item['total_cost'];
         }
-        $cartKey = $param['cart_key'];
-        $cart = $this->cartService->getCartByKey($cartKey);
-
-        if ($cart['cart_key'] == $cartKey) {
-            $cartItem = $this->cartItemService->getItemByCartKey($cartKey);
-            $listItem = [];
-            $totalCost = 0;
-            foreach ($cartItem as $item) {
-                $detailItem = $this->menuService->getDetailItemInCart($cartKey, $item['item_id']);
-                array_push($listItem, $detailItem);
-                $totalCost += $item['total_cost'];
-            }
-            $cart['total_cost'] = $totalCost;
-            $this->cartService->update($cart);
-            $data = ['cart' => $cart['cart_key'], 'item_in_cart' => $listItem, 'total_cost' => $totalCost];
-            return $this->successResponse($data, 'Success');
-
-        } else {
-            return $this->errorResponse('The CartKey you provided does not match the Cart Key for this Cart.', null, false, 400);
-        }
-
+        $cart['total_cost'] = $totalCost;
+        $this->cartService->update($cart);
+        $data = ['table_id' => $tableID, 'item_in_cart' => $listItem, 'total_cost' => $totalCost];
+        return $this->successResponse($data, 'Success');
     }
 
     public function deleteCart()
     {
-        $param = request()->all();
-        $validator = Validator::make($param, [
-            'cart_key' => 'required',
-        ]);
+        $tableID = JWTAuth::user()->_id;
 
-        if ($validator->fails()) {
-            return $this->errorResponse($validator->errors(), null, false, 400);
-        }
-
-        $cartKey = $param['cart_key'];
-        $cart = $this->cartService->getCartByKey($cartKey);
-        if ($cart['cart_key'] == $cartKey) {
-            $this->cartService->delete($cart);
-            $this->cartItemService->deleteByCartKey($cartKey);
-            return $this->successResponse(null, 'Delete Success');
-        } else {
-            return $this->errorResponse('The CartKey you provided does not match the Cart Key for this Cart.', null, false, 400);
-        }
-
+        $cart = $this->cartService->getCartByTableID($tableID);
+        $this->cartService->delete($cart);
+        $this->cartItemService->deleteCartItemByTableID($tableID);
+        return $this->successResponse(null, 'Delete Success');
     }
 
-    public function addProducts()
+    public function addItems()
     {
         $param = request()->all();
         $validator = Validator::make($param, [
-            'cart_key' => 'required',
             'item_id' => 'required',
             'quantity' => 'required|numeric|min:1|max:10',
             'cost' => 'required|numeric'
@@ -101,58 +74,43 @@ class CartController extends Controller
             return $this->errorResponse($validator->errors(), null, false, 400);
         }
 
-        $cartKey = $param['cart_key'];
+        $tableID = JWTAuth::user()->_id;
         $itemID = $param['item_id'];
         $quantity = $param['quantity'];
         $note = $param['note'];
         $cost = $param['cost'];
         $dishInCombo = isset($param['dish_in_combo']) ? $param['dish_in_combo'] : null;
-        //Check if the CarKey is Valid
-        $cart = $this->cartService->getCartByKey($cartKey);
-        if ($cart['cart_key'] == $cartKey) {
-            //check if the the same product is already in the Cart, if true update the quantity, if not create a new one.
-            $cartItem = $this->cartItemService->getCartItemByItemID($cartKey, $itemID);
-            if ($cartItem) {
-                $cartItem->quantity = $quantity;
-                $data = $this->cartItemService->update($cartKey, $itemID, $quantity, $note, $dishInCombo, $cost);
-                return $this->successResponse($data, 'Update success');
-            } else {
-                $data = $this->cartItemService->addNewItem($cartKey, $itemID, $quantity, $note, $dishInCombo, $cost);
-                return $this->successResponse($data, 'Add item Success');
-            }
+        //check if the the same product is already in the Cart, if true update the quantity, if not create a new one.
+        $cartItem = $this->cartItemService->getCartItemByItemID($tableID, $itemID);
+        if ($cartItem) {
+            $cartItem->quantity = $quantity;
+            $this->cartItemService->update($tableID, $itemID, $quantity, $note, $dishInCombo, $cost);
+            return $this->successResponse(null, 'Update success');
         } else {
-            return $this->errorResponse('The CartKey you provided does not match the Cart Key for this Cart.', null, false, 400);
+            $this->cartItemService->addNewItem($tableID, $itemID, $quantity, $note, $dishInCombo, $cost);
+            return $this->successResponse(null, 'Add item Success');
         }
-
     }
 
     public function deleteItemInCart()
     {
         $param = request()->all();
         $validator = Validator::make($param, [
-            'cart_key' => 'required',
             'item_id' => 'required',
         ]);
-
         if ($validator->fails()) {
             return $this->errorResponse($validator->errors(), null, false, 400);
         }
-
-        $cartKey = $param['cart_key'];
+        $tableID = JWTAuth::user()->_id;
         $itemID = $param['item_id'];
-        $cart = $this->cartService->getCartByKey($cartKey);
-        if ($cart['cart_key'] == $cartKey) {
-            $cartItem = $this->cartItemService->getCartItemByItemID($cartKey, $itemID);
-            if ($cartItem) {
-                $this->cartItemService->deleteItemInCart($cartKey, $itemID);
-                return $this->successResponse(null, 'Delete Success');
-            } else {
-                return $this->errorResponse('Not found item', null, false, 400);
-            }
-
+        $cartItem = $this->cartItemService->getCartItemByItemID($tableID, $itemID);
+        if ($cartItem) {
+            $this->cartItemService->deleteItemInCart($tableID, $itemID);
+            return $this->successResponse(null, 'Delete Success');
         } else {
-            return $this->errorResponse('The CartKey you provided does not match the Cart Key for this Cart.', null, false, 400);
+            return $this->errorResponse('Not found item', null, false, 400);
         }
+
     }
 
 }
