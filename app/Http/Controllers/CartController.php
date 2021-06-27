@@ -61,7 +61,7 @@ class CartController extends Controller
         return $this->successResponse(null, 'Delete Success');
     }
 
-    public function addProducts()
+    public function addItems()
     {
         $param = request()->all();
         $validator = Validator::make($param, [

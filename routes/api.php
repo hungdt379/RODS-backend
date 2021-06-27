@@ -43,7 +43,7 @@ Route::group([
         Route::post('call/payment', 'NotificationController@callPayment');
         Route::post('call/waiter', 'NotificationController@callWaiterNotification');
         Route::get('cart', 'CartController@show');
-        Route::post('cart/item/add', 'CartController@addProducts');
+        Route::post('cart/item/add', 'CartController@addItems');
         Route::post('cart/item/delete', 'CartController@deleteItemInCart');
 
 
