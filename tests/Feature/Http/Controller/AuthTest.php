@@ -111,7 +111,7 @@ class AuthTest extends TestCase
             ->assertStatus(401)
             ->assertExactJson([
                 'status' => false,
-                'message' => 'Invalid Email or Password',
+                'message' => 'Invalid Username or Password',
                 'data' => [],
                 'ts' => time()
             ]);
@@ -132,7 +132,7 @@ class AuthTest extends TestCase
             ->assertStatus(401)
             ->assertExactJson([
                 'status' => false,
-                'message' => 'Invalid Email or Password',
+                'message' => 'Invalid Username or Password',
                 'data' => [],
                 'ts' => time()
             ]);
@@ -152,7 +152,7 @@ class AuthTest extends TestCase
             ->assertStatus(401)
             ->assertExactJson([
                 'status' => false,
-                'message' => 'Invalid Email or Password',
+                'message' => 'Invalid Username or Password',
                 'data' => [],
                 'ts' => time()
             ]);
@@ -172,7 +172,7 @@ class AuthTest extends TestCase
             ->assertStatus(401)
             ->assertExactJson([
                 'status' => false,
-                'message' => 'Invalid Email or Password',
+                'message' => 'Invalid Username or Password',
                 'data' => [],
                 'ts' => time()
             ]);
@@ -192,7 +192,7 @@ class AuthTest extends TestCase
             ->assertStatus(401)
             ->assertExactJson([
                 'status' => false,
-                'message' => 'Invalid Email or Password',
+                'message' => 'Invalid Username or Password',
                 'data' => [],
                 'ts' => time()
             ]);

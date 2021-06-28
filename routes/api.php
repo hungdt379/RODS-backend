@@ -39,7 +39,7 @@ Route::group([
         Route::get('menu/item/detail', 'MenuController@getDetailItem');
         Route::post('feedback', 'FeedbackController@addfeedback');
         Route::post('order/send', 'QueueOrderController@sendOrder');
-        Route::post('call/waiter', 'NotificationController@callWaiter');
+        Route::post('call/waiter', 'NotificationController@callWaiter')->name('callWaiter');
         Route::post('call/payment', 'NotificationController@callPayment');
         Route::get('cart', 'CartController@show');
         Route::post('cart/item/add', 'CartController@addItems');
