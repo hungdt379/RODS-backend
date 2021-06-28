@@ -36,29 +36,23 @@ class CartController extends Controller
     {
         $tableID = JWTAuth::user()->_id;
         $cart = $this->cartService->getCartByTableID($tableID);
-
-        $cartItem = $this->cartItemService->getCartItemByTableID($tableID);
-        $listItem = [];
-        $totalCost = 0;
-        foreach ($cartItem as $item) {
-            $detailItem = $this->menuService->getDetailItemInCart($tableID, $item['item_id']);
-            array_push($listItem, $detailItem);
-            $totalCost += $item['total_cost'];
+        if ($cart) {
+            $cartItem = $this->cartItemService->getCartItemByTableID($tableID);
+            $listItem = [];
+            $totalCost = 0;
+            foreach ($cartItem as $item) {
+                $detailItem = $this->menuService->getDetailItemInCart($tableID, $item['item_id']);
+                array_push($listItem, $detailItem);
+                $totalCost += $item['total_cost'];
+            }
+            $cart['total_cost'] = $totalCost;
+            $this->cartService->update($cart);
+            $data = ['table_id' => $tableID, 'item_in_cart' => $listItem, 'total_cost' => $totalCost];
+            return $this->successResponse($data, 'Success');
+        } else {
+            return $this->errorResponse('Not found cart to show', null, false, 404);
         }
-        $cart['total_cost'] = $totalCost;
-        $this->cartService->update($cart);
-        $data = ['table_id' => $tableID, 'item_in_cart' => $listItem, 'total_cost' => $totalCost];
-        return $this->successResponse($data, 'Success');
-    }
 
-    public function deleteCart()
-    {
-        $tableID = JWTAuth::user()->_id;
-
-        $cart = $this->cartService->getCartByTableID($tableID);
-        $this->cartService->delete($cart);
-        $this->cartItemService->deleteCartItemByTableID($tableID);
-        return $this->successResponse(null, 'Delete Success');
     }
 
     public function addItems()
@@ -71,7 +65,7 @@ class CartController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return $this->errorResponse($validator->errors(), null, false, 400);
+            return $this->errorResponse($validator->errors(), null, false, 404);
         }
 
         $tableID = JWTAuth::user()->_id;
@@ -81,36 +75,38 @@ class CartController extends Controller
         $cost = $param['cost'];
         $dishInCombo = isset($param['dish_in_combo']) ? $param['dish_in_combo'] : null;
         //check if the the same product is already in the Cart, if true update the quantity, if not create a new one.
-        $cartItem = $this->cartItemService->getCartItemByItemID($tableID, $itemID);
-        if ($cartItem) {
-            $cartItem->quantity = $quantity;
-            $this->cartItemService->update($tableID, $itemID, $quantity, $note, $dishInCombo, $cost);
-            return $this->successResponse(null, 'Update success');
+        $cart = $this->cartService->getCartByTableID($tableID);
+        if ($cart) {
+            $cartItem = $this->cartItemService->getCartItemByItemID($tableID, $itemID);
+            if ($cartItem) {
+                $cartItem->quantity = $quantity;
+                $this->cartItemService->update($tableID, $itemID, $quantity, $note, $dishInCombo, $cost);
+                return $this->successResponse(null, 'Update success');
+            } else {
+                $this->cartItemService->addNewItem($tableID, $itemID, $quantity, $note, $dishInCombo, $cost);
+                return $this->successResponse(null, 'Add item Success');
+            }
         } else {
-            $this->cartItemService->addNewItem($tableID, $itemID, $quantity, $note, $dishInCombo, $cost);
-            return $this->successResponse(null, 'Add item Success');
+            return $this->errorResponse('Not found cart to add', null, false, 404);
         }
+
     }
 
     public function deleteItemInCart()
     {
         $param = request()->all();
-        $validator = Validator::make($param, [
-            'item_id' => 'required',
-        ]);
-        if ($validator->fails()) {
-            return $this->errorResponse($validator->errors(), null, false, 400);
-        }
+        $itemID = isset($param['item_id']) ? $param['item_id'] : "";
         $tableID = JWTAuth::user()->_id;
-        $itemID = $param['item_id'];
-        $cartItem = $this->cartItemService->getCartItemByItemID($tableID, $itemID);
-        if ($cartItem) {
-            $this->cartItemService->deleteItemInCart($tableID, $itemID);
-            return $this->successResponse(null, 'Delete Success');
+        if ($itemID == "") {
+            $this->cartItemService->deleteAllItemByTableID($tableID);
         } else {
-            return $this->errorResponse('Not found item', null, false, 400);
+            $cartItem = $this->cartItemService->getListCartItemByItemID($tableID, $itemID)->toArray();
+            if (count($itemID) == count($cartItem)) {
+                $this->cartItemService->deleteItemInCart($tableID, $itemID);
+                return $this->successResponse(null, 'Delete Success');
+            } else
+                return $this->errorResponse('One or more item not found', null, false, 404);
         }
-
     }
 
 }
