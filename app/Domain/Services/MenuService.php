@@ -15,6 +15,7 @@ class MenuService
     private $categoryRepository;
     private $orderRepository;
     private $dishInComboRepository;
+    private $cartItemService;
 
     /**
      * MenuService constructor.
@@ -23,12 +24,13 @@ class MenuService
      * @param $orderRepository
      * @param $dishInComboRepository
      */
-    public function __construct(MenuRepository $menuRepository, CategoryRepository $categoryRepository, OrderRepository $orderRepository, DishInComboRepository $dishInComboRepository)
+    public function __construct(MenuRepository $menuRepository, CategoryRepository $categoryRepository, OrderRepository $orderRepository, DishInComboRepository $dishInComboRepository, CartItemService $cartItemService)
     {
         $this->menuRepository = $menuRepository;
         $this->categoryRepository = $categoryRepository;
         $this->orderRepository = $orderRepository;
         $this->dishInComboRepository = $dishInComboRepository;
+        $this->cartItemService = $cartItemService;
     }
 
 
@@ -41,17 +43,20 @@ class MenuService
             $menu['fast'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getFast()->_id);
         } else {
             if ($checkExistingOrder[0]['combo']['hotpot'] == false) {
-                $menu['combo']['detail'] = $this->menuRepository->getComboByID($checkExistingOrder[0]['combo']['_id']);
+                $menu['combo']['detail'] = $this->menuRepository->getItemByID($checkExistingOrder[0]['combo']['_id']);
                 $menu['combo']['dish_in_combo'] = $this->dishInComboRepository->getDishesByCombo($checkExistingOrder[0]['combo']['_id']);
                 $menu['combo']['detail'][0]['cost'] = 0;
 
             } else {
-                $menu['combo']['detail'] = $this->menuRepository->getComboByID($checkExistingOrder[0]['combo']['_id']);
+                $menu['combo']['detail'] = $this->menuRepository->getItemByID($checkExistingOrder[0]['combo']['_id']);
                 $menu['combo']['dish_in_combo'] = $this->dishInComboRepository->getDishesByCombo($checkExistingOrder[0]['combo']['_id']);
-                $menu['hotpot'] = $this->menuRepository->getHotpot();
+                $menu['hotpot']['detail'] = $this->menuRepository->getHotpot();
+                $menu['hotpot']['dish_in_hotpot'] = $this->dishInComboRepository->getDishesByCombo($menu['hotpot']['detail'][0]['_id']);
                 $menu['combo']['detail'][0]['cost'] = 0;
             }
-
+            if (isset($checkExistingOrder[0]['hotpot'])) {
+                $menu['hotpot']['detail'][0]['cost'] = 0;
+            }
             $menu['drink'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getDink()->_id);
             $menu['fast'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getFast()->_id);
         }
@@ -62,6 +67,21 @@ class MenuService
     public function getItemByName($name)
     {
         return $this->menuRepository->getItemByName($name);
+    }
+
+    public function getDetailItemInCart($tableID, $itemID)
+    {
+        $item = $this->menuRepository->getItemByID($itemID);
+        $cartItem = $this->cartItemService->getCartItemByItemID($tableID, $itemID);
+
+        $item[0]['quantity'] = $cartItem['quantity'];
+        $item[0]['note'] = $cartItem['note'];
+        $item[0]['total_cost'] = $cartItem['total_cost'];
+        if (isset($cartItem['dish_in_combo'])) {
+            $item[0]['dish_in_combo'] = $cartItem['dish_in_combo'];
+        }
+
+        return $item;
     }
 
     public function getDetailItemByID($id)

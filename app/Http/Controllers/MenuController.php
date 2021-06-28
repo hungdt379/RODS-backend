@@ -56,4 +56,13 @@ class MenuController
 
         return $this->successResponse($data, 'Success');
     }
+
+    // day là code của thịnh viết lên trên function này
+    public function searchItem123()
+    {
+        $param = request()->all();
+        $data = $this->menuService->getItemByName($param['q']);
+
+        return $this->successResponse($data, 'Success');
+    }
 }

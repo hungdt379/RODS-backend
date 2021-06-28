@@ -37,6 +37,8 @@ class UserService
         $updateUser->is_active = true;
         $updateUser->number_of_customer = (int)$numberOfCustomer;
         $this->userRepository->update($updateUser);
+
+        return $updateUser;
     }
 
     public function closeTable($user)
