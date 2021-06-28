@@ -10,6 +10,7 @@ class UserService
 {
     private $userRepository;
 
+
     public function __construct(UserRepository $userRepository)
     {
         $this->userRepository = $userRepository;
@@ -35,14 +36,14 @@ class UserService
         $updateUser = $this->getUserById($userID);
         $updateUser->is_active = true;
         $updateUser->number_of_customer = (int)$numberOfCustomer;
-
-        return $this->userRepository->update($updateUser);
+        $this->userRepository->update($updateUser);
     }
 
-    public function deleteRememberToken($user)
+    public function closeTable($user)
     {
         $user['remember_token'] = [];
         $user->is_active = false;
+        $user->number_of_customer = 0;
         return $this->userRepository->update($user);
     }
 

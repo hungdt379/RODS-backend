@@ -197,27 +197,4 @@ class AuthTest extends TestCase
                 'ts' => time()
             ]);
     }
-
-    /** @test */
-    public function logout_TestCase_01()
-    {
-        $data = [
-            'username' => 'TN',
-            'password' => '123'
-        ];
-
-        $token = JWTAuth::attempt($data);
-
-        $response = $this->withHeaders(['Authorization' => 'Bearer ' . $token])
-            ->get(route('logout'));
-
-        $response
-            ->assertStatus(200)
-            ->assertExactJson([
-                'status' => true,
-                'message' => "Logout successfully",
-                'data' => [],
-                'ts' => time()
-            ]);
-    }
 }
