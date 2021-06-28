@@ -36,7 +36,9 @@ class NotificationRepository
 
     public function getNotificationByReceiver($receiver, $pageSize)
     {
-        return Notification::where('receiver', $receiver)->paginate((int)$pageSize);
+        return Notification::where('receiver', $receiver)
+            ->orderBy('ts', 'desc')
+            ->paginate((int)$pageSize);
     }
 
     public function removeReferenceAfterRead($ref)
@@ -48,6 +50,7 @@ class NotificationRepository
     {
         return Notification::where('user_id', $tableID)
             ->where('receiver', Notification::RECEIVER_WAITER)
+            ->orderBy('ts', 'desc')
             ->paginate((int) $pageSize);
     }
 
