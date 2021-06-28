@@ -86,13 +86,12 @@ class CartController extends Controller
     {
         $param = request()->all();
         $itemID = isset($param['item_id']) ? $param['item_id'] : "";
-        $listItemID = array_map('strval', explode(',', $itemID));
         $tableID = JWTAuth::user()->_id;
         if ($itemID == "") {
             $this->cartItemService->deleteAllItemByTableID($tableID);
             return $this->successResponse(null, 'Delete Success');
         } else {
-            foreach ($listItemID as $item) {
+            foreach ($itemID as $item) {
                 $cartItem = $this->cartItemService->getCartItemByItemID($tableID, $item);
                 if ($cartItem) {
                     $this->cartItemService->deleteItemInCart($tableID, $item);
