@@ -111,7 +111,7 @@ class AuthTest extends TestCase
             ->assertStatus(401)
             ->assertExactJson([
                 'status' => false,
-                'message' => 'Invalid Email or Password',
+                'message' => 'Invalid Username or Password',
                 'data' => [],
                 'ts' => time()
             ]);
@@ -132,7 +132,7 @@ class AuthTest extends TestCase
             ->assertStatus(401)
             ->assertExactJson([
                 'status' => false,
-                'message' => 'Invalid Email or Password',
+                'message' => 'Invalid Username or Password',
                 'data' => [],
                 'ts' => time()
             ]);
@@ -152,7 +152,7 @@ class AuthTest extends TestCase
             ->assertStatus(401)
             ->assertExactJson([
                 'status' => false,
-                'message' => 'Invalid Email or Password',
+                'message' => 'Invalid Username or Password',
                 'data' => [],
                 'ts' => time()
             ]);
@@ -172,7 +172,7 @@ class AuthTest extends TestCase
             ->assertStatus(401)
             ->assertExactJson([
                 'status' => false,
-                'message' => 'Invalid Email or Password',
+                'message' => 'Invalid Username or Password',
                 'data' => [],
                 'ts' => time()
             ]);
@@ -192,30 +192,7 @@ class AuthTest extends TestCase
             ->assertStatus(401)
             ->assertExactJson([
                 'status' => false,
-                'message' => 'Invalid Email or Password',
-                'data' => [],
-                'ts' => time()
-            ]);
-    }
-
-    /** @test */
-    public function logout_TestCase_01()
-    {
-        $data = [
-            'username' => 'TN',
-            'password' => '123'
-        ];
-
-        $token = JWTAuth::attempt($data);
-
-        $response = $this->withHeaders(['Authorization' => 'Bearer ' . $token])
-            ->get(route('logout'));
-
-        $response
-            ->assertStatus(200)
-            ->assertExactJson([
-                'status' => true,
-                'message' => "Logout successfully",
+                'message' => 'Invalid Username or Password',
                 'data' => [],
                 'ts' => time()
             ]);

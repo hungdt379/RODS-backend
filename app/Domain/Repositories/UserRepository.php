@@ -4,7 +4,6 @@
 namespace App\Domain\Repositories;
 
 use App\Domain\Entities\User;
-use Illuminate\Support\Facades\DB;
 
 class UserRepository
 {
