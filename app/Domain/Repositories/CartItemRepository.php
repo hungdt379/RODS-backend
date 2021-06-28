@@ -29,9 +29,10 @@ class CartItemRepository
     }
 
     public function deleteItemInCart($tableID, $itemID){
-       return CartItem::where(['table_id' => $tableID, 'item_id' => $itemID])->delete();
+       return CartItem::where('table_id', $tableID)->whereIn('item_id',$itemID)->delete();
     }
 
-
-
+    public function getListCartItemByItemID($tableID, $itemID){
+        return CartItem::where('table_id', $tableID)->whereIn('item_id',$itemID)->get();
+    }
 }
