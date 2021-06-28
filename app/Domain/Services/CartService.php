@@ -10,15 +10,19 @@ use App\Domain\Repositories\CartRepository;
 class CartService
 {
     private $cartRepository;
+    private $cartItemService;
 
     /**
      * CartService constructor.
      * @param $cartRepository
+     * @param $cartItemService
      */
-    public function __construct(CartRepository $cartRepository)
+    public function __construct(CartRepository $cartRepository, CartItemService $cartItemService)
     {
         $this->cartRepository = $cartRepository;
+        $this->cartItemService = $cartItemService;
     }
+
 
     public function addNewCart($tableID)
     {
@@ -41,8 +45,11 @@ class CartService
         return $this->cartRepository->update($cart);
     }
 
-    public function delete($cart)
+    public function delete($tableID)
     {
+        $cart = $this->getCartByTableID($tableID);
+        $this->cartItemService->deleteAllItemByTableID($tableID);
+
         return $this->cartRepository->delete($cart);
     }
 

@@ -12,7 +12,7 @@ class CartItemRepository
         return CartItem::where('table_id', $tableID)->get();
     }
 
-    public function deleteCartItemByTableID($tableID){
+    public function deleteAllItemByTableID($tableID){
         return CartItem::where('table_id', $tableID)->delete();
     }
 
@@ -31,5 +31,7 @@ class CartItemRepository
     public function deleteItemInCart($tableID, $itemID){
        return CartItem::where(['table_id' => $tableID, 'item_id' => $itemID])->delete();
     }
+
+
 
 }

@@ -51,16 +51,6 @@ class CartController extends Controller
         return $this->successResponse($data, 'Success');
     }
 
-    public function deleteCart()
-    {
-        $tableID = JWTAuth::user()->_id;
-
-        $cart = $this->cartService->getCartByTableID($tableID);
-        $this->cartService->delete($cart);
-        $this->cartItemService->deleteCartItemByTableID($tableID);
-        return $this->successResponse(null, 'Delete Success');
-    }
-
     public function addItems()
     {
         $param = request()->all();
@@ -95,22 +85,24 @@ class CartController extends Controller
     public function deleteItemInCart()
     {
         $param = request()->all();
-        $validator = Validator::make($param, [
-            'item_id' => 'required',
-        ]);
-        if ($validator->fails()) {
-            return $this->errorResponse($validator->errors(), null, false, 400);
-        }
+        $itemID = isset($param['item_id']) ? $param['item_id'] : "";
+        $listItemID = array_map('strval', explode(',', $itemID));
         $tableID = JWTAuth::user()->_id;
-        $itemID = $param['item_id'];
-        $cartItem = $this->cartItemService->getCartItemByItemID($tableID, $itemID);
-        if ($cartItem) {
-            $this->cartItemService->deleteItemInCart($tableID, $itemID);
+        if ($itemID == "") {
+            $this->cartItemService->deleteAllItemByTableID($tableID);
             return $this->successResponse(null, 'Delete Success');
         } else {
-            return $this->errorResponse('Not found item', null, false, 400);
+            foreach ($listItemID as $item) {
+                $cartItem = $this->cartItemService->getCartItemByItemID($tableID, $item);
+                if ($cartItem) {
+                    $this->cartItemService->deleteItemInCart($tableID, $item);
+                } else {
+                    $strError = 'Not found item by id : ' . $item;
+                    return $this->errorResponse($strError, null, false, 400);
+                }
+            }
         }
-
+        return $this->successResponse(null, 'Delete Success');;
     }
 
 }

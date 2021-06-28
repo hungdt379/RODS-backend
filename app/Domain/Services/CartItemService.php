@@ -25,9 +25,9 @@ class CartItemService
         return $this->cartItemRepository->getCartItemByTableID($tableID);
     }
 
-    public function deleteCartItemByTableID($tableID)
+    public function deleteAllItemByTableID($tableID)
     {
-        return $this->cartItemRepository->deleteCartItemByTableID($tableID);
+        return $this->cartItemRepository->deleteAllItemByTableID($tableID);
     }
 
     public function getCartItemByItemID($tableID, $itemID)

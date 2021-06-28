@@ -93,7 +93,7 @@ class UserController extends Controller
         }
         JWTAuth::setToken($ctoken);
         $this->userService->closeTable($user);
-        $this->cartController->deleteCart();
+        $this->cartService->delete($param['table_id']);
         return $this->successResponse(null, 'Close table successful');
     }
 
