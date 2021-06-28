@@ -50,7 +50,7 @@ class CartController extends Controller
             $data = ['table_id' => $tableID, 'item_in_cart' => $listItem, 'total_cost' => $totalCost];
             return $this->successResponse($data, 'Success');
         } else {
-            return $this->errorResponse('Not found cart to show', null, false, 400);
+            return $this->errorResponse('Not found cart to show', null, false, 404);
         }
 
     }
@@ -65,7 +65,7 @@ class CartController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return $this->errorResponse($validator->errors(), null, false, 400);
+            return $this->errorResponse($validator->errors(), null, false, 404);
         }
 
         $tableID = JWTAuth::user()->_id;
@@ -87,7 +87,7 @@ class CartController extends Controller
                 return $this->successResponse(null, 'Add item Success');
             }
         } else {
-            return $this->errorResponse('Not found cart to add', null, false, 400);
+            return $this->errorResponse('Not found cart to add', null, false, 404);
         }
 
     }
@@ -105,7 +105,7 @@ class CartController extends Controller
                 $this->cartItemService->deleteItemInCart($tableID, $itemID);
                 return $this->successResponse(null, 'Delete Success');
             } else
-                return $this->errorResponse('One or more item not found', null, false, 400);
+                return $this->errorResponse('One or more item not found', null, false, 404);
         }
     }
 
