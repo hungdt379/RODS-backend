@@ -43,7 +43,7 @@ class CartItemService
             $item['note'] = $note;
         }
         if (isset($dishInCombo)) {
-            $item['dish_in_combo'] = json_decode($dishInCombo);
+            $item['dish_in_combo'] = $dishInCombo;
         }
         $item['total_cost'] = (int)$cost * (int)$quantity;
 
@@ -57,7 +57,7 @@ class CartItemService
             'item_id' => $itemID,
             'quantity' => $quantity,
             'note' => $note,
-            'dish_in_combo' => json_decode($dishInCombo),
+            'dish_in_combo' => $dishInCombo,
             'total_cost' => (int)$cost * (int)$quantity
         ];
         $cartItem = new CartItem($data);
