@@ -25,7 +25,7 @@ class MenuRepository
 
     public function getItemByID($id)
     {
-        return Menu::where('_id', $id)->get();
+        return Menu::where('_id', $id)->first();
 
     }
 

@@ -6,47 +6,64 @@ namespace App\Domain\Services;
 
 use App\Domain\Repositories\QueueOrderRepository;
 use App\Domain\Entities\QueueOrder;
+use JWTAuth;
 
 class QueueOrderService
 {
     private $queueOrderRepository;
+    private $cartService;
+    private $cartItemService;
+    private $menuService;
 
     /**
      * QueueOrderService constructor.
-     * @param $queueOrderRepository
+     * @param QueueOrderRepository $queueOrderRepository
+     * @param CartService $cartService
+     * @param CartItemService $cartItemService
+     * @param MenuService $menuService
      */
-    public function __construct(QueueOrderRepository $queueOrderRepository)
+    public function __construct(QueueOrderRepository $queueOrderRepository, CartService $cartService, CartItemService $cartItemService, MenuService $menuService)
     {
         $this->queueOrderRepository = $queueOrderRepository;
+        $this->cartService = $cartService;
+        $this->cartItemService = $cartItemService;
+        $this->menuService = $menuService;
     }
+
 
     public function checkExistQueueOrderInTable($tableID)
     {
-        $queueOrder = $this->getQueueOrderByTableID($tableID)->toArray();
-        if ($queueOrder == []) {
+        $queueOrder = $this->getQueueOrderByTableID($tableID);
+        if (!$queueOrder) {
             return false;
         }
         return true;
     }
 
-    public function insertToQueueOrder($param)
+    public function insertToQueueOrder()
     {
-        $queueOrder = new QueueOrder();
+        $table = JWTAuth::user();
+        $tableID = $table->_id;
+        $tableName = $table->full_name;
+        $numberOfCustomer = $table->number_of_customer;
 
-        $queueOrder->number_of_customer = $param['number_of_customer'];
-        $queueOrder->table_id = $param['table_id'];
-        $queueOrder->table_name = $param['table_name'];
-        $queueOrder->status = $param['status'];
-        if(isset($param['combo'])){
-            $queueOrder->combo = json_decode($param['combo']);
+        $cart = $this->cartService->getCartByTableID($tableID);
+        $cartItem = $this->cartItemService->getCartItemByTableID($tableID)->toArray();
+
+        $item = [];
+        foreach ($cartItem as $value) {
+            $detailItem = $this->menuService->getItemByID($value['item_id']);
+            $value['detail_item'] = $detailItem->toArray();
+            array_push($item, $value);
         }
-        if(isset($param['side_dish_drink'])){
-            $queueOrder->side_dish_drink = json_decode($param['side_dish_drink']);
-        }
-        if(isset($param['hotpot'])){
-            $queueOrder->hotpot = json_decode($param['hotpot']);
-        }
-        $queueOrder->total_cost = $param['total_cost'];
+
+        $queueOrder = new QueueOrder();
+        $queueOrder->table_id = $tableID;
+        $queueOrder->table_name = $tableName;
+        $queueOrder->number_of_customer = $numberOfCustomer;
+        $queueOrder->status = QueueOrder::QUEUE_ORDER_STATUS_QUEUED;
+        $queueOrder->item = $item;
+        $queueOrder->total_cost = $cart['total_cost'];
         $queueOrder->ts = time();
 
         return $this->queueOrderRepository->insert($queueOrder);
@@ -60,5 +77,10 @@ class QueueOrderService
     public function delete($id)
     {
         return $this->queueOrderRepository->delete($id);
+    }
+
+    public function update($queueOrder)
+    {
+        return $this->queueOrderRepository->update($queueOrder);
     }
 }

@@ -62,7 +62,7 @@ Route::group([
         Route::get('table/notifications/read', 'NotificationController@markAsReadOfWaiter');
         Route::get('table/id', 'UserController@getTableById');
         Route::get('table/order/queue/view', 'QueueOrderController@getQueueOrderByTableID');
-        Route::get('table/order/queue/cancel', 'QueueOrderController@cancelQueueOrder');
+        Route::post('table/order/queue/cancel', 'QueueOrderController@cancelQueueOrder');
     });
 });
 
