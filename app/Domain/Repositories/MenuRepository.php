@@ -31,7 +31,7 @@ class MenuRepository
 
     public function getItemByName($name)
     {
-        return Menu::where('name', 'LIKE', '%' . $name . '%')->get();
+        return Menu::whereRaw(array('$text'=>array('$search'=> $name)))->get();
     }
 
     public function getDetailItemByID($id)
