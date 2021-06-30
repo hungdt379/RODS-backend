@@ -12,12 +12,8 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         //TODO: can change Role permission to using laravel packages
-        $this->call(UsersSeeder::class);
-        $this->call(Category::class);
-        $this->call(DishInCombo::class);
-        $this->call(Feedback::class);
-        $this->call(Menu::class);
-        $this->call(Order::class);
-        $this->call(QueueOrder::class);
+        $this->call(SearchCombo129::class);
+        $this->call(SearchCombo169::class);
+        $this->call(SearchCombo209::class);
     }
 }

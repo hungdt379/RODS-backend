@@ -12,6 +12,6 @@ class Feedback extends Model
     protected $collection = 'feedback';
 
     protected $fillable = [
-        '_id', 'rate_service', 'rate_dish', 'content'
+        '_id', 'rate_service', 'rate_dish', 'content', 'ts'
     ];
 }

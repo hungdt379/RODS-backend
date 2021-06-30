@@ -52,7 +52,15 @@ class MenuController
     public function searchItem()
     {
         $param = request()->all();
-        $data = $this->menuService->getItemByName($param['q']);
+        if ($param['q'] == null){
+            return $this->errorResponse('Not found items', null, false, 404);
+        }
+
+        $data = $this->menuService->getItemByName($param['q'], JWTAuth::user()->_id);
+
+        if (sizeof($data) == 0 ){
+            return $this->errorResponse('Not found items', null, false, 404);
+        }
 
         return $this->successResponse($data, 'Success');
     }
