@@ -33,54 +33,49 @@ class MenuRepository
 
     public function getItemByName($name)
     {
-        return Menu::whereRaw(array('$text'=>array('$search'=> $name)))
-                    ->Where('name', 'not like', 'Lẩu')->get();
+        return Menu::whereRaw(array('$text' => array('$search' => $name)))
+            ->Where('name', 'not like', 'Lẩu')->get();
     }
 
     public function searchCombo129($name)
     {
-        return SearchCombo129K::whereRaw(array('$text'=>array('$search'=>$name)))->get();
+        return SearchCombo129K::whereRaw(array('$text' => array('$search' => $name)))->get();
     }
 
     public function searchCombo169($name)
     {
-        return SearchCombo169K::whereRaw(array('$text'=>array('$search'=>$name)))->get();
+        return SearchCombo169K::whereRaw(array('$text' => array('$search' => $name)))->get();
     }
 
     public function searchCombo209($name)
     {
-        return SearchCombo209K::whereRaw(array('$text'=>array('$search'=>$name)))->get();
+        return SearchCombo209K::whereRaw(array('$text' => array('$search' => $name)))->get();
     }
 
-    public function getDetailItemByID($id)
+    public function getDetailItemByID($itemID)
     {
-        return Menu::raw(function ($collection) use ($id) {
-            return $collection->aggregate(
+        return Menu::raw(function ($collection) use ($itemID) {
+            return $collection->aggregate([
                 [
-                    [
-                        '$addFields' => [
-                            'category_id' => ['$toObjectId' => '$category_id'],
-                            '_id' => ['$toString' => '$_id'],
-                        ]
-                    ],
+                    '$addFields' => [
+                        '_id' => ['$toString' => '$_id']
+                    ]
+                ],
+                [
+                    '$match' => [
+                        '_id' => $itemID
+                    ]
+                ],
+                [
+                    '$lookup' => [
+                        'as' => 'dish_in_combo',
+                        'from' => 'dish_in_combo',
+                        'foreignField' => 'pid',
+                        'localField' => '_id'
+                    ]
+                ]
 
-                    ['$match' => ['_id' => $id]],
-
-                    [
-                        '$lookup' => [
-                            'as' => 'category',
-                            'from' => 'category',
-                            'foreignField' => '_id',
-                            'localField' => 'category_id'
-                        ]
-                    ],
-
-                    ['$unwind' => '$category'],
-
-                ]);
-
+            ]);
         });
     }
-
-
 }

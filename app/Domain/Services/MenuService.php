@@ -99,19 +99,9 @@ class MenuService
         return $item;
     }
 
-    public function getDetailItemByID($id)
+    public function getDetailItemByID($itemID)
     {
-        return $this->menuRepository->getDetailItemByID($id);
-    }
-
-    public function isCombo($id)
-    {
-        $item = $this->getDetailItemByID($id);
-
-        if ($item[0]['category']['name'] == 'combo') {
-            return true;
-        }
-        return false;
+        return $this->menuRepository->getDetailItemByID($itemID);
     }
 
     public function getItemByID($itemID){
