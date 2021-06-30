@@ -17,9 +17,7 @@ class QueueOrder extends Model
         '_id',
         'number_of_customer', 'table_id',
         'table_name', 'status',
-        'combo',
-        'extra_combo',
-        'side_dish_drink',
+        'item',
         'total_cost',
         'ts'
     ];

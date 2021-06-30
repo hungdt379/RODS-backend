@@ -74,11 +74,11 @@ class MenuService
         $item = $this->menuRepository->getItemByID($itemID);
         $cartItem = $this->cartItemService->getCartItemByItemID($tableID, $itemID);
 
-        $item[0]['quantity'] = $cartItem['quantity'];
-        $item[0]['note'] = $cartItem['note'];
-        $item[0]['total_cost'] = $cartItem['total_cost'];
+        $item['quantity'] = $cartItem['quantity'];
+        $item['note'] = $cartItem['note'];
+        $item['total_cost'] = $cartItem['total_cost'];
         if (isset($cartItem['dish_in_combo'])) {
-            $item[0]['dish_in_combo'] = $cartItem['dish_in_combo'];
+            $item['dish_in_combo'] = $cartItem['dish_in_combo'];
         }
 
         return $item;
@@ -97,6 +97,10 @@ class MenuService
             return true;
         }
         return false;
+    }
+
+    public function getItemByID($itemID){
+        return $this->menuRepository->getItemByID($itemID);
     }
 
 }

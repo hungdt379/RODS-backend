@@ -6,6 +6,7 @@ namespace App\Domain\Repositories;
 
 use App\Domain\Entities\QueueOrder;
 
+
 class QueueOrderRepository
 {
 
@@ -17,11 +18,15 @@ class QueueOrderRepository
     public function getQueueOrderByTableID($tableID)
     {
         return QueueOrder::where([['status', QueueOrder::QUEUE_ORDER_STATUS_QUEUED], ['table_id', $tableID]])
-            ->get();
+            ->first();
     }
 
     public function delete($id)
     {
         return QueueOrder::where('_id', $id)->delete();
+    }
+
+    public function update($queueOrder){
+        return $queueOrder->update();
     }
 }
