@@ -3,7 +3,6 @@
 use Illuminate\Database\Seeder;
 use App\Domain\Entities\Menu;
 use App\Domain\Entities\Category;
-use App\Domain\Entities\SearchCombo129K;
 
 class SearchCombo129 extends Seeder
 {
@@ -23,7 +22,7 @@ class SearchCombo129 extends Seeder
                     ->orWhere('category_id', $fastFood->_id)->get();
 
         foreach ($menu as $x){
-            $searchCombo129 = new SearchCombo129k();
+            $searchCombo129 = new \App\Domain\Entities\SearchCombo129K();
             $searchCombo129->_id = $x->_id;
             $searchCombo129->name = $x->name;
             $searchCombo129->cost = $x->cost;
