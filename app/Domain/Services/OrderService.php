@@ -23,7 +23,7 @@ class OrderService
     }
 
     public function getConfirmOrderByTableID($tableID){
-        return $this->orderRepository->checkExistingOrderInTable($tableID);
+        return $this->orderRepository->getConfirmOrder($tableID);
     }
 
     public function AddNewConfirmOrder($queueOrder){

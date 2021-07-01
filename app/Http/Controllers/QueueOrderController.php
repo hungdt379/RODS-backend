@@ -51,7 +51,7 @@ class QueueOrderController extends Controller
             if (!$check) {
                 $data = $this->queueOrderService->insertToQueueOrder();
                 $this->cartItemService->deleteAllItemByTableID($tableID);
-//                $this->notificationService->notification(null, Notification::TITLE_SEND_ORDER_VN, Notification::TITLE_SEND_ORDER_EN, $user, $re);
+                $this->notificationService->notification(null, Notification::TITLE_SEND_ORDER_VN, Notification::TITLE_SEND_ORDER_EN, $user, $re);
                 return $this->successResponse($data, 'Send order success');
             } else {
                 return $this->errorResponse('Table exist queue order', null, false, 405);
@@ -114,6 +114,7 @@ class QueueOrderController extends Controller
         }else{
             $this->orderService->MergeOrder($queueOrder, $confirmOrder);
         }
+        $this->queueOrderService->delete($queueOrder['_id']);
 
         return $this->successResponse(null, 'Confirm Success');
     }
