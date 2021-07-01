@@ -86,12 +86,12 @@ class QueueOrderController extends Controller
     {
         $param = request()->all();
         $validator = Validator::make($param, [
-            'table_id' => 'required'
+            '_id' => 'required'
         ]);
         if ($validator->fails()) {
             return $this->errorResponse($validator->errors(), null, false, 404);
         }
-        $this->queueOrderService->delete($param['id']);
+        $this->queueOrderService->delete($param['_id']);
 
         return $this->successResponse(null, 'Delete Success');
     }
