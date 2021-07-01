@@ -6,6 +6,7 @@ use App\Domain\Entities\Notification;
 use App\Domain\Services\CartItemService;
 use App\Domain\Services\MenuService;
 use App\Domain\Services\NotificationService;
+use App\Domain\Services\OrderService;
 use App\Domain\Services\QueueOrderService;
 use App\Traits\ApiResponse;
 use JWTAuth;
@@ -16,6 +17,7 @@ class QueueOrderController extends Controller
     use ApiResponse;
 
     private $queueOrderService;
+    private $orderService;
     private $menuService;
     private $cartItemService;
     private $notificationService;
@@ -26,13 +28,15 @@ class QueueOrderController extends Controller
      * @param MenuService $menuService
      * @param CartItemService $cartItemService
      * @param NotificationService $notificationService
+     * @param OrderService $orderService
      */
-    public function __construct(QueueOrderService $queueOrderService, MenuService $menuService, CartItemService $cartItemService, NotificationService $notificationService)
+    public function __construct(QueueOrderService $queueOrderService, MenuService $menuService, CartItemService $cartItemService, NotificationService $notificationService, OrderService $orderService)
     {
         $this->queueOrderService = $queueOrderService;
         $this->menuService = $menuService;
         $this->cartItemService = $cartItemService;
         $this->notificationService = $notificationService;
+        $this->orderService = $orderService;
     }
 
 
@@ -92,5 +96,27 @@ class QueueOrderController extends Controller
         return $this->successResponse(null, 'Delete Success');
     }
 
+    public function confirmQueueOrder()
+    {
+        $param = request()->all();
+        $validator = Validator::make($param, [
+            'table_id' => 'required'
+        ]);
+        if ($validator->fails()) {
+            return $this->errorResponse($validator->errors(), null, false, 404);
+        }
+
+        $tableID = $param['table_id'];
+        $confirmOrder = $this->orderService->getConfirmOrderByTableID($tableID);
+        $queueOrder = $this->queueOrderService->getQueueOrderByTableID($tableID);
+        if(!$confirmOrder){
+            $this->orderService->addNewConfirmOrder($queueOrder);
+        }else{
+            $this->orderService->mergeOrder($queueOrder, $confirmOrder);
+        }
+        $this->queueOrderService->delete($queueOrder['_id']);
+
+        return $this->successResponse(null, 'Confirm Success');
+    }
 
 }

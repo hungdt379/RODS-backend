@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 
 use App\Domain\Services\CartItemService;
 use App\Domain\Services\CartService;
+use App\Domain\Services\CategoryService;
 use App\Domain\Services\MenuService;
 use App\Traits\ApiResponse;
 use Illuminate\Support\Facades\Validator;
@@ -18,18 +19,21 @@ class CartController extends Controller
     private $cartService;
     private $cartItemService;
     private $menuService;
+    private $categoryService;
 
     /**
      * CartController constructor.
-     * @param $cartService
-     * @param $cartItemService
-     * @param $menuService
+     * @param CartService $cartService
+     * @param CartItemService $cartItemService
+     * @param MenuService $menuService
+     * @param CategoryService $categoryService
      */
-    public function __construct(CartService $cartService, CartItemService $cartItemService, MenuService $menuService)
+    public function __construct(CartService $cartService, CartItemService $cartItemService, MenuService $menuService, CategoryService $categoryService)
     {
         $this->cartService = $cartService;
         $this->cartItemService = $cartItemService;
         $this->menuService = $menuService;
+        $this->categoryService = $categoryService;
     }
 
     public function show()
@@ -60,7 +64,7 @@ class CartController extends Controller
         $param = request()->all();
         $validator = Validator::make($param, [
             'item_id' => 'required',
-            'quantity' => 'required|numeric|min:1|max:10',
+            'quantity' => 'required|numeric|min:0|max:10',
             'cost' => 'required|numeric'
         ]);
 
@@ -71,6 +75,11 @@ class CartController extends Controller
         $tableID = JWTAuth::user()->_id;
         $itemID = $param['item_id'];
         $quantity = $param['quantity'];
+        $item = $this->menuService->getItemByID($itemID);
+        $category = $this->categoryService->getComboCategory();
+        if($item['category_id']==$category['_id']){
+            $quantity = JWTAuth::user()->number_of_customer;
+        }
         $note = $param['note'];
         $cost = $param['cost'];
         $dishInCombo = isset($param['dish_in_combo']) ? $param['dish_in_combo'] : null;
@@ -89,7 +98,6 @@ class CartController extends Controller
         } else {
             return $this->errorResponse('Not found cart to add', null, false, 404);
         }
-
     }
 
     public function deleteItemInCart()

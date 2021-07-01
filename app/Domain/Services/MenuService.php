@@ -9,6 +9,7 @@ use App\Domain\Repositories\CategoryRepository;
 use App\Domain\Repositories\DishInComboRepository;
 use App\Domain\Repositories\MenuRepository;
 use App\Domain\Repositories\OrderRepository;
+use JWTAuth;
 
 class MenuService
 {
@@ -37,27 +38,36 @@ class MenuService
 
     public function getMenu($tableID)
     {
-        $checkExistingOrder = $this->orderRepository->checkExistingOrderInTable($tableID)->toArray();
-        if (($checkExistingOrder) == []) {
+        $confirmOrder = $this->orderRepository->getConfirmOrder($tableID);
+        $combo = null;
+        if (!$confirmOrder) {
             $menu['combo'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getCombo()->_id);
             $menu['drink'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getDink()->_id);
             $menu['fast'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getFast()->_id);
         } else {
-            if ($checkExistingOrder[0]['combo']['hotpot'] == false) {
-                $menu['combo']['detail'] = $this->menuRepository->getItemByID($checkExistingOrder[0]['combo']['_id']);
-                $menu['combo']['dish_in_combo'] = $this->dishInComboRepository->getDishesByCombo($checkExistingOrder[0]['combo']['_id']);
+            foreach ($confirmOrder['item'] as $value) {
+                if (strpos($value['detail_item']['name'], 'Combo') !== false) {
+                    $combo = $value['detail_item'];
+                }
+            }
+            if ($combo['hotpot'] == false) {
+                $menu['combo']['detail'] = $this->menuRepository->getItemByID($combo['_id']);
+                $menu['combo']['dish_in_combo'] = $this->dishInComboRepository->getDishesByCombo($combo['_id']);
                 $menu['combo']['detail'][0]['cost'] = 0;
 
             } else {
-                $menu['combo']['detail'] = $this->menuRepository->getItemByID($checkExistingOrder[0]['combo']['_id']);
-                $menu['combo']['dish_in_combo'] = $this->dishInComboRepository->getDishesByCombo($checkExistingOrder[0]['combo']['_id']);
+                $menu['combo']['detail'] = $this->menuRepository->getItemByID($combo['_id']);
+                $menu['combo']['dish_in_combo'] = $this->dishInComboRepository->getDishesByCombo($combo['_id']);
                 $menu['hotpot']['detail'] = $this->menuRepository->getHotpot();
                 $menu['hotpot']['dish_in_hotpot'] = $this->dishInComboRepository->getDishesByCombo($menu['hotpot']['detail'][0]['_id']);
-                $menu['combo']['detail'][0]['cost'] = 0;
+                $menu['combo']['detail']['cost'] = 0;
             }
-            if (isset($checkExistingOrder[0]['hotpot'])) {
-                $menu['hotpot']['detail'][0]['cost'] = 0;
+            foreach ($confirmOrder['item'] as $value) {
+                if (strpos($value['detail_item']['name'], 'Lẩu') !== false) {
+                    $menu['hotpot']['detail'][0]['cost'] = 0;
+                }
             }
+
             $menu['drink'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getDink()->_id);
             $menu['fast'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getFast()->_id);
         }
@@ -74,9 +84,9 @@ class MenuService
         } else {
             if ($checkExistingOrder[0]['combo']['name'] == Menu::COMBO_129) {
                 $resultSearch = $this->menuRepository->searchCombo129($name);
-            }else if ($checkExistingOrder[0]['combo']['name'] == Menu::COMBO_169){
+            } else if ($checkExistingOrder[0]['combo']['name'] == Menu::COMBO_169) {
                 $resultSearch = $this->menuRepository->searchCombo169($name);
-            }else if ($checkExistingOrder[0]['combo']['name'] == Menu::COMBO_209){
+            } else if ($checkExistingOrder[0]['combo']['name'] == Menu::COMBO_209) {
                 $resultSearch = $this->menuRepository->searchCombo169($name);
             }
         }
@@ -101,10 +111,34 @@ class MenuService
 
     public function getDetailItemByID($itemID)
     {
-        return $this->menuRepository->getDetailItemByID($itemID);
+        $tableID = JWTAuth::user()->_id;
+        $cartItem = $this->cartItemService->getCartItemByTableID($tableID)->toArray();
+        $item = $this->menuRepository->getDetailItemByID($itemID);
+
+        foreach ($cartItem as $value) {
+            if ($item[0]['_id'] == $value['item_id']) {
+                $item[0]['quantity'] = $value['quantity'];
+                if ($value['dish_in_combo'] == null) {
+                    $value['dish_in_combo'] = [];
+                } else {
+                    $dishInCombo = $item[0]['dish_in_combo'];
+                    $length = count($value['dish_in_combo']);
+                    for ($i = 0; $i < $length; $i++) {
+                        for ($j = 0; $j < count($dishInCombo); $j++) {
+                            if ($value['dish_in_combo'][$i] == $dishInCombo[$j]['name']) {
+                                $dishInCombo[$j]['is_selected'] = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return $item;
     }
 
-    public function getItemByID($itemID){
+    public function getItemByID($itemID)
+    {
         return $this->menuRepository->getItemByID($itemID);
     }
 

@@ -63,6 +63,7 @@ Route::group([
         Route::get('table/id', 'UserController@getTableById');
         Route::get('table/order/queue/view', 'QueueOrderController@getQueueOrderByTableID');
         Route::post('table/order/queue/cancel', 'QueueOrderController@cancelQueueOrder');
+        Route::post('table/order/queue/confirm', 'QueueOrderController@confirmQueueOrder');
     });
 });
 
