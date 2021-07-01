@@ -23,4 +23,7 @@ class CategoryService
         return $this->categoryRepository->getAllCategory();
     }
 
+    public function getComboCategory(){
+        return $this->categoryRepository->getCombo();
+    }
 }

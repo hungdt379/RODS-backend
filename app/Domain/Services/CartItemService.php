@@ -70,7 +70,8 @@ class CartItemService
         return $this->cartItemRepository->deleteItemInCart($tableID, $itemID);
     }
 
-    public function getListCartItemByItemID($tableID, $itemID){
+    public function getListCartItemByItemID($tableID, $itemID)
+    {
         return $this->cartItemRepository->getListCartItemByItemID($tableID, $itemID);
     }
 }

@@ -54,9 +54,11 @@ class QueueOrderService
         foreach ($cartItem as $value) {
             $detailItem = $this->menuService->getItemByID($value['item_id']);
             $value['detail_item'] = $detailItem->toArray();
+            if ($value['total_cost'] == 0) {
+                $value['quantity'] = 0;
+            }
             array_push($item, $value);
         }
-
         $queueOrder = new QueueOrder();
         $queueOrder->table_id = $tableID;
         $queueOrder->table_name = $tableName;

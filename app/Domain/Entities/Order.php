@@ -16,14 +16,10 @@ class Order extends Model
 
     protected $fillable = [
         '_id',
-        'number_of_customer',
-        'table_name',
-        'table_id',
-        'status',
-        'combo',
-        'side_dish_drink',
+        'number_of_customer', 'table_id',
+        'table_name', 'status',
+        'item',
         'total_cost',
-        'note',
         'ts'
     ];
 }

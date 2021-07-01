@@ -36,27 +36,36 @@ class MenuService
 
     public function getMenu($tableID)
     {
-        $checkExistingOrder = $this->orderRepository->checkExistingOrderInTable($tableID)->toArray();
-        if (($checkExistingOrder) == []) {
+        $checkExistingOrder = $this->orderRepository->checkExistingOrderInTable($tableID);
+        $combo = null;
+        if (!$checkExistingOrder) {
             $menu['combo'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getCombo()->_id);
             $menu['drink'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getDink()->_id);
             $menu['fast'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getFast()->_id);
         } else {
-            if ($checkExistingOrder[0]['combo']['hotpot'] == false) {
-                $menu['combo']['detail'] = $this->menuRepository->getItemByID($checkExistingOrder[0]['combo']['_id']);
-                $menu['combo']['dish_in_combo'] = $this->dishInComboRepository->getDishesByCombo($checkExistingOrder[0]['combo']['_id']);
+            foreach ($checkExistingOrder['item'] as $value){
+                if(strpos($value['detail_item']['name'], 'Combo') !== false){
+                    $combo = $value['detail_item'];
+                }
+            }
+            if ($combo['hotpot'] == false) {
+                $menu['combo']['detail'] = $this->menuRepository->getItemByID($combo['_id']);
+                $menu['combo']['dish_in_combo'] = $this->dishInComboRepository->getDishesByCombo($combo['_id']);
                 $menu['combo']['detail'][0]['cost'] = 0;
 
             } else {
-                $menu['combo']['detail'] = $this->menuRepository->getItemByID($checkExistingOrder[0]['combo']['_id']);
-                $menu['combo']['dish_in_combo'] = $this->dishInComboRepository->getDishesByCombo($checkExistingOrder[0]['combo']['_id']);
+                $menu['combo']['detail'] = $this->menuRepository->getItemByID($combo['_id']);
+                $menu['combo']['dish_in_combo'] = $this->dishInComboRepository->getDishesByCombo($combo['_id']);
                 $menu['hotpot']['detail'] = $this->menuRepository->getHotpot();
                 $menu['hotpot']['dish_in_hotpot'] = $this->dishInComboRepository->getDishesByCombo($menu['hotpot']['detail'][0]['_id']);
-                $menu['combo']['detail'][0]['cost'] = 0;
+                $menu['combo']['detail']['cost'] = 0;
             }
-            if (isset($checkExistingOrder[0]['hotpot'])) {
-                $menu['hotpot']['detail'][0]['cost'] = 0;
+            foreach ($checkExistingOrder['item'] as $value){
+                if(strpos($value['detail_item']['name'], 'Lẩu') !== false){
+                    $menu['hotpot']['detail'][0]['cost'] = 0;
+                }
             }
+
             $menu['drink'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getDink()->_id);
             $menu['fast'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getFast()->_id);
         }
