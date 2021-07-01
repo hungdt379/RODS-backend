@@ -110,9 +110,9 @@ class QueueOrderController extends Controller
         $confirmOrder = $this->orderService->getConfirmOrderByTableID($tableID);
         $queueOrder = $this->queueOrderService->getQueueOrderByTableID($tableID);
         if(!$confirmOrder){
-            $this->orderService->AddNewConfirmOrder($queueOrder);
+            $this->orderService->addNewConfirmOrder($queueOrder);
         }else{
-            $this->orderService->MergeOrder($queueOrder, $confirmOrder);
+            $this->orderService->mergeOrder($queueOrder, $confirmOrder);
         }
         $this->queueOrderService->delete($queueOrder['_id']);
 

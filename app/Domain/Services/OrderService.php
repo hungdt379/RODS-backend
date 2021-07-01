@@ -26,7 +26,7 @@ class OrderService
         return $this->orderRepository->getConfirmOrder($tableID);
     }
 
-    public function AddNewConfirmOrder($queueOrder){
+    public function addNewConfirmOrder($queueOrder){
         $confirmOrder = new Order();
 
         $confirmOrder->table_id = $queueOrder->table_id;
@@ -40,7 +40,7 @@ class OrderService
         return $this->orderRepository->insert($confirmOrder);
     }
 
-    public function MergeOrder($queueOrder, $confirmOrder){
+    public function mergeOrder($queueOrder, $confirmOrder){
         $item = array_merge($confirmOrder['item'], $queueOrder['item']);
         $totalCost  = 0;
         $length = count($item);
