@@ -33,6 +33,7 @@ class FeedbackService
         $feedback->rate_service = $param['rateService'];
         $feedback->rate_dish = $param['rateDish'];
         $feedback->content = $param['content'];
+        $feedback->ts = time();
 
         $this->feedbackRepository->insert($feedback);
     }

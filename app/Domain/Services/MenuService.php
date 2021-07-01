@@ -4,6 +4,7 @@
 namespace App\Domain\Services;
 
 
+use App\Domain\Entities\Menu;
 use App\Domain\Repositories\CategoryRepository;
 use App\Domain\Repositories\DishInComboRepository;
 use App\Domain\Repositories\MenuRepository;
@@ -73,9 +74,23 @@ class MenuService
     }
 
 
-    public function getItemByName($name)
+    public function getItemByName($name, $tableID)
     {
-        return $this->menuRepository->getItemByName($name);
+        $checkExistingOrder = $this->orderRepository->checkExistingOrderInTable($tableID)->toArray();
+
+        if (($checkExistingOrder) == [] || !isset($checkExistingOrder[0]['combo'])) {
+            $resultSearch = $this->menuRepository->getItemByName($name);
+        } else {
+            if ($checkExistingOrder[0]['combo']['name'] == Menu::COMBO_129) {
+                $resultSearch = $this->menuRepository->searchCombo129($name);
+            }else if ($checkExistingOrder[0]['combo']['name'] == Menu::COMBO_169){
+                $resultSearch = $this->menuRepository->searchCombo169($name);
+            }else if ($checkExistingOrder[0]['combo']['name'] == Menu::COMBO_209){
+                $resultSearch = $this->menuRepository->searchCombo169($name);
+            }
+        }
+
+        return $resultSearch;
     }
 
     public function getDetailItemInCart($tableID, $itemID)
@@ -93,19 +108,9 @@ class MenuService
         return $item;
     }
 
-    public function getDetailItemByID($id)
+    public function getDetailItemByID($itemID)
     {
-        return $this->menuRepository->getDetailItemByID($id);
-    }
-
-    public function isCombo($id)
-    {
-        $item = $this->getDetailItemByID($id);
-
-        if ($item[0]['category']['name'] == 'combo') {
-            return true;
-        }
-        return false;
+        return $this->menuRepository->getDetailItemByID($itemID);
     }
 
     public function getItemByID($itemID){

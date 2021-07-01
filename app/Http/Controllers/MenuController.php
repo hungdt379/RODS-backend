@@ -7,6 +7,7 @@ namespace App\Http\Controllers;
 use App\Domain\Services\DishInComboService;
 use App\Domain\Services\MenuService;
 use App\Traits\ApiResponse;
+use Illuminate\Support\Facades\Validator;
 use JWTAuth;
 
 class MenuController
@@ -37,13 +38,17 @@ class MenuController
     public function getDetailItem()
     {
         $param = request()->all();
-        $check = $this->menuService->isCombo($param['id']);
+        $validator = Validator::make($param, [
+            '_id' => 'required'
+        ]);
 
-        $data = $this->menuService->getDetailItemByID($param['id']);
-        if ($check) {
-            $dishInCombo = $this->dishInComboService->getDishesByCombo($param['id']);
-            $data['dish_in_combo'] = $dishInCombo;
-            return $this->successResponse($data, 'Success');
+        if ($validator->fails()) {
+            return $this->errorResponse('Invalid param', null, false, 400);
+        }
+
+        $data = $this->menuService->getDetailItemByID($param['_id']);
+        if (sizeof($data) == 0){
+            return $this->errorResponse('Not found item', null,false, 404);
         }
 
         return $this->successResponse($data, 'Success');
@@ -52,7 +57,15 @@ class MenuController
     public function searchItem()
     {
         $param = request()->all();
-        $data = $this->menuService->getItemByName($param['q']);
+        if ($param['q'] == null){
+            return $this->errorResponse('Not found items', null, false, 404);
+        }
+
+        $data = $this->menuService->getItemByName($param['q'], JWTAuth::user()->_id);
+
+        if (sizeof($data) == 0 ){
+            return $this->errorResponse('Not found items', null, false, 404);
+        }
 
         return $this->successResponse($data, 'Success');
     }
