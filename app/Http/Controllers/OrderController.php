@@ -75,4 +75,20 @@ class OrderController extends Controller
         $data = $this->orderService->getAllConfirmOrder($pageSize);
         return $this->successResponseWithPaging($data->items(), 'Success', $data->currentPage(), $pageSize, $data->total());
     }
+
+    public function getAllItemInConfirmOrder(){
+        $param = request()->all();
+        $validator = Validator::make($param, [
+            'table_id' => 'required'
+        ]);
+        if ($validator->fails()) {
+            return $this->errorResponse($validator->errors(), null, false, 404);
+        }
+        $tableID = $param['table_id'];
+
+        $confirmOrder = $this->orderService->getConfirmOrderByTableID($tableID);
+        $data = $this->orderService->getAllItemInConfirmOrder($confirmOrder);
+
+//        return
+    }
 }

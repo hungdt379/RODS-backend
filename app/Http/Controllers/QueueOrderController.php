@@ -114,7 +114,7 @@ class QueueOrderController extends Controller
         }else{
             $this->orderService->mergeOrder($queueOrder, $confirmOrder);
         }
-        $this->queueOrderService->delete($queueOrder['_id']);
+//        $this->queueOrderService->delete($queueOrder['_id']);
 
         return $this->successResponse(null, 'Confirm Success');
     }

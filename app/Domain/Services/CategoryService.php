@@ -19,11 +19,23 @@ class CategoryService
         $this->categoryRepository = $categoryRepository;
     }
 
-    public function geAllCategory(){
+    public function geAllCategory()
+    {
         return $this->categoryRepository->getAllCategory();
     }
 
-    public function getComboCategory(){
+    public function getComboCategory()
+    {
         return $this->categoryRepository->getCombo();
+    }
+
+    public function getFastCategory()
+    {
+        return $this->categoryRepository->getFast();
+    }
+
+    public function getDrinkCategory()
+    {
+        return $this->categoryRepository->getDink();
     }
 }

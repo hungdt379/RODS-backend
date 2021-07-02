@@ -84,6 +84,8 @@ Route::group([
     Route::group(['middleware' => 'auth.jwt'], function () {
         Route::get('notifications', 'NotificationController@getAllNotification');
         Route::get('notifications/read', 'NotificationController@markAsRead');
+        Route::get('order/dish', 'DishInOrderController@getDishInOrder');
+        Route::get('order/drink', 'DishInOrderController@getDrinkInOrder');
     });
 });
 
