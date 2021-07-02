@@ -60,4 +60,19 @@ class OrderController extends Controller
 
         return $this->successResponse(null, 'Delete Success');
     }
+
+    public function getListConfirmOrder()
+    {
+        $param = request()->all();
+        $validator = Validator::make($param, [
+            'pageSize' => 'required|numeric|'
+        ]);
+        if ($validator->fails()) {
+            return $this->errorResponse($validator->errors(), null, false, 404);
+        }
+
+        $pageSize = $param['pageSize'];
+        $data = $this->orderService->getAllConfirmOrder($pageSize);
+        return $this->successResponseWithPaging($data->items(), 'Success', $data->currentPage(), $pageSize, $data->total());
+    }
 }

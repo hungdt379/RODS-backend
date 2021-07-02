@@ -90,6 +90,7 @@ Route::group([
 Route::group(['middleware' => 'auth.jwt'], function () {
     Route::get('search', 'MenuController@searchItem');
     Route::get('table/order/confirm/detail', 'OrderController@viewDetailConfirmOrder');
+    Route::get('order/confirm/list', 'OrderController@getListConfirmOrder');
 });
 
 Route::get('testPDF', 'AuthController@hello');

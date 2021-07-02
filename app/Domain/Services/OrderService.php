@@ -5,7 +5,6 @@ namespace App\Domain\Services;
 
 
 use App\Domain\Entities\Order;
-use App\Domain\Entities\QueueOrder;
 use App\Domain\Repositories\OrderRepository;
 
 
@@ -22,11 +21,18 @@ class OrderService
         $this->orderRepository = $orderRepository;
     }
 
-    public function getConfirmOrderByTableID($tableID){
+    public function getConfirmOrderByTableID($tableID)
+    {
         return $this->orderRepository->getConfirmOrder($tableID);
     }
 
-    public function addNewConfirmOrder($queueOrder){
+    public function getAllConfirmOrder($pageSize)
+    {
+        return $this->orderRepository->getAllConfirmOrder($pageSize);
+    }
+
+    public function addNewConfirmOrder($queueOrder)
+    {
         $confirmOrder = new Order();
 
         $confirmOrder->table_id = $queueOrder->table_id;
@@ -40,26 +46,27 @@ class OrderService
         return $this->orderRepository->insert($confirmOrder);
     }
 
-    public function mergeOrder($queueOrder, $confirmOrder){
+    public function mergeOrder($queueOrder, $confirmOrder)
+    {
         $item = array_merge($confirmOrder['item'], $queueOrder['item']);
-        $totalCost  = 0;
+        $totalCost = 0;
         $length = count($item);
 
 
         for ($i = 0; $i < $length; $i++) {
-            for ($j = $i+1; $j < $length; $j++){
-                if($item[$i]['item_id'] == $item[$j]['item_id']){
+            for ($j = $i + 1; $j < $length; $j++) {
+                if ($item[$i]['item_id'] == $item[$j]['item_id']) {
                     $item[$i]['quantity'] += $item[$j]['quantity'];
                     $item[$i]['total_cost'] += $item[$j]['total_cost'];
                     $item[$i]['dish_in_combo'] = $item[$j]['dish_in_combo'];
                     unset($item[$j]);
-                    $item=array_values($item);
+                    $item = array_values($item);
                     $length--;
                 }
             }
         }
 
-        foreach ($item as $value){
+        foreach ($item as $value) {
             $totalCost += $value['total_cost'];
         }
 
@@ -69,13 +76,14 @@ class OrderService
         return $this->orderRepository->update($confirmOrder);
     }
 
-    public function deleteItemInConfirmOrder($confirmOrder, $itemID){
+    public function deleteItemInConfirmOrder($confirmOrder, $itemID)
+    {
         $item = $confirmOrder['item'];
-        for ($i = 0; $i < count($item); $i++){
-            for($j =0; $j < count($itemID); $j++){
-                if($item[$i]['item_id'] == $itemID[$j]){
+        for ($i = 0; $i < count($item); $i++) {
+            for ($j = 0; $j < count($itemID); $j++) {
+                if ($item[$i]['item_id'] == $itemID[$j]) {
                     unset($item[$i]);
-                    $item=array_values($item);
+                    $item = array_values($item);
                 }
             }
         }
