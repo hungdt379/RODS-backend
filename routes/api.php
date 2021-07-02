@@ -64,6 +64,7 @@ Route::group([
         Route::get('table/order/queue/view', 'QueueOrderController@getQueueOrderByTableID');
         Route::post('table/order/queue/cancel', 'QueueOrderController@cancelQueueOrder');
         Route::post('table/order/queue/confirm', 'QueueOrderController@confirmQueueOrder');
+        Route::post('table/order/confirm/item/delete', 'OrderController@deleteItemInConfirmOrder');
     });
 });
 
@@ -83,11 +84,15 @@ Route::group([
     Route::group(['middleware' => 'auth.jwt'], function () {
         Route::get('notifications', 'NotificationController@getAllNotification');
         Route::get('notifications/read', 'NotificationController@markAsRead');
+        Route::get('order/dish', 'DishInOrderController@getDishInOrder');
+        Route::get('order/drink', 'DishInOrderController@getDrinkInOrder');
     });
 });
 
 Route::group(['middleware' => 'auth.jwt'], function () {
     Route::get('search', 'MenuController@searchItem');
+    Route::get('table/order/confirm/detail', 'OrderController@viewDetailConfirmOrder');
+    Route::get('order/confirm/list', 'OrderController@getListConfirmOrder');
 });
 
 Route::get('testPDF', 'AuthController@hello');

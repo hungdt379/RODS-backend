@@ -5,7 +5,6 @@ namespace App\Domain\Repositories;
 
 
 use App\Domain\Entities\Order;
-use App\Domain\Entities\QueueOrder;
 
 
 class OrderRepository
@@ -20,6 +19,13 @@ class OrderRepository
     {
         return Order::where('status', Order::ORDER_STATUS_CONFIRMED)
             ->where('table_id', $tableID)->get();
+    }
+
+    public function getAllConfirmOrder($pageSize)
+    {
+        return Order::where('status', Order::ORDER_STATUS_CONFIRMED)
+            ->orderBy('ts', 'DESC')
+            ->paginate((int)$pageSize);
     }
 
     public function insert($confirmOrder)
