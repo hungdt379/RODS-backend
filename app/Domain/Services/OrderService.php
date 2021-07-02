@@ -68,4 +68,19 @@ class OrderService
 
         return $this->orderRepository->update($confirmOrder);
     }
+
+    public function deleteItemInConfirmOrder($confirmOrder, $itemID){
+        $item = $confirmOrder['item'];
+        for ($i = 0; $i < count($item); $i++){
+            for($j =0; $j < count($itemID); $j++){
+                if($item[$i]['item_id'] == $itemID[$j]){
+                    unset($item[$i]);
+                    $item=array_values($item);
+                }
+            }
+        }
+        $confirmOrder['item'] = $item;
+
+        return $this->orderRepository->update($confirmOrder);
+    }
 }

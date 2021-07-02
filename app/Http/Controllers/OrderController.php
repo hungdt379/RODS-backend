@@ -23,7 +23,8 @@ class OrderController extends Controller
         $this->orderService = $orderService;
     }
 
-    public function viewDetailConfirmOrder(){
+    public function viewDetailConfirmOrder()
+    {
         $param = request()->all();
         $validator = Validator::make($param, [
             'table_id' => 'required'
@@ -34,10 +35,29 @@ class OrderController extends Controller
         $tableID = $param['table_id'];
 
         $data = $this->orderService->getConfirmOrderByTableID($tableID);
-        if($data){
+        if ($data) {
             return $this->successResponse($data, 'Success');
-        }else{
+        } else {
             return $this->errorResponse('Not found confirm order', null, false, 404);
         }
+    }
+
+    public function deleteItemInConfirmOrder()
+    {
+        $param = request()->all();
+        $validator = Validator::make($param, [
+            'table_id' => 'required',
+            'item_id' => 'required'
+        ]);
+        if ($validator->fails()) {
+            return $this->errorResponse($validator->errors(), null, false, 404);
+        }
+        $tableID = $param['table_id'];
+        $itemID = $param['item_id'];
+
+        $confirmOrder = $this->orderService->getConfirmOrderByTableID($tableID);
+        $this->orderService->deleteItemInConfirmOrder($confirmOrder, $itemID);
+
+        return $this->successResponse(null, 'Delete Success');
     }
 }
