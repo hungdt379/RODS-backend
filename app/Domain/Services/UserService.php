@@ -94,14 +94,17 @@ class UserService
         $table = $this->getUserById($tableId);
         $table->password = Hash::make(time());
         $this->userRepository->update($table);
-        QrCode::size(500)->format('svg')
-            ->generate('http://rdos.funitekit.com/customer-login?username='.$table->username.'&password='.time(), public_path('qrcode/'.time().'.svg'));
+        $qrCode = QrCode::size(500)->format('svg')
+            ->generate('http://rdos.funitekit.com/customer-login?username='.$table->username.'&password='.time());
+        $nameQrFile = time() . '.svg';
+        Storage::disk('qrcode')->put($nameQrFile, $qrCode);
+
         $customPaper = array(0,0,380.10,283.80); // (10*20 cm)
         $pdf = PDF::loadHTML('<h1>'.$table->full_name.'</h1>'.
                             '<img style="width:290px, height:290px" src="qrcode/'.time().'.svg" alt="">')
                             ->setPaper($customPaper, 'landscape');
         $nameFile = '_' . time() . '.pdf';
-        Storage::disk('public')->put($nameFile, $pdf->output());
+        Storage::disk('export')->put($nameFile, $pdf->output());
         return $url = asset('export/' . $nameFile);
     }
 }
