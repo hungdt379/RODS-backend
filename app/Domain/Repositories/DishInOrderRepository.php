@@ -20,4 +20,12 @@ class DishInOrderRepository
             ->whereIn('category_id', $categoryID)
             ->paginate((int)$pageSize);
     }
+
+    public function getDishInOrderByID($id){
+        return DishInOrder::where('_id', $id)->first();
+    }
+
+    public function update($dishInOrder){
+        return $dishInOrder->update();
+    }
 }

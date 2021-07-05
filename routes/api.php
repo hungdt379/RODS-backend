@@ -86,6 +86,7 @@ Route::group([
         Route::get('notifications/read', 'NotificationController@markAsRead');
         Route::get('order/dish', 'DishInOrderController@getDishInOrder');
         Route::get('order/drink', 'DishInOrderController@getDrinkInOrder');
+        Route::post('order/status/update', 'DishInOrderController@updateStatus');
     });
 });
 
