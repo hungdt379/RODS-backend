@@ -48,8 +48,15 @@ return [
             'root' => storage_path('php'),
         ],
 
+        'qrcode' => [
+            'driver' => 'local',
+            'root' => public_path() . '/qrcode',
+            'url' => env('APP_URL').'/public',
+            'visibility' => 'public',
+        ],
+
         // save file to public
-        'public' => [
+        'export' => [
             'driver' => 'local',
             'root' => public_path() . '/export',
             'url' => env('APP_URL').'/public',
