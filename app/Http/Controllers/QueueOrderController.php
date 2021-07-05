@@ -86,12 +86,12 @@ class QueueOrderController extends Controller
     {
         $param = request()->all();
         $validator = Validator::make($param, [
-            'table_id' => 'required'
+            '_id' => 'required'
         ]);
         if ($validator->fails()) {
             return $this->errorResponse($validator->errors(), null, false, 404);
         }
-        $this->queueOrderService->delete($param['id']);
+        $this->queueOrderService->delete($param['_id']);
 
         return $this->successResponse(null, 'Delete Success');
     }
@@ -109,9 +109,9 @@ class QueueOrderController extends Controller
         $tableID = $param['table_id'];
         $confirmOrder = $this->orderService->getConfirmOrderByTableID($tableID);
         $queueOrder = $this->queueOrderService->getQueueOrderByTableID($tableID);
-        if(!$confirmOrder){
+        if (!$confirmOrder) {
             $this->orderService->addNewConfirmOrder($queueOrder);
-        }else{
+        } else {
             $this->orderService->mergeOrder($queueOrder, $confirmOrder);
         }
         $this->queueOrderService->delete($queueOrder['_id']);

@@ -74,19 +74,27 @@ class CartController extends Controller
 
         $tableID = JWTAuth::user()->_id;
         $itemID = $param['item_id'];
-        $quantity = $param['quantity'];
+        $quantity = (int)$param['quantity'];
         $item = $this->menuService->getItemByID($itemID);
         $category = $this->categoryService->getComboCategory();
-        if($item['category_id']==$category['_id']){
+        if ($item['category_id'] == $category['_id']) {
             $quantity = JWTAuth::user()->number_of_customer;
         }
         $note = $param['note'];
         $cost = $param['cost'];
         $dishInCombo = isset($param['dish_in_combo']) ? $param['dish_in_combo'] : null;
-        //check if the the same product is already in the Cart, if true update the quantity, if not create a new one.
         $cart = $this->cartService->getCartByTableID($tableID);
         if ($cart) {
             $cartItem = $this->cartItemService->getCartItemByItemID($tableID, $itemID);
+            $listItemInCart = $this->cartItemService->getCartItemByTableID($tableID);
+            foreach ($listItemInCart as $value) {
+                $itemInCart = $this->menuService->getItemByID($value['item_id']);
+                if ((strpos($itemInCart['name'], 'Combo') !== false) &&
+                    (strpos($item['name'], 'Combo') !== false) &&
+                    ($itemInCart['_id'] != $item['_id'])) {
+                    return $this->errorResponse('The cart already exist combo', null, false, 400);
+                }
+            }
             if ($cartItem) {
                 $cartItem->quantity = $quantity;
                 $this->cartItemService->update($tableID, $itemID, $quantity, $note, $dishInCombo, $cost);
