@@ -10,6 +10,7 @@ use Validator;
 class DishInOrderController extends Controller
 {
     use ApiResponse;
+
     private $dishInOrderService;
     private $categoryService;
 
@@ -24,7 +25,8 @@ class DishInOrderController extends Controller
         $this->categoryService = $categoryService;
     }
 
-    public function getDishInOrder(){
+    public function getDishInOrder()
+    {
         $param = request()->all();
         $validator = Validator::make($param, [
             'table_id' => 'required',
@@ -44,7 +46,8 @@ class DishInOrderController extends Controller
         return $this->successResponseWithPaging($data->items(), 'Success', $data->currentPage(), $pageSize, $data->total());
     }
 
-    public function getDrinkInOrder(){
+    public function getDrinkInOrder()
+    {
         $param = request()->all();
         $validator = Validator::make($param, [
             'table_id' => 'required',
@@ -63,4 +66,18 @@ class DishInOrderController extends Controller
         return $this->successResponseWithPaging($data->items(), 'Success', $data->currentPage(), $pageSize, $data->total());
     }
 
+    public function updateStatus()
+    {
+        $param = request()->all();
+        $validator = Validator::make($param, [
+            '_id' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return $this->errorResponse($validator->errors(), null, false, 404);
+        }
+        $id = $param['_id'];
+        $this->dishInOrderService->updateStatus($id);
+
+        return $this->successResponse(null, 'Update Success');
+    }
 }
