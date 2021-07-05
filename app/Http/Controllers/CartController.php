@@ -74,7 +74,7 @@ class CartController extends Controller
 
         $tableID = JWTAuth::user()->_id;
         $itemID = $param['item_id'];
-        $quantity = $param['quantity'];
+        $quantity = (int)$param['quantity'];
         $item = $this->menuService->getItemByID($itemID);
         $category = $this->categoryService->getComboCategory();
         if ($item['category_id'] == $category['_id']) {

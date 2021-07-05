@@ -25,7 +25,8 @@ class Menu extends Seeder
             'description' => null,
             'image' => 'http://165.227.99.160/image/nuong-129.png',
             'hotpot' => true,
-            'category_id' => $combo->_id
+            'category_id' => $combo->_id,
+            'is_sold_out' => false
         ]);
         DB::table('menu')->insert([
 
@@ -34,7 +35,8 @@ class Menu extends Seeder
             'description' => null,
             'image' => 'http://165.227.99.160/image/nuong-169.png',
             'hotpot' => true,
-            'category_id' => $combo->_id
+            'category_id' => $combo->_id,
+            'is_sold_out' => false
         ]);
         DB::table('menu')->insert([
 
@@ -43,7 +45,8 @@ class Menu extends Seeder
             'description' => null,
             'image' => 'http://165.227.99.160/image/nuong-169.png',
             'hotpot' => false,
-            'category_id' => $combo->_id
+            'category_id' => $combo->_id,
+            'is_sold_out' => false
         ]);
         DB::table('menu')->insert([
             'name' => 'Lẩu',
@@ -51,7 +54,8 @@ class Menu extends Seeder
             'description' => null,
             'image' => 'http://165.227.99.160/image/lau.png',
             'hotpot' => false,
-            'category_id' => $combo->_id
+            'category_id' => $combo->_id,
+            'is_sold_out' => false
         ]);
         DB::table('menu')->insert([
             'name' => 'Khoai lang kén',
@@ -59,7 +63,8 @@ class Menu extends Seeder
             'description' => null,
             'image' => 'http://165.227.99.160/image/khoai-lang-ken.png',
             'hotpot' => false,
-            'category_id' => $fastFood->_id
+            'category_id' => $fastFood->_id,
+            'is_sold_out' => false
         ]);
         DB::table('menu')->insert([
             'name' => 'Ngô chiên',
@@ -67,7 +72,8 @@ class Menu extends Seeder
             'description' => null,
             'image' => 'http://165.227.99.160/image/ngo-chien.png',
             'hotpot' => false,
-            'category_id' => $fastFood->_id
+            'category_id' => $fastFood->_id,
+            'is_sold_out' => false
         ]);
         DB::table('menu')->insert([
             'name' => 'Gà lắc',
@@ -75,7 +81,8 @@ class Menu extends Seeder
             'description' => null,
             'image' => 'http://165.227.99.160/image/ga-lac.png',
             'hotpot' => false,
-            'category_id' => $fastFood->_id
+            'category_id' => $fastFood->_id,
+            'is_sold_out' => false
         ]);
         DB::table('menu')->insert([
             'name' => 'Coca lon',
@@ -83,7 +90,8 @@ class Menu extends Seeder
             'description' => null,
             'image' => 'http://165.227.99.160/image/coca.png',
             'hotpot' => false,
-            'category_id' => $drink->_id
+            'category_id' => $drink->_id,
+            'is_sold_out' => false
         ]);
         DB::table('menu')->insert([
             'name' => 'Bia lon',
@@ -91,7 +99,8 @@ class Menu extends Seeder
             'description' => null,
             'image' => 'http://165.227.99.160/image/bia.png',
             'hotpot' => false,
-            'category_id' => $drink->_id
+            'category_id' => $drink->_id,
+            'is_sold_out' => false
         ]);
         DB::table('menu')->insert([
             'name' => 'Rượu táo mèo 500ml',
@@ -99,7 +108,8 @@ class Menu extends Seeder
             'description' => 'abc',
             'image' => 'http://165.227.99.160/image/tao-meo.png',
             'hotpot' => false,
-            'category_id' => $drink->_id
+            'category_id' => $drink->_id,
+            'is_sold_out' => false
         ]);
         DB::table('menu')->insert([
             'name' => 'Rượu nếp trắng 500ml',
@@ -107,7 +117,8 @@ class Menu extends Seeder
             'description' => 'abc',
             'image' => 'http://165.227.99.160/image/nep-trang.png',
             'hotpot' => false,
-            'category_id' => $drink->_id
+            'category_id' => $drink->_id,
+            'is_sold_out' => false
         ]);
     }
 }

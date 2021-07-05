@@ -19,59 +19,73 @@ class DishInCombo extends Seeder
         DB::table('dish_in_combo')->truncate();
         DB::table('dish_in_combo')->insert([
             'pid' => [$combo1->_id, $combo2->_id, $combo3->_id],
-            'name' => 'Ba chỉ bò'
+            'name' => 'Ba chỉ bò',
+            'is_sold_out' => false
         ]);
         DB::table('dish_in_combo')->insert([
             'pid' => [$combo1->_id, $combo2->_id, $combo3->_id],
-            'name' => 'Ba chỉ lợn'
+            'name' => 'Ba chỉ lợn',
+            'is_sold_out' => false
         ]);
         DB::table('dish_in_combo')->insert([
             'pid' => [$combo1->_id, $combo2->_id, $combo3->_id],
-            'name' => 'Xúc xích'
+            'name' => 'Xúc xích',
+            'is_sold_out' => false
         ]);
         DB::table('dish_in_combo')->insert([
             'pid' => [$combo1->_id, $combo2->_id, $combo3->_id],
-            'name' => 'Sụn'
+            'name' => 'Sụn',
+            'is_sold_out' => false
         ]);
         DB::table('dish_in_combo')->insert([
             'pid' => [$combo1->_id, $combo2->_id, $combo3->_id],
-            'name' => 'Bắp bò'
+            'name' => 'Bắp bò',
+            'is_sold_out' => false
         ]);
         DB::table('dish_in_combo')->insert([
             'pid' => [$combo1->_id, $combo2->_id, $combo3->_id],
-            'name' => 'Kim chi'
+            'name' => 'Kim chi',
+            'is_sold_out' => false
         ]);
         DB::table('dish_in_combo')->insert([
             'pid' => [$combo1->_id, $combo2->_id, $combo3->_id],
-            'name' => 'Rau củ quả'
+            'name' => 'Rau củ quả',
+            'is_sold_out' => false
         ]);
         DB::table('dish_in_combo')->insert([
             'pid' => [$combo2->_id, $combo3->_id],
-            'name' => 'Gà'
+            'name' => 'Gà',
+            'is_sold_out' => false
         ]);
         DB::table('dish_in_combo')->insert([
             'pid' => [$combo2->_id, $combo3->_id],
-            'name' => 'Mực'
+            'name' => 'Mực',
+            'is_sold_out' => false
         ]);
         DB::table('dish_in_combo')->insert([
             'pid' => [$combo2->_id, $combo3->_id],
-            'name' => 'Tôm'
+            'name' => 'Tôm',
+            'is_sold_out' => false
         ]);
         DB::table('dish_in_combo')->insert([
             'pid' => [$combo2->_id, $combo3->_id],
-            'name' => 'Bạch tuộc'
+            'name' => 'Bạch tuộc',
+            'is_sold_out' => false
         ]);
         DB::table('dish_in_combo')->insert([
             'pid' => [$hotpot->_id, $combo3->_id],
-            'name' => 'Mì tôm'
+            'name' => 'Mì tôm',
+            'is_sold_out' => false
         ]);
         DB::table('dish_in_combo')->insert([
             'pid' => [$hotpot->_id, $combo3->_id],
-            'name' => 'Rau'
+            'name' => 'Rau',
+            'is_sold_out' => false
         ]);
         DB::table('dish_in_combo')->insert([
             'pid' => [$hotpot->_id, $combo3->_id],
-            'name' => 'Đậu'
+            'name' => 'Đậu',
+            'is_sold_out' => false
         ]);
     }
 }
