@@ -65,6 +65,7 @@ Route::group([
         Route::post('table/order/queue/cancel', 'QueueOrderController@cancelQueueOrder');
         Route::post('table/order/queue/confirm', 'QueueOrderController@confirmQueueOrder');
         Route::post('table/order/confirm/item/delete', 'OrderController@deleteItemInConfirmOrder');
+        Route::post('table/order/confirm/note/add', 'OrderController@addNoteForRemainItem');
     });
 });
 
@@ -78,6 +79,7 @@ Route::group([
         Route::get('feedback', 'FeedbackController@getAllFeedback');
         Route::get('notifications', 'NotificationController@getAllNotification');
         Route::get('notifications/read', 'NotificationController@markAsRead');
+        Route::post('order/confirm/voucher/add', 'OrderController@addVoucherToConfirmOrder');
     });
 });
 
