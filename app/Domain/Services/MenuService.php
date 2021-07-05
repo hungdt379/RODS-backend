@@ -122,9 +122,9 @@ class MenuService
                     $value['dish_in_combo'] = [];
                 } else {
                     $dishInCombo = $item[0]['dish_in_combo'];
-                    $length = count($value['dish_in_combo']);
+                    $length = sizeof($value['dish_in_combo']);
                     for ($i = 0; $i < $length; $i++) {
-                        for ($j = 0; $j < count($dishInCombo); $j++) {
+                        for ($j = 0; $j < sizeof($dishInCombo); $j++) {
                             if ($value['dish_in_combo'][$i] == $dishInCombo[$j]['name']) {
                                 $dishInCombo[$j]['is_selected'] = true;
                             }
