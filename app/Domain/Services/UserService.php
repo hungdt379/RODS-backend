@@ -98,7 +98,7 @@ class UserService
             ->generate('http://rdos.funitekit.com/customer-login?username='.$table->username.'&password='.time(), public_path('qrcode/'.time().'.svg'));
         $customPaper = array(0,0,380.10,283.80); // (10*20 cm)
         $pdf = PDF::loadHTML('<h1>'.$table->full_name.'</h1>'.
-                            '<img style="width:290px, height:290px" src="qrcode/'.time().'.svg" alt="">')
+                            '<img style="width:290px, height:290px" src="/public/qrcode/'.time().'.svg" alt="">')
                             ->setPaper($customPaper, 'landscape');
         $nameFile = '_' . time() . '.pdf';
         Storage::disk('public')->put($nameFile, $pdf->output());
