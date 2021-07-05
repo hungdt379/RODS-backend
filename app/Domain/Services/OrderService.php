@@ -127,9 +127,19 @@ class OrderService
         return $this->orderRepository->update($confirmOrder);
     }
 
-    public function addNoteForRemainItem($id, $note){
+    public function addNoteForRemainItem($id, $note)
+    {
         $confirmOrder = $this->orderRepository->getConfirmOrderByID($id);
         $confirmOrder->note = $note;
+
+        return $this->orderRepository->update($confirmOrder);
+    }
+
+    public function addVoucherToConfirmOrder($id, $voucher)
+    {
+        $confirmOrder = $this->orderRepository->getConfirmOrderByID($id);
+        $confirmOrder->voucher = $voucher;
+        $confirmOrder->total_cost = (int)$confirmOrder['total_cost'] - (int)$confirmOrder['total_cost'] * $voucher / 100;
 
         return $this->orderRepository->update($confirmOrder);
     }

@@ -96,7 +96,23 @@ class OrderController extends Controller
         $id = $param['_id'];
         $this->orderService->addNoteForRemainItem($id, $note);
 
+        return $this->successResponse(null, 'Success');
+    }
+
+    public function addVoucherToConfirmOrder(){
+        $param = request()->all();
+        $validator = Validator::make($param, [
+            '_id' => 'required',
+            'voucher' => 'required|numeric|min:5|max:90'
+        ]);
+        if ($validator->fails()) {
+            return $this->errorResponse($validator->errors(), null, false, 404);
+        }
+        $id = $param['_id'];
+        $voucher = (int)$param['voucher'];
+        $this->orderService->addVoucherToConfirmOrder($id, $voucher);
 
         return $this->successResponse(null, 'Success');
+
     }
 }

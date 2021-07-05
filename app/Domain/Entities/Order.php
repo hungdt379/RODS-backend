@@ -21,6 +21,7 @@ class Order extends Model
         'item',
         'total_cost',
         'note',
+        'voucher',
         'ts'
     ];
 }
