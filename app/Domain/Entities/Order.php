@@ -20,6 +20,7 @@ class Order extends Model
         'table_name', 'status',
         'item',
         'total_cost',
+        'note',
         'ts'
     ];
 }

@@ -4,23 +4,29 @@
 namespace App\Http\Controllers;
 
 
+use App\Domain\Entities\Notification;
+use App\Domain\Services\NotificationService;
 use App\Domain\Services\OrderService;
 use App\Traits\ApiResponse;
 use Validator;
+use JWTAuth;
 
 class OrderController extends Controller
 {
     use ApiResponse;
 
     private $orderService;
+    private $notificationService;
 
     /**
      * OrderController constructor.
-     * @param $orderService
+     * @param OrderService $orderService
+     * @param NotificationService $notificationService
      */
-    public function __construct(OrderService $orderService)
+    public function __construct(OrderService $orderService, NotificationService $notificationService)
     {
         $this->orderService = $orderService;
+        $this->notificationService = $notificationService;
     }
 
     public function viewDetailConfirmOrder()
@@ -76,19 +82,21 @@ class OrderController extends Controller
         return $this->successResponseWithPaging($data->items(), 'Success', $data->currentPage(), $pageSize, $data->total());
     }
 
-    public function getAllItemInConfirmOrder(){
+    public function addNoteForRemainItem()
+    {
         $param = request()->all();
         $validator = Validator::make($param, [
-            'table_id' => 'required'
+            'note' => 'required',
+            '_id' => 'required'
         ]);
         if ($validator->fails()) {
             return $this->errorResponse($validator->errors(), null, false, 404);
         }
-        $tableID = $param['table_id'];
+        $note = $param['note'];
+        $id = $param['_id'];
+        $this->orderService->addNoteForRemainItem($id, $note);
 
-        $confirmOrder = $this->orderService->getConfirmOrderByTableID($tableID);
-        $data = $this->orderService->getAllItemInConfirmOrder($confirmOrder);
 
-//        return
+        return $this->successResponse(null, 'Success');
     }
 }

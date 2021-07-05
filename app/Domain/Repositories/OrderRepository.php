@@ -9,6 +9,11 @@ use App\Domain\Entities\Order;
 
 class OrderRepository
 {
+    public function getConfirmOrderByID($id)
+    {
+        return Order::where('_id', $id)->first();
+    }
+
     public function getConfirmOrder($tableID)
     {
         return Order::where('status', Order::ORDER_STATUS_CONFIRMED)

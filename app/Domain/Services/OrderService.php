@@ -126,4 +126,11 @@ class OrderService
 
         return $this->orderRepository->update($confirmOrder);
     }
+
+    public function addNoteForRemainItem($id, $note){
+        $confirmOrder = $this->orderRepository->getConfirmOrderByID($id);
+        $confirmOrder->note = $note;
+
+        return $this->orderRepository->update($confirmOrder);
+    }
 }
