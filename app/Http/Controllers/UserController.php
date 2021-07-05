@@ -103,4 +103,65 @@ class UserController extends Controller
         $this->userService->updateNumberOfCustomer($param['table_id'], $param['number_of_customer']);
         return $this->successResponse('', 'Update successfully');
     }
+
+    public function addNewTable()
+    {
+        $param = request()->all();
+        $validator = Validator::make($param, [
+            'table_number' => 'required|integer|min:1',
+            'max_customer' => 'required|integer|min:1'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->errorResponse('Invalid params', null, false, 400);
+        }
+
+        if ($param['table_number'] < 10) {
+            $username = 'MB0' . $param['table_number'];
+            $fullname = 'Bàn 0' . $param['table_number'];
+        } else {
+            $username = 'MB' . $param['table_number'];
+            $fullname = 'Bàn ' . $param['table_number'];
+        }
+
+        $check = $this->userService->checkExistedTable($username);
+        if (!$check) {
+            return $this->errorResponse('Table existed', null, false, 409);
+        }
+
+        $this->userService->addNewTable($username, $fullname, $param['max_customer']);
+
+        return $this->successResponse('', 'Insert successful');
+    }
+
+    public function deleteTable()
+    {
+        $param = request()->all();
+        $validator = Validator::make($param, [
+            'table_id' => 'required|alpha_num'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->errorResponse('Invalid param', null, false, 400);
+        }
+
+        $this->userService->deleteTable($param['table_id']);
+
+        return $this->successResponse('', 'Delete successful');
+    }
+
+    public function generateNewQrCode()
+    {
+        $param = request()->all();
+        $validator = Validator::make($param, [
+            'table_id' => 'required|alpha_num'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->errorResponse('Invalid param', null, false, 400);
+        }
+
+        $data = $this->userService->generateNewQrCode($param['table_id']);
+        return $this->successResponse($data, 'Success');
+    }
 }
