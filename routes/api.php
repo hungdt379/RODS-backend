@@ -72,6 +72,9 @@ Route::group([
     'prefix' => 'receptionist'
 ], function () {
     Route::group(['middleware' => 'auth.jwt'], function () {
+        Route::post('table/new', 'UserController@addNewTable');
+        Route::get('table/delete', 'UserController@deleteTable');
+        Route::get('table/qrcode', 'UserController@generateNewQrCode');
         Route::get('feedback', 'FeedbackController@getAllFeedback');
         Route::get('notifications', 'NotificationController@getAllNotification');
         Route::get('notifications/read', 'NotificationController@markAsRead');
