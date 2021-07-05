@@ -143,4 +143,42 @@ class OrderService
 
         return $this->orderRepository->update($confirmOrder);
     }
+
+    public function increaseQuantity($id, $itemID)
+    {
+        $confirmOrder = $this->orderRepository->getConfirmOrderByID($id);
+        $item = [];
+        $totalCost = 0;
+        foreach ($confirmOrder['item'] as $value) {
+            if ($value['item_id'] == $itemID) {
+                $value['quantity'] = (int)($value['quantity']) + 1;
+                $value['total_cost'] = $value['quantity'] * (int)$value['detail_item']['cost'];
+            }
+            array_push($item, $value);
+            $totalCost += $value['total_cost'];
+        }
+        $confirmOrder->item = $item;
+        $confirmOrder->total_cost = $totalCost;
+
+        return $this->orderRepository->update($confirmOrder);
+    }
+
+    public function decreaseQuantity($id, $itemID)
+    {
+        $confirmOrder = $this->orderRepository->getConfirmOrderByID($id);
+        $item = [];
+        $totalCost = 0;
+        foreach ($confirmOrder['item'] as $value) {
+            if ($value['item_id'] == $itemID) {
+                $value['quantity'] = (int)($value['quantity']) - 1;
+                $value['total_cost'] = $value['quantity'] * (int)$value['detail_item']['cost'];
+            }
+            array_push($item, $value);
+            $totalCost += $value['total_cost'];
+        }
+        $confirmOrder->item = $item;
+        $confirmOrder->total_cost = $totalCost;
+
+        return $this->orderRepository->update($confirmOrder);
+    }
 }
