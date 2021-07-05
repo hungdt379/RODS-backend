@@ -99,7 +99,8 @@ class OrderController extends Controller
         return $this->successResponse(null, 'Success');
     }
 
-    public function addVoucherToConfirmOrder(){
+    public function addVoucherToConfirmOrder()
+    {
         $param = request()->all();
         $validator = Validator::make($param, [
             '_id' => 'required',
@@ -114,5 +115,28 @@ class OrderController extends Controller
 
         return $this->successResponse(null, 'Success');
 
+    }
+
+    public function updateQuantityOfItem()
+    {
+        $param = request()->all();
+        $validator = Validator::make($param, [
+            '_id' => 'required',
+            'item_id' => 'required',
+            'status' => 'required|boolean'
+        ]);
+        if ($validator->fails()) {
+            return $this->errorResponse($validator->errors(), null, false, 404);
+        }
+        $id = $param['_id'];
+        $itemID = $param['item_id'];
+        $status = $param['status'];
+        if($status){
+            $this->orderService->increaseQuantity($id, $itemID);
+        }else{
+            $this->orderService->decreaseQuantity($id, $itemID);
+        }
+
+        return $this->successResponse(null, 'Success');
     }
 }

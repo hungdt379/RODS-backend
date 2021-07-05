@@ -80,6 +80,7 @@ Route::group([
         Route::get('notifications', 'NotificationController@getAllNotification');
         Route::get('notifications/read', 'NotificationController@markAsRead');
         Route::post('order/confirm/voucher/add', 'OrderController@addVoucherToConfirmOrder');
+        Route::post('order/confirm/item/quantity/update', 'OrderController@updateQuantityOfItem');
     });
 });
 
