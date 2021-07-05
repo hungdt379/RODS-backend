@@ -48,19 +48,7 @@ class OrderService
         $confirmOrder->total_cost = $queueOrder->total_cost;
         $confirmOrder->ts = time();
 
-        foreach ($item as $value){
-            $dishInOrder = new DishInOrder();
-            $dishInOrder->table_id = $queueOrder->table_id;
-            $dishInOrder->table_name = $queueOrder->table_name;
-            $dishInOrder->item_id = $value['item_id'];
-            $dishInOrder->item_name = $value['detail_item']['name'];
-            $dishInOrder->dish_in_combo = $value['dish_in_combo'];
-            $dishInOrder->quantity = $value['quantity'];
-            $dishInOrder->status = DishInOrder::ORDER_ITEM_STATUS_PREPARE;
-            $dishInOrder->category_id = $value['detail_item']['category_id'];
-
-            $this->dishInOrderService->insert($dishInOrder);
-        }
+        $this->insertToDishInOrder($queueOrder);
 
         return $this->orderRepository->insert($confirmOrder);
     }
@@ -71,19 +59,7 @@ class OrderService
         $totalCost = 0;
         $length = count($item);
 
-        foreach ($queueOrder['item'] as $value){
-            $dishInOrder = new DishInOrder();
-            $dishInOrder->table_id = $queueOrder->table_id;
-            $dishInOrder->table_name = $queueOrder->table_name;
-            $dishInOrder->item_id = $value['item_id'];
-            $dishInOrder->item_name = $value['detail_item']['name'];
-            $dishInOrder->dish_in_combo = $value['dish_in_combo'];
-            $dishInOrder->quantity = $value['quantity'];
-            $dishInOrder->status = DishInOrder::ORDER_ITEM_STATUS_PREPARE;
-            $dishInOrder->category_id = $value['detail_item']['category_id'];
-
-            $this->dishInOrderService->insert($dishInOrder);
-        }
+        $this->insertToDishInOrder($queueOrder);
 
         for ($i = 0; $i < $length; $i++) {
             for ($j = $i + 1; $j < $length; $j++) {
@@ -101,12 +77,38 @@ class OrderService
         foreach ($item as $value) {
             $totalCost += $value['total_cost'];
         }
-
         $confirmOrder['item'] = array_values($item);
         $confirmOrder['total_cost'] = $totalCost;
 
-
         return $this->orderRepository->update($confirmOrder);
+    }
+
+    public function insertToDishInOrder($queueOrder)
+    {
+        foreach ($queueOrder['item'] as $value) {
+            $dishInOrder = new DishInOrder();
+            $dishInOrder->table_id = $queueOrder->table_id;
+            $dishInOrder->table_name = $queueOrder->table_name;
+            $dishInOrder->item_name = $value['detail_item']['name'];
+            $dishInOrder->quantity = $value['quantity'];
+            $dishInOrder->status = DishInOrder::ORDER_ITEM_STATUS_PREPARE;
+            $dishInOrder->category_id = $value['detail_item']['category_id'];
+            if ($value['dish_in_combo'] != null) {
+                $dishInCombo = $value['dish_in_combo'];
+                $length = count($dishInCombo);
+                for ($i = 0; $i < $length; $i++) {
+                    $dishInOrder = new DishInOrder();
+                    $dishInOrder->table_id = $queueOrder->table_id;
+                    $dishInOrder->table_name = $queueOrder->table_name;
+                    $dishInOrder->item_name = $value['dish_in_combo'][$i];
+                    $dishInOrder->quantity = $value['quantity'];
+                    $dishInOrder->status = DishInOrder::ORDER_ITEM_STATUS_PREPARE;
+                    $dishInOrder->category_id = $value['detail_item']['category_id'];
+                    $this->dishInOrderService->insert($dishInOrder);
+                }
+            }
+            $this->dishInOrderService->insert($dishInOrder);
+        }
     }
 
     public function deleteItemInConfirmOrder($confirmOrder, $itemID)
