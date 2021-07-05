@@ -27,4 +27,14 @@ class UserRepository
     {
         return $user->save();
     }
+
+    public function checkExistedTable($username)
+    {
+        return User::where('username', $username)->first();
+    }
+
+    public function deleteTable($tableId)
+    {
+        User::where('_id', $tableId)->delete();
+    }
 }
