@@ -35,6 +35,17 @@ class OrderService
         return $this->orderRepository->getAllConfirmOrder($pageSize);
     }
 
+    public function getCompletedOrderByID($id)
+    {
+        return $this->orderRepository->getCompletedOrderByID($id);
+    }
+
+    public function invoiceOrder($confirmOrder)
+    {
+        $confirmOrder->status = Order::ORDER_STATUS_COMPLETED;
+        return $this->orderRepository->update($confirmOrder);
+    }
+
     public function addNewConfirmOrder($queueOrder)
     {
         $confirmOrder = new Order();
@@ -139,7 +150,8 @@ class OrderService
     {
         $confirmOrder = $this->orderRepository->getConfirmOrderByID($id);
         $confirmOrder->voucher = $voucher;
-        $confirmOrder->total_cost = (int)$confirmOrder['total_cost'] - (int)$confirmOrder['total_cost'] * $voucher / 100;
+        $confirmOrder->total_cost_of_voucher = (int)$confirmOrder['total_cost'] * $voucher / 100;
+        $confirmOrder->total_cost = (int)$confirmOrder['total_cost'] - $confirmOrder->total_cost_of_voucher;
 
         return $this->orderRepository->update($confirmOrder);
     }
