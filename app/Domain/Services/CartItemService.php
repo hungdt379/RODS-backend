@@ -47,7 +47,7 @@ class CartItemService
         }
         $item['total_cost'] = (int)$cost * (int)$quantity;
 
-        return $this->cartItemRepository->update($item);;
+        return $this->cartItemRepository->update($item);
     }
 
     public function addNewItem($tableID, $itemID, $quantity, $note, $dishInCombo, $cost)
