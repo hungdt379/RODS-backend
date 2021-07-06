@@ -13,7 +13,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        'App\Console\Commands\DeleteNotificationCommand'
+        'App\Console\Commands\DeleteNotificationCommand',
+        'App\Console\Commands\DeleteRememberToken'
     ];
 
     /**
@@ -24,7 +25,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('delete:notification')->everyMinute();
+        $schedule->command('delete:notification')->dailyAt('00:00');
+        $schedule->command('delete:token')->dailyAt('00:00');
     }
 
     /**
