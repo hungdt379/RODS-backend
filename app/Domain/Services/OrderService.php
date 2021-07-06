@@ -46,6 +46,61 @@ class OrderService
         return $this->orderRepository->update($confirmOrder);
     }
 
+    public function getListConfirmOrderByTableID($tableID)
+    {
+        return $this->orderRepository->getListConfirmOrderByTableID($tableID);
+    }
+
+    public function matchingConfirmOrder($listConfirmOrder)
+    {
+        $item = [];
+        $totalCost = 0;
+        $tableID = [];
+        $tableName = [];
+        $numberOfCustomer = 0;
+        $note = '';
+        $id = [];
+        foreach ($listConfirmOrder as $confirmOrder) {
+            $note = $note.', '.$confirmOrder['note'];
+            $numberOfCustomer += (int)$confirmOrder['number_of_customer'];
+            array_push($tableID, $confirmOrder['table_id']);
+            array_push($tableName, $confirmOrder['table_name']);
+            array_push($id, $confirmOrder['_id']);
+            foreach ($confirmOrder['item'] as $value) {
+                array_push($item, $value);
+            }
+        }
+        $length = count($item);
+        for ($i = 0; $i < $length; $i++) {
+            for ($j = $i + 1; $j < $length; $j++) {
+                if ($item[$i]['item_id'] == $item[$j]['item_id']) {
+                    $item[$i]['quantity'] += $item[$j]['quantity'];
+                    $item[$i]['total_cost'] += $item[$j]['total_cost'];
+                    $item[$i]['dish_in_combo'] = $item[$j]['dish_in_combo'];
+                    unset($item[$j]);
+                    $item = array_values($item);
+                    $length--;
+                }
+            }
+        }
+        foreach ($item as $value) {
+            $totalCost += $value['total_cost'];
+        }
+        $newConfirmOrder = new Order();
+        $newConfirmOrder->table_id = $tableID;
+        $newConfirmOrder->table_name = $tableName;
+        $newConfirmOrder->number_of_customer = $numberOfCustomer;
+        $newConfirmOrder->status = Order::ORDER_STATUS_CONFIRMED;
+        $newConfirmOrder->item = array_values($item);
+        $newConfirmOrder->total_cost = $totalCost;
+        $newConfirmOrder->total_cost = $totalCost;
+        $newConfirmOrder->note = substr($note,2);
+        $newConfirmOrder->ts = time();
+
+        $this->orderRepository->deleteConfirmOrderByID($id);
+        return $this->orderRepository->insert($newConfirmOrder);
+    }
+
     public function addNewConfirmOrder($queueOrder)
     {
         $confirmOrder = new Order();
@@ -192,5 +247,10 @@ class OrderService
         $confirmOrder->total_cost = $totalCost;
 
         return $this->orderRepository->update($confirmOrder);
+    }
+
+    public function deleteConfirmOrderByTableID($tableID)
+    {
+        return $this->orderRepository->deleteConfirmOrderByID($tableID);
     }
 }

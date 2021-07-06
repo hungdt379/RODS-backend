@@ -159,4 +159,20 @@ class OrderController extends Controller
 
         return $this->successResponse(null, 'Success');
     }
+
+    public function matchingConfirmOrder()
+    {
+        $param = request()->all();
+        $validator = Validator::make($param, [
+            'table_id' => 'required'
+        ]);
+        if ($validator->fails()) {
+            return $this->errorResponse($validator->errors(), null, false, 404);
+        }
+        $tableID = $param['table_id'];
+        $listConfirmOrder = $this->orderService->getListConfirmOrderByTableID($tableID)->toArray();
+        $this->orderService->matchingConfirmOrder($listConfirmOrder);
+
+        return $this->successResponse(null, 'Success');
+    }
 }

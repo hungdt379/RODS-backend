@@ -23,7 +23,19 @@ class OrderRepository
     public function getCompletedOrderByID($id)
     {
         return Order::where('status', Order::ORDER_STATUS_COMPLETED)
-                ->where('_id', $id) ->first();
+            ->where('_id', $id)->first();
+    }
+
+    public function getListConfirmOrderByTableID($tableID)
+    {
+        return Order::where('status', Order::ORDER_STATUS_CONFIRMED)
+            ->whereIn('table_id', $tableID)->get();
+    }
+
+    public function deleteConfirmOrderByID($id)
+    {
+        return Order::where('status', Order::ORDER_STATUS_CONFIRMED)
+            ->whereIn('_id', $id)->delete();
     }
 
     public function checkExistingOrderInTable($tableID)
