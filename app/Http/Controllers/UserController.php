@@ -162,7 +162,13 @@ class UserController extends Controller
         }
 
         $table = $this->userService->getUserById($param['table_id']);
-        $check = $this->userService->checkExistedTableForUpdate($username, $table->username);
+
+        if ($table != null){
+            $check = $this->userService->checkExistedTableForUpdate($username, $table->username);
+        }else{
+            return $this->errorResponse('Table does not exist', null, false, 400);
+        }
+
         if (!$check) {
             return $this->errorResponse('Table existed', null, false, 409);
         }
