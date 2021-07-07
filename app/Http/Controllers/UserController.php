@@ -71,8 +71,10 @@ class UserController extends Controller
             return $this->errorResponse('Invalid params', null, false, 400);
         }
 
-        if ($param['number_of_customer'] > 8 || $param['number_of_customer'] < 1) {
-            return $this->errorResponse('Number of customer must be greater or equal 1 and less or equal 8', null, false, 400);
+        $table = $this->userService->getUserById($param['table_id']);
+
+        if ($param['number_of_customer'] > $table->max_customer || $param['number_of_customer'] < 1) {
+            return $this->errorResponse('Number of customer must be greater or equal 1 and less or equal ' . $table->max_customer, null, false, 400);
         }
 
         $this->userService->openTable($param['table_id'], $param['number_of_customer']);
@@ -85,7 +87,7 @@ class UserController extends Controller
         $param = request()->all();
         $user = $this->userService->getUserById($param['table_id']);
 
-        if (sizeof($user->remember_token) != 0){
+        if (sizeof($user->remember_token) != 0) {
             $ctoken = JWTAuth::getToken();
             foreach ($user['remember_token'] as $token) {
                 if ($token != $ctoken) {
@@ -136,6 +138,37 @@ class UserController extends Controller
         $this->userService->addNewTable($username, $fullname, $param['max_customer']);
 
         return $this->successResponse('', 'Insert successful');
+    }
+
+    public function updateTable()
+    {
+        $param = request()->all();
+        $validator = Validator::make($param, [
+            'table_number' => 'required|integer|min:1',
+            'max_customer' => 'required|integer|min:1',
+            'table_id' => 'required|alpha_num'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->errorResponse('Invalid params', null, false, 400);
+        }
+
+        if ($param['table_number'] < 10) {
+            $username = 'MB0' . $param['table_number'];
+            $fullname = 'Bàn 0' . $param['table_number'];
+        } else {
+            $username = 'MB' . $param['table_number'];
+            $fullname = 'Bàn ' . $param['table_number'];
+        }
+
+        $table = $this->userService->getUserById($param['table_id']);
+        $check = $this->userService->checkExistedTableForUpdate($username, $table->username);
+        if (!$check) {
+            return $this->errorResponse('Table existed', null, false, 409);
+        }
+
+        $this->userService->updateTable($param['table_id'], $username, $fullname, $param['max_customer']);
+        return $this->successResponse('', 'Update successful');
     }
 
     public function deleteTable()

@@ -74,6 +74,7 @@ Route::group([
 ], function () {
     Route::group(['middleware' => 'auth.jwt'], function () {
         Route::post('table/new', 'UserController@addNewTable');
+        Route::post('table/update', 'UserController@updateTable');
         Route::get('table/delete', 'UserController@deleteTable');
         Route::get('table/qrcode', 'UserController@generateNewQrCode');
         Route::get('feedback', 'FeedbackController@getAllFeedback');
