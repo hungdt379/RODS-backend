@@ -84,6 +84,22 @@ class UserService
         } else return false;
     }
 
+    public function checkExistedTableForUpdate($username, $currentUsername)
+    {
+        $table = $this->userRepository->checkExistedTableForUpdate($username, $currentUsername);
+        if ($table == null) {
+            return true;
+        } else return false;
+    }
+
+    public function updateTable($tableId, $username, $fullname, $maxCustomer ){
+        $table = $this->userRepository->getUserById($tableId);
+        $table->full_name = $fullname;
+        $table->username = $username;
+        $table->max_customer = $maxCustomer;
+        $this->userRepository->update($table);
+    }
+
     public function deleteTable($tableId)
     {
         $this->userRepository->deleteTable($tableId);
@@ -99,7 +115,7 @@ class UserService
         $nameQrFile = time() . '.svg';
         Storage::disk('qrcode')->put($nameQrFile, $qrCode);
 
-        $customPaper = array(0,0,380.10,283.80); // (10*20 cm)
+        $customPaper = array(0,0,380.10,283.80);
         $pdf = PDF::loadHTML('<h1>'.$table->full_name.'</h1>'.
                             '<img style="width:290px, height:290px" src="qrcode/'.time().'.svg" alt="">')
                             ->setPaper($customPaper, 'landscape');

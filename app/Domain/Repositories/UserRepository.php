@@ -33,6 +33,11 @@ class UserRepository
         return User::where('username', $username)->first();
     }
 
+    public function checkExistedTableForUpdate($username, $currentUsername)
+    {
+        return User::where('username', $username)->where('username', 'not like', $currentUsername)->first();
+    }
+
     public function deleteTable($tableId)
     {
         User::where('_id', $tableId)->delete();
