@@ -29,4 +29,9 @@ class DishInComboRepository
             ->get();
     }
 
+    public function getDishInCombo($textSearch)
+    {
+        return DishInCombo::whereRaw(array('$text' => array('$search' => $textSearch)))->get();
+    }
+
 }

@@ -81,7 +81,10 @@ class MenuController
         if ($validator->fails()) {
             return $this->errorResponse('Invalid params', null, false, 400);
         }
-        $data = $this->menuService->getAllItem();
+
+        $data = $this->menuService->getItem($param['q']);
+        if (sizeof($data) == 0) return $this->errorResponse('Not found items', null, false, 404);
+
         $dataWithPaging = [];
         $start = ($param['page'] - 1) * $param['pageSize'];
         $end = $param['page'] * $param['pageSize'];
