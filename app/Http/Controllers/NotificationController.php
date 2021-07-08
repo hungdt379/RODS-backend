@@ -71,9 +71,9 @@ class NotificationController extends Controller
         $param = request()->all();
 
         $validator = Validator::make($param, [
-            'table_id' => 'required|alpha_num|max:30',
-            'page' => 'required|integer|max:10',
-            'pageSize' => 'required|integer|max:10'
+            'table_id' => 'required|alpha_num',
+            'page' => 'required|integer',
+            'pageSize' => 'required|integer'
         ]);
 
         if ($validator->fails()) {
@@ -95,8 +95,8 @@ class NotificationController extends Controller
         $param = request()->all();
 
         $validator = Validator::make($param, [
-            'page' => 'required|integer|max:10',
-            'pageSize' => 'required|integer|max:10',
+            'page' => 'required|integer',
+            'pageSize' => 'required|integer',
             'receiver' => Rule::in(Notification::RECEIVER_ALL_NOTIFICATION)
         ]);
 
@@ -117,7 +117,7 @@ class NotificationController extends Controller
         $param = request()->all();
 
         $validator = Validator::make($param, [
-            'table_id' => 'required|alpha_num|max:30'
+            'table_id' => 'required|alpha_num'
         ]);
 
         if ($validator->fails()) {

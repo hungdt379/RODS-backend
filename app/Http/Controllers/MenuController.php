@@ -74,8 +74,8 @@ class MenuController
     {
         $param = request()->all();
         $validator = Validator::make($param, [
-            'page' => 'required|integer|max:10',
-            'pageSize' => 'required|integer|max:10'
+            'page' => 'required|integer',
+            'pageSize' => 'required|integer'
         ]);
 
         if ($validator->fails()) {
@@ -85,10 +85,19 @@ class MenuController
         $dataWithPaging = [];
         $start = ($param['page'] - 1) * $param['pageSize'];
         $end = $param['page'] * $param['pageSize'];
+        $total = sizeof($data);
+        $totalPage = ceil($total / $param['pageSize']);
+
+        if ($param['page'] > (int)$totalPage) {
+            return $this->errorResponse('Not found items', null, false, 404);
+        }
+
+        if ($end >= $total) $end = $total;
+
         for ($i = $start; $i < $end; $i++) {
             array_push($dataWithPaging, $data[$i]);
         }
-        return $this->successResponseWithPaging($dataWithPaging, 'Success', $param['page'], $param['pageSize'], sizeof($data));
+        return $this->successResponseWithPaging($dataWithPaging, 'Success', $param['page'], $param['pageSize'], $total);
     }
 
     public function updateItemSoldOutStatus()
