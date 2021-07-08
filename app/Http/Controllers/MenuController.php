@@ -47,8 +47,8 @@ class MenuController
         }
 
         $data = $this->menuService->getDetailItemByID($param['_id']);
-        if (sizeof($data) == 0){
-            return $this->errorResponse('Not found item', null,false, 404);
+        if (sizeof($data) == 0) {
+            return $this->errorResponse('Not found item', null, false, 404);
         }
 
         return $this->successResponse($data, 'Success');
@@ -57,17 +57,59 @@ class MenuController
     public function searchItem()
     {
         $param = request()->all();
-        if ($param['q'] == null){
+        if ($param['q'] == null) {
             return $this->errorResponse('Not found items', null, false, 404);
         }
 
         $data = $this->menuService->getItemByName($param['q'], JWTAuth::user()->_id);
 
-        if (sizeof($data) == 0 ){
+        if (sizeof($data) == 0) {
             return $this->errorResponse('Not found items', null, false, 404);
         }
 
         return $this->successResponse($data, 'Success');
+    }
+
+    public function getAllItem()
+    {
+        $param = request()->all();
+        $validator = Validator::make($param, [
+            'page' => 'required|integer|max:10',
+            'pageSize' => 'required|integer|max:10'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->errorResponse('Invalid params', null, false, 400);
+        }
+        $data = $this->menuService->getAllItem();
+        $dataWithPaging = [];
+        $start = ($param['page'] - 1) * $param['pageSize'];
+        $end = $param['page'] * $param['pageSize'];
+        for ($i = $start; $i < $end; $i++) {
+            array_push($dataWithPaging, $data[$i]);
+        }
+        return $this->successResponseWithPaging($dataWithPaging, 'Success', $param['page'], $param['pageSize'], sizeof($data));
+    }
+
+    public function updateItemSoldOutStatus()
+    {
+        $param = request()->all();
+        $validator = Validator::make($param, [
+            'item_id' => 'required|alpha_num',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->errorResponse('Invalid param', null, false, 400);
+        }
+
+        $menuItem = $this->menuService->getItemByID($param['item_id']);
+        $dishItem = $this->dishInComboService->getDishInComboById($param['item_id']);
+        if ($menuItem == null && $dishItem == null) {
+            return $this->errorResponse('Not found items', null, false, 404);
+        }
+
+        $this->menuService->updateItemSoldOutStatus($menuItem, $dishItem);
+        return $this->successResponse(null, 'Update successful');
     }
 
     // day là code của thịnh viết lên trên function này

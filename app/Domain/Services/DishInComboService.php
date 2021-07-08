@@ -23,4 +23,9 @@ class DishInComboService
     {
         return $this->dishInComboRepository->getDishesByCombo($comboID);
     }
+
+    public function getDishInComboById($itemId)
+    {
+        return $this->dishInComboRepository->getDishInComboById($itemId);
+    }
 }
