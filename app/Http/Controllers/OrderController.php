@@ -113,8 +113,8 @@ class OrderController extends Controller
             return $this->errorResponse($validator->errors(), null, false, 404);
         }
         $note = $param['note'];
-        $id = $param['_id'];
-        $this->orderService->addNoteForRemainItem($id, $note);
+        $orderID = $param['_id'];
+        $this->orderService->addNoteForRemainItem($orderID, $note);
 
         return $this->successResponse(null, 'Success');
     }
@@ -129,9 +129,9 @@ class OrderController extends Controller
         if ($validator->fails()) {
             return $this->errorResponse($validator->errors(), null, false, 404);
         }
-        $id = $param['_id'];
+        $orderID = $param['_id'];
         $voucher = (int)$param['voucher'];
-        $this->orderService->addVoucherToConfirmOrder($id, $voucher);
+        $this->orderService->addVoucherToConfirmOrder($orderID, $voucher);
 
         return $this->successResponse(null, 'Success');
 
@@ -148,13 +148,13 @@ class OrderController extends Controller
         if ($validator->fails()) {
             return $this->errorResponse($validator->errors(), null, false, 404);
         }
-        $id = $param['_id'];
+        $orderID = $param['_id'];
         $itemID = $param['item_id'];
         $status = $param['status'];
         if ($status) {
-            $this->orderService->increaseQuantity($id, $itemID);
+            $this->orderService->increaseQuantity($orderID, $itemID);
         } else {
-            $this->orderService->decreaseQuantity($id, $itemID);
+            $this->orderService->decreaseQuantity($orderID, $itemID);
         }
 
         return $this->successResponse(null, 'Success');

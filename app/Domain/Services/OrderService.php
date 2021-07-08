@@ -35,9 +35,9 @@ class OrderService
         return $this->orderRepository->getAllConfirmOrder($pageSize);
     }
 
-    public function getCompletedOrderByID($id)
+    public function getCompletedOrderByID($orderID)
     {
-        return $this->orderRepository->getCompletedOrderByID($id);
+        return $this->orderRepository->getCompletedOrderByID($orderID);
     }
 
     public function invoiceOrder($confirmOrder)
@@ -59,7 +59,7 @@ class OrderService
         $tableName = [];
         $numberOfCustomer = 0;
         $note = '';
-        $id = [];
+        $orderID = [];
         foreach ($listConfirmOrder as $confirmOrder) {
             if(isset($confirmOrder['note'])){
                 $note = $note.', '.$confirmOrder['note'];
@@ -67,7 +67,7 @@ class OrderService
             $numberOfCustomer += (int)$confirmOrder['number_of_customer'];
             array_push($tableID, $confirmOrder['table_id']);
             array_push($tableName, $confirmOrder['table_name']);
-            array_push($id, $confirmOrder['_id']);
+            array_push($orderID, $confirmOrder['_id']);
             foreach ($confirmOrder['item'] as $value) {
                 array_push($item, $value);
             }
@@ -99,7 +99,7 @@ class OrderService
         $newConfirmOrder->note = substr($note,2);
         $newConfirmOrder->ts = time();
 
-        $this->orderRepository->deleteConfirmOrderByID($id);
+        $this->orderRepository->deleteConfirmOrderByID($orderID);
         return $this->orderRepository->insert($newConfirmOrder);
     }
 
@@ -195,17 +195,17 @@ class OrderService
         return $this->orderRepository->update($confirmOrder);
     }
 
-    public function addNoteForRemainItem($id, $note)
+    public function addNoteForRemainItem($orderID, $note)
     {
-        $confirmOrder = $this->orderRepository->getConfirmOrderByID($id);
+        $confirmOrder = $this->orderRepository->getConfirmOrderByID($orderID);
         $confirmOrder->note = $note;
 
         return $this->orderRepository->update($confirmOrder);
     }
 
-    public function addVoucherToConfirmOrder($id, $voucher)
+    public function addVoucherToConfirmOrder($orderID, $voucher)
     {
-        $confirmOrder = $this->orderRepository->getConfirmOrderByID($id);
+        $confirmOrder = $this->orderRepository->getConfirmOrderByID($orderID);
         $confirmOrder->voucher = $voucher;
         $confirmOrder->total_cost_of_voucher = (int)$confirmOrder['total_cost'] * $voucher / 100;
         $confirmOrder->total_cost = (int)$confirmOrder['total_cost'] - $confirmOrder->total_cost_of_voucher;
@@ -213,9 +213,9 @@ class OrderService
         return $this->orderRepository->update($confirmOrder);
     }
 
-    public function increaseQuantity($id, $itemID)
+    public function increaseQuantity($orderID, $itemID)
     {
-        $confirmOrder = $this->orderRepository->getConfirmOrderByID($id);
+        $confirmOrder = $this->orderRepository->getConfirmOrderByID($orderID);
         $item = [];
         $totalCost = 0;
         foreach ($confirmOrder['item'] as $value) {
@@ -251,8 +251,4 @@ class OrderService
         return $this->orderRepository->update($confirmOrder);
     }
 
-    public function deleteConfirmOrderByTableID($tableID)
-    {
-        return $this->orderRepository->deleteConfirmOrderByID($tableID);
-    }
 }
