@@ -61,7 +61,9 @@ class OrderService
         $note = '';
         $id = [];
         foreach ($listConfirmOrder as $confirmOrder) {
-            $note = $note.', '.$confirmOrder['note'];
+            if(isset($confirmOrder['note'])){
+                $note = $note.', '.$confirmOrder['note'];
+            }
             $numberOfCustomer += (int)$confirmOrder['number_of_customer'];
             array_push($tableID, $confirmOrder['table_id']);
             array_push($tableName, $confirmOrder['table_name']);
