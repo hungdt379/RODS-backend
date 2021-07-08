@@ -64,7 +64,7 @@ class Menu extends Seeder
             'name' => 'Rượu Soju Hàn Quốc',
             'cost' => 10000,
             'description' => null,
-            'image' => 'http://165.227.99.160/image/pepsi.png',
+            'image' => 'http://165.227.99.160/image/soju.png',
             'hotpot' => false,
             'category_id' => $drink->_id,
             'is_sold_out' => false
