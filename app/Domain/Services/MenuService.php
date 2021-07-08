@@ -142,4 +142,26 @@ class MenuService
         return $this->menuRepository->getItemByID($itemID);
     }
 
+    public function getAllItem()
+    {
+        $menu = $this->menuRepository->getAllMenu()->toArray();
+        $dishInCombo = $this->dishInComboRepository->getAllDishInCombo();
+        foreach ($dishInCombo as $item) {
+            array_push($menu, $item);
+        }
+
+        return $menu;
+    }
+
+    public function updateItemSoldOutStatus($menuItem, $dishItem)
+    {
+        if ($menuItem == null && $dishItem != null) {
+            $dishItem->is_sold_out = true;
+            $this->dishInComboRepository->update($dishItem);
+        } else if ($menuItem != null && $dishItem == null) {
+            $menuItem->is_sold_out = true;
+            $this->menuRepository->update($menuItem);
+        }
+    }
+
 }

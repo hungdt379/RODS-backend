@@ -4,16 +4,18 @@
 namespace App\Domain\Repositories;
 
 
-use App\Domain\Entities\Category;
 use App\Domain\Entities\Menu;
 use App\Domain\Entities\SearchCombo129K;
 use App\Domain\Entities\SearchCombo169K;
 use App\Domain\Entities\SearchCombo209K;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Query\JoinClause;
 
 class MenuRepository
 {
+
+    public function getAllMenu(){
+        return Menu::all();
+    }
+
     public function getMenuByCategory($categoryID)
     {
         return Menu::where('category_id', $categoryID)->where('name', 'not like', 'Lẩu')->get();
@@ -28,7 +30,11 @@ class MenuRepository
     public function getItemByID($id)
     {
         return Menu::where('_id', $id)->first();
+    }
 
+    public function update($menuItem)
+    {
+        $menuItem->save();
     }
 
     public function getItemByName($name)
