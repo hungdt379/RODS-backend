@@ -14,11 +14,62 @@ class Menu extends Seeder
      */
     public function run()
     {
-        DB::table('menu')->update(['is_sold_out' => false]);
+        //DB::table('menu')->update(['is_sold_out' => false]);
 
-//        $combo = Category::where('name', 'combo')->first();
-//        $drink = Category::where('name', 'drink')->first();
-//        $fastFood = Category::where('name', 'fast')->first();
+        $combo = Category::where('name', 'combo')->first();
+        $drink = Category::where('name', 'drink')->first();
+        $fastFood = Category::where('name', 'fast')->first();
+
+        DB::table('menu')->insert([
+            'name' => '7Up',
+            'cost' => 10000,
+            'description' => null,
+            'image' => 'http://165.227.99.160/image/7-up.png',
+            'hotpot' => false,
+            'category_id' => $drink->_id,
+            'is_sold_out' => false
+        ]);
+
+        DB::table('menu')->insert([
+            'name' => 'Bia Sài Gòn',
+            'cost' => 15000,
+            'description' => null,
+            'image' => 'http://165.227.99.160/image/bia-sai-gon.png',
+            'hotpot' => false,
+            'category_id' => $drink->_id,
+            'is_sold_out' => false
+        ]);
+
+        DB::table('menu')->insert([
+            'name' => 'Nem chua rán',
+            'cost' => 30000,
+            'description' => null,
+            'image' => 'http://165.227.99.160/image/nem-chua-ran.png',
+            'hotpot' => false,
+            'category_id' => $fastFood->_id,
+            'is_sold_out' => false
+        ]);
+
+        DB::table('menu')->insert([
+            'name' => 'Pepsi',
+            'cost' => 10000,
+            'description' => null,
+            'image' => 'http://165.227.99.160/image/pepsi.png',
+            'hotpot' => false,
+            'category_id' => $drink->_id,
+            'is_sold_out' => false
+        ]);
+
+        DB::table('menu')->insert([
+            'name' => 'Rượu Soju Hàn Quốc',
+            'cost' => 10000,
+            'description' => null,
+            'image' => 'http://165.227.99.160/image/pepsi.png',
+            'hotpot' => false,
+            'category_id' => $drink->_id,
+            'is_sold_out' => false
+        ]);
+
 //        DB::table('menu')->truncate();
 //        DB::table('menu')->insert([
 //
