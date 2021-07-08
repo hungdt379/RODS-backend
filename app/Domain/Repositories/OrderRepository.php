@@ -20,6 +20,12 @@ class OrderRepository
             ->where('table_id', $tableID)->first();
     }
 
+    public function getCompletedOrderByID($id)
+    {
+        return Order::where('status', Order::ORDER_STATUS_COMPLETED)
+                ->where('_id', $id) ->first();
+    }
+
     public function checkExistingOrderInTable($tableID)
     {
         return Order::where('status', Order::ORDER_STATUS_CONFIRMED)

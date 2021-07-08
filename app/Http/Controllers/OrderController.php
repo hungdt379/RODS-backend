@@ -82,6 +82,26 @@ class OrderController extends Controller
         return $this->successResponseWithPaging($data->items(), 'Success', $data->currentPage(), $pageSize, $data->total());
     }
 
+    public function getCompletedOrderByTableID()
+    {
+        $param = request()->all();
+        $validator = Validator::make($param, [
+            'table_id' => 'required'
+        ]);
+        if ($validator->fails()) {
+            return $this->errorResponse($validator->errors(), null, false, 404);
+        }
+        $tableID = $param['table_id'];
+        $confirmOrder = $this->orderService->getConfirmOrderByTableID($tableID);
+        if ($confirmOrder) {
+            $this->orderService->invoiceOrder($confirmOrder);
+            $data = $this->orderService->getCompletedOrderByID($confirmOrder->_id);
+            return $this->successResponse($data, 'Success');
+        } else {
+            return $this->errorResponse('Not found confirm order', null, false, 404);
+        }
+    }
+
     public function addNoteForRemainItem()
     {
         $param = request()->all();
@@ -131,9 +151,9 @@ class OrderController extends Controller
         $id = $param['_id'];
         $itemID = $param['item_id'];
         $status = $param['status'];
-        if($status){
+        if ($status) {
             $this->orderService->increaseQuantity($id, $itemID);
-        }else{
+        } else {
             $this->orderService->decreaseQuantity($id, $itemID);
         }
 
