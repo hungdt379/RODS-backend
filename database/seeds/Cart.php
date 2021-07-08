@@ -15,7 +15,6 @@ class Cart extends Seeder
         DB::table('cart')->insert([
             'cart_key' => 'c86c8991b5baf8103c8c071f00b56e4e',
             'table_id' => '60bf956e37610000b8004ec6',
-
         ]);
 
     }

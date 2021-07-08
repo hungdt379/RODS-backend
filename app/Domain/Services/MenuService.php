@@ -148,10 +148,16 @@ class MenuService
         return $this->menuRepository->getItemByID($itemID);
     }
 
-    public function getAllItem()
+    public function getItem($textSearch)
     {
-        $menu = $this->menuRepository->getAllMenu()->toArray();
-        $dishInCombo = $this->dishInComboRepository->getAllDishInCombo();
+        if ($textSearch == null || $textSearch == ''){
+            $menu = $this->menuRepository->getAllMenu()->toArray();
+            $dishInCombo = $this->dishInComboRepository->getAllDishInCombo();
+        }else{
+            $menu = $this->menuRepository->getMenu($textSearch)->toArray();
+            $dishInCombo = $this->dishInComboRepository->getDishInCombo($textSearch);
+        }
+
         foreach ($dishInCombo as $item) {
             array_push($menu, $item);
         }
