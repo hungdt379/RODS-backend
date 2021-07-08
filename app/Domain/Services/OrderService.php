@@ -35,15 +35,72 @@ class OrderService
         return $this->orderRepository->getAllConfirmOrder($pageSize);
     }
 
-    public function getCompletedOrderByID($id)
+    public function getCompletedOrderByID($orderID)
     {
-        return $this->orderRepository->getCompletedOrderByID($id);
+        return $this->orderRepository->getCompletedOrderByID($orderID);
     }
 
     public function invoiceOrder($confirmOrder)
     {
         $confirmOrder->status = Order::ORDER_STATUS_COMPLETED;
         return $this->orderRepository->update($confirmOrder);
+    }
+
+    public function getListConfirmOrderByTableID($tableID)
+    {
+        return $this->orderRepository->getListConfirmOrderByTableID($tableID);
+    }
+
+    public function matchingConfirmOrder($listConfirmOrder)
+    {
+        $item = [];
+        $totalCost = 0;
+        $tableID = [];
+        $tableName = [];
+        $numberOfCustomer = 0;
+        $note = '';
+        $orderID = [];
+        foreach ($listConfirmOrder as $confirmOrder) {
+            if(isset($confirmOrder['note'])){
+                $note = $note.', '.$confirmOrder['note'];
+            }
+            $numberOfCustomer += (int)$confirmOrder['number_of_customer'];
+            array_push($tableID, $confirmOrder['table_id']);
+            array_push($tableName, $confirmOrder['table_name']);
+            array_push($orderID, $confirmOrder['_id']);
+            foreach ($confirmOrder['item'] as $value) {
+                array_push($item, $value);
+            }
+        }
+        $length = count($item);
+        for ($i = 0; $i < $length; $i++) {
+            for ($j = $i + 1; $j < $length; $j++) {
+                if ($item[$i]['item_id'] == $item[$j]['item_id']) {
+                    $item[$i]['quantity'] += $item[$j]['quantity'];
+                    $item[$i]['total_cost'] += $item[$j]['total_cost'];
+                    $item[$i]['dish_in_combo'] = $item[$j]['dish_in_combo'];
+                    unset($item[$j]);
+                    $item = array_values($item);
+                    $length--;
+                }
+            }
+        }
+        foreach ($item as $value) {
+            $totalCost += $value['total_cost'];
+        }
+        $newConfirmOrder = new Order();
+        $newConfirmOrder->table_id = $tableID;
+        $newConfirmOrder->table_name = $tableName;
+        $newConfirmOrder->number_of_customer = $numberOfCustomer;
+        $newConfirmOrder->status = Order::ORDER_STATUS_CONFIRMED;
+        $newConfirmOrder->item = array_values($item);
+        $newConfirmOrder->total_cost = $totalCost;
+        $newConfirmOrder->total_cost = $totalCost;
+        $newConfirmOrder->note = substr($note,2);
+        $newConfirmOrder->ts = time();
+
+        $this->orderRepository->deleteConfirmOrderByID($orderID);
+        return $this->orderRepository->insert($newConfirmOrder);
     }
 
     public function addNewConfirmOrder($queueOrder)
@@ -138,17 +195,17 @@ class OrderService
         return $this->orderRepository->update($confirmOrder);
     }
 
-    public function addNoteForRemainItem($id, $note)
+    public function addNoteForRemainItem($orderID, $note)
     {
-        $confirmOrder = $this->orderRepository->getConfirmOrderByID($id);
+        $confirmOrder = $this->orderRepository->getConfirmOrderByID($orderID);
         $confirmOrder->note = $note;
 
         return $this->orderRepository->update($confirmOrder);
     }
 
-    public function addVoucherToConfirmOrder($id, $voucher)
+    public function addVoucherToConfirmOrder($orderID, $voucher)
     {
-        $confirmOrder = $this->orderRepository->getConfirmOrderByID($id);
+        $confirmOrder = $this->orderRepository->getConfirmOrderByID($orderID);
         $confirmOrder->voucher = $voucher;
         $confirmOrder->total_cost_of_voucher = (int)$confirmOrder['total_cost'] * $voucher / 100;
         $confirmOrder->total_cost = (int)$confirmOrder['total_cost'] - $confirmOrder->total_cost_of_voucher;
@@ -156,9 +213,9 @@ class OrderService
         return $this->orderRepository->update($confirmOrder);
     }
 
-    public function increaseQuantity($id, $itemID)
+    public function increaseQuantity($orderID, $itemID)
     {
-        $confirmOrder = $this->orderRepository->getConfirmOrderByID($id);
+        $confirmOrder = $this->orderRepository->getConfirmOrderByID($orderID);
         $item = [];
         $totalCost = 0;
         foreach ($confirmOrder['item'] as $value) {
@@ -193,4 +250,5 @@ class OrderService
 
         return $this->orderRepository->update($confirmOrder);
     }
+
 }

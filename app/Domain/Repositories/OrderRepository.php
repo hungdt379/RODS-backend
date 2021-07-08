@@ -9,9 +9,9 @@ use App\Domain\Entities\Order;
 
 class OrderRepository
 {
-    public function getConfirmOrderByID($id)
+    public function getConfirmOrderByID($orderID)
     {
-        return Order::where('_id', $id)->first();
+        return Order::where('_id', $orderID)->first();
     }
 
     public function getConfirmOrder($tableID)
@@ -20,10 +20,22 @@ class OrderRepository
             ->where('table_id', $tableID)->first();
     }
 
-    public function getCompletedOrderByID($id)
+    public function getCompletedOrderByID($orderID)
     {
         return Order::where('status', Order::ORDER_STATUS_COMPLETED)
-                ->where('_id', $id) ->first();
+            ->where('_id', $orderID)->first();
+    }
+
+    public function getListConfirmOrderByTableID($tableID)
+    {
+        return Order::where('status', Order::ORDER_STATUS_CONFIRMED)
+            ->whereIn('table_id', $tableID)->get();
+    }
+
+    public function deleteConfirmOrderByID($orderID)
+    {
+        return Order::where('status', Order::ORDER_STATUS_CONFIRMED)
+            ->whereIn('_id', $orderID)->delete();
     }
 
     public function checkExistingOrderInTable($tableID)
