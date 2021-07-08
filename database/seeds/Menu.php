@@ -15,7 +15,7 @@ class Menu extends Seeder
     public function run()
     {
         //DB::table('menu')->update(['is_sold_out' => false]);
-               DB::table('menu')->truncate();
+        DB::table('menu')->truncate();
         $combo = Category::where('name', 'combo')->first();
         $drink = Category::where('name', 'drink')->first();
         $fastFood = Category::where('name', 'fast')->first();
