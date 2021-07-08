@@ -21,7 +21,16 @@ class Category extends Seeder
             'name' => 'drink',
         ]);
         DB::table('category')->insert([
+            'name' => 'normal',
+        ]);
+        DB::table('category')->insert([
             'name' => 'fast',
+        ]);
+        DB::table('category')->insert([
+            'name' => 'alcohol',
+        ]);
+        DB::table('category')->insert([
+            'name' => 'beer',
         ]);
     }
 }

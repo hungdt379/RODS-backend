@@ -42,8 +42,11 @@ class MenuService
         $combo = null;
         if (!$confirmOrder) {
             $menu['combo'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getCombo()->_id);
-            $menu['drink'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getDink()->_id);
             $menu['fast'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getFast()->_id);
+            $menu['normal'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getNormal()->_id);
+            $menu['drink'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getDink()->_id);
+            $menu['alcohol'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getAlcohol()->_id);
+            $menu['beer'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getBeer()->_id);
         } else {
             foreach ($confirmOrder['item'] as $value) {
                 if (strpos($value['detail_item']['name'], 'Combo') !== false) {
@@ -68,8 +71,11 @@ class MenuService
                 }
             }
 
-            $menu['drink'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getDink()->_id);
             $menu['fast'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getFast()->_id);
+            $menu['normal'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getNormal()->_id);
+            $menu['drink'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getDink()->_id);
+            $menu['alcohol'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getAlcohol()->_id);
+            $menu['beer'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getBeer()->_id);
         }
         return $menu;
     }
@@ -87,7 +93,7 @@ class MenuService
             } else if ($checkExistingOrder[0]['combo']['name'] == Menu::COMBO_169) {
                 $resultSearch = $this->menuRepository->searchCombo169($name);
             } else if ($checkExistingOrder[0]['combo']['name'] == Menu::COMBO_209) {
-                $resultSearch = $this->menuRepository->searchCombo169($name);
+                $resultSearch = $this->menuRepository->searchCombo209($name);
             }
         }
 

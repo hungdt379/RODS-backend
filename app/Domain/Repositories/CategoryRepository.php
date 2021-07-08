@@ -27,4 +27,19 @@ class CategoryRepository
         return Category::where('name', 'fast')->first();
     }
 
+    public function getNormal()
+    {
+        return Category::where('name', 'normal')->first();
+    }
+
+    public function getBeer()
+    {
+        return Category::where('name', 'beer')->first();
+    }
+
+    public function getAlcohol()
+    {
+        return Category::where('name', 'alcohol')->first();
+    }
+
 }

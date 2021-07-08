@@ -15,10 +15,17 @@ class SearchCombo209 extends Seeder
     public function run()
     {
         DB::table('search_combo_209')->truncate();
+        $combo = Category::where('name', 'combo')->first();
         $drink = Category::where('name', 'drink')->first();
+        $normal = Category::where('name', 'normal')->first();
         $fastFood = Category::where('name', 'fast')->first();
-        $menu = Menu::where('name', 'Combo lẩu nướng 209k')
+        $alcohol = Category::where('name', 'alcohol')->first();
+        $beer = Category::where('name', 'beer')->first();
+        $menu = Menu::where('name', 'Combo lẩu nướng 249k')
             ->orWhere('category_id', $drink->_id)
+            ->orWhere('category_id', $normal->_id)
+            ->orWhere('category_id', $alcohol->_id)
+            ->orWhere('category_id', $beer->_id)
             ->orWhere('category_id', $fastFood->_id)->get();
 
         foreach ($menu as $x){
@@ -26,7 +33,6 @@ class SearchCombo209 extends Seeder
             $searchCombo209->_id = $x->_id;
             $searchCombo209->name = $x->name;
             $searchCombo209->cost = $x->cost;
-            $searchCombo209->description = $x->description;
             $searchCombo209->image = $x->image;
             $searchCombo209->hotpot = $x->hotpot;
             $searchCombo209->category_id = $x->category_id;
