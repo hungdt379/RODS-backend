@@ -27,6 +27,7 @@ Route::group([
         'middleware' => 'auth.jwt'
     ], function () {
         Route::get('logout', 'AuthController@logout')->name('logout');
+        Route::post('password/change', 'AuthController@changePassword');
     });
 });
 

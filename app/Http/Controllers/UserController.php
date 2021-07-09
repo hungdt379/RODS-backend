@@ -11,6 +11,7 @@ use App\Domain\Services\UserService;
 use App\Traits\ApiResponse;
 use Illuminate\Support\Facades\Validator;
 use JWTAuth;
+use \Illuminate\Http\Response as Res;
 
 class UserController extends Controller
 {
