@@ -25,11 +25,27 @@ class DishInOrderService
         return $this->dishInOrderRepository->insert($dishInOrder);
     }
 
-    public function getDishInOrder($tableID, $categoryID, $pageSize){
+    public function getDishInOrder($tableID, $categoryID, $pageSize)
+    {
         return $this->dishInOrderRepository->getDishInOrder($tableID, $categoryID, $pageSize);
     }
 
-    public function updateStatus($id){
+    public function getAllDishInOrderByTableID($tableID)
+    {
+        return $this->dishInOrderRepository->getAllDishInOrderByTableID($tableID);
+    }
+
+    public function updateDishInOrderToNewTable($dishInOrder, $toTable)
+    {
+        foreach ($dishInOrder as $value){
+            $value->table_id = $toTable['_id'];
+            $value->table_name = $toTable['full_name'];
+            $this->dishInOrderRepository->update($value);
+        }
+    }
+
+    public function updateStatus($id)
+    {
         $dishInOrder = $this->dishInOrderRepository->getDishInOrderByID($id);
         $dishInOrder->status = DishInOrder::ORDER_ITEM_STATUS_COMPLETED;
         return $this->dishInOrderRepository->update($dishInOrder);

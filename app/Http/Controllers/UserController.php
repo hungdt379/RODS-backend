@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 
 use App\Domain\Services\CartService;
+use App\Domain\Services\DishInOrderService;
+use App\Domain\Services\OrderService;
+use App\Domain\Services\QueueOrderService;
 use App\Domain\Services\UserService;
 use App\Traits\ApiResponse;
 use Illuminate\Support\Facades\Validator;
@@ -16,18 +19,28 @@ class UserController extends Controller
     private $userService;
     private $cartService;
     private $cartController;
+    private $orderService;
+    private $dishInOrderService;
+    private $queueOrderService;
 
     /**
      * UserController constructor.
-     * @param $userService
-     * @param $cartService
-     * @param $cartController
+     * @param UserService $userService
+     * @param CartService $cartService
+     * @param CartController $cartController
+     * @param OrderService $orderService
+     * @param DishInOrderService $dishInOrderService
+     * @param QueueOrderService $queueOrderService
      */
-    public function __construct(UserService $userService, CartService $cartService, CartController $cartController)
+    public function __construct(UserService $userService, CartService $cartService, CartController $cartController,
+                                OrderService $orderService, DishInOrderService $dishInOrderService, QueueOrderService $queueOrderService)
     {
         $this->userService = $userService;
         $this->cartService = $cartService;
         $this->cartController = $cartController;
+        $this->orderService = $orderService;
+        $this->dishInOrderService = $dishInOrderService;
+        $this->queueOrderService = $queueOrderService;
     }
 
 
@@ -209,5 +222,48 @@ class UserController extends Controller
 
         $data = $this->userService->generateNewQrCode($table);
         return $this->successResponse($data, 'Success');
+    }
+
+    public function changeTable()
+    {
+        $param = request()->all();
+        $validator = Validator::make($param, [
+            'from_table_id' => 'required|alpha_num',
+            'to_table_id' => 'required|alpha_num'
+        ]);
+        if ($validator->fails()) {
+            return $this->errorResponse('Invalid param', null, false, 400);
+        }
+
+        $fromTableID = $param['from_table_id'];
+        $toTableID = $param['to_table_id'];
+
+        $toTable = $this->userService->getUserById($toTableID);
+        if($toTable && $toTable['is_active'] == false){
+            $fromTable = $this->userService->getUserById($fromTableID);
+            $this->userService->openTable($toTableID, $fromTable['number_of_customer']);
+            $this->cartService->addNewCart($toTableID);
+            $this->userService->closeTable($fromTable);
+            $this->cartService->delete($fromTableID);
+            $toTable = $this->userService->getUserById($toTableID);
+            $fromOrder = $this->orderService->getConfirmOrderByTableID($fromTableID);
+            if ($fromOrder) {
+                $this->orderService->updateOrderToNewTable($fromOrder, $toTable);
+                $dishInOrder = $this->dishInOrderService->getAllDishInOrderByTableID($fromTableID);
+                if ($dishInOrder->toArray() != []) {
+                    $this->dishInOrderService->updateDishInOrderToNewTable($dishInOrder, $toTable);
+                }
+            }
+
+            $fromQueueOrder = $this->queueOrderService->getQueueOrderByTableID($fromTableID);
+            if($fromQueueOrder){
+                $this->queueOrderService->updateQueueOrderToNewTable($fromQueueOrder, $toTable);
+            }
+
+            return $this->successResponse(null, 'Success');
+        }else{
+            return $this->errorResponse('Table not found or not empty', null, false, 404);
+        }
+
     }
 }

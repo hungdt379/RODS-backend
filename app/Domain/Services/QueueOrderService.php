@@ -71,6 +71,15 @@ class QueueOrderService
         return $this->queueOrderRepository->insert($queueOrder);
     }
 
+    public function updateQueueOrderToNewTable($fromQueueOrder, $toTable)
+    {
+        $fromQueueOrder->table_id = $toTable['_id'];
+        $fromQueueOrder->table_name = $toTable['full_name'];
+        $fromQueueOrder->number_of_customer = $toTable['number_of_customer'];
+
+        return $this->queueOrderRepository->update($fromQueueOrder);
+    }
+
     public function getQueueOrderByTableID($tableID)
     {
         return $this->queueOrderRepository->getQueueOrderByTableID($tableID);
