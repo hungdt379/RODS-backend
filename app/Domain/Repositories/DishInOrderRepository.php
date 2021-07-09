@@ -21,11 +21,20 @@ class DishInOrderRepository
             ->paginate((int)$pageSize);
     }
 
-    public function getDishInOrderByID($id){
+    public function getDishInOrderByID($id)
+    {
         return DishInOrder::where('_id', $id)->first();
     }
 
-    public function update($dishInOrder){
+    public function getAllDishInOrderByTableID($tableID)
+    {
+        return DishInOrder::where('status', DishInOrder::ORDER_ITEM_STATUS_PREPARE)
+            ->where('table_id', $tableID)->get();
+    }
+
+    public function update($dishInOrder)
+    {
         return $dishInOrder->update();
     }
+
 }

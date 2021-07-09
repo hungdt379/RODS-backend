@@ -66,6 +66,7 @@ Route::group([
         Route::post('table/order/queue/confirm', 'QueueOrderController@confirmQueueOrder');
         Route::post('table/order/confirm/item/delete', 'OrderController@deleteItemInConfirmOrder');
         Route::post('table/order/confirm/note/add', 'OrderController@addNoteForRemainItem');
+        Route::post('table/change', 'UserController@changeTable');
     });
 });
 

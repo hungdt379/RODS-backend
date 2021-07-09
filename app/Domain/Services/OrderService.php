@@ -51,6 +51,14 @@ class OrderService
         return $this->orderRepository->getListConfirmOrderByTableID($tableID);
     }
 
+    public function updateOrderToNewTable($fromOrder, $table){
+        $fromOrder->table_id = $table['_id'];
+        $fromOrder->table_name = $table['full_name'];
+        $fromOrder->number_of_customer = $table['number_of_customer'];
+
+        return $this->orderRepository->update($fromOrder);
+    }
+
     public function matchingConfirmOrder($listConfirmOrder)
     {
         $item = [];
