@@ -97,7 +97,7 @@ Route::group([
         Route::get('order/dish', 'DishInOrderController@getDishInOrder');
         Route::get('order/drink', 'DishInOrderController@getDrinkInOrder');
         Route::post('order/status/update', 'DishInOrderController@updateStatus');
-        Route::get('items/all', 'MenuController@getAllItem');
+        Route::get('items/all', 'MenuController@getAllItem')->name('all-item');
         Route::get('items/update/sold', 'MenuController@updateItemSoldOutStatus');
     });
 });

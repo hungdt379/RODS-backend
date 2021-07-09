@@ -105,9 +105,9 @@ class UserService
         $this->userRepository->deleteTable($tableId);
     }
 
-    public function generateNewQrCode($tableId)
+    public function generateNewQrCode($table)
     {
-        $table = $this->getUserById($tableId);
+
         $table->password = Hash::make(time());
         $this->userRepository->update($table);
         $qrCode = QrCode::size(500)->format('svg')

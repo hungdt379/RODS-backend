@@ -204,7 +204,10 @@ class UserController extends Controller
             return $this->errorResponse('Invalid param', null, false, 400);
         }
 
-        $data = $this->userService->generateNewQrCode($param['table_id']);
+        $table = $this->userService->getUserById($param['table_id']);
+        if ($table == null) return $this->errorResponse('Not found table', null, false, 404);
+
+        $data = $this->userService->generateNewQrCode($table);
         return $this->successResponse($data, 'Success');
     }
 }
