@@ -129,35 +129,6 @@ class DishInCombo extends Seeder
             'name' => 'Phồng tôm',
             'is_sold_out' => false
         ]);
-        DB::table('dish_in_combo')->insert([
-            'pid' => [$hotpot->_id, $combo3->_id],
-            'name' => 'Viên hải sản',
-            'is_sold_out' => false
-        ]);
-        DB::table('dish_in_combo')->insert([
-            'pid' => [$hotpot->_id, $combo3->_id],
-            'name' => 'Há cảo',
-            'is_sold_out' => false
-        ]);
-        DB::table('dish_in_combo')->insert([
-            'pid' => [$hotpot->_id, $combo3->_id],
-            'name' => 'Váng đậu',
-            'is_sold_out' => false
-        ]);
-        DB::table('dish_in_combo')->insert([
-            'pid' => [$hotpot->_id, $combo3->_id],
-            'name' => 'Mì tôm',
-            'is_sold_out' => false
-        ]);
-        DB::table('dish_in_combo')->insert([
-            'pid' => [$hotpot->_id, $combo3->_id],
-            'name' => 'Rau',
-            'is_sold_out' => false
-        ]);
-        DB::table('dish_in_combo')->insert([
-            'pid' => [$hotpot->_id, $combo3->_id],
-            'name' => 'Đậu',
-            'is_sold_out' => false
-        ]);
+
     }
 }

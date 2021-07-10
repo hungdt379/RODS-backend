@@ -28,7 +28,6 @@ class Menu extends Seeder
             'name' => 'Combo nướng 139k',
             'cost' => 139000,
             'image' => 'http://165.227.99.160/image/nuong-129.png',
-            'hotpot' => true,
             'category_id' => $combo->_id,
             'is_sold_out' => false
         ]);
@@ -37,24 +36,14 @@ class Menu extends Seeder
             'name' => 'Combo nướng 169k',
             'cost' => 169000,
             'image' => 'http://165.227.99.160/image/nuong-169.png',
-            'hotpot' => true,
             'category_id' => $combo->_id,
             'is_sold_out' => false
         ]);
         DB::table('menu')->insert([
 
-            'name' => 'Combo lẩu nướng 249k',
+            'name' => 'Combo nướng 249k',
             'cost' => 249000,
             'image' => 'http://165.227.99.160/image/nuong-169.png',
-            'hotpot' => false,
-            'category_id' => $combo->_id,
-            'is_sold_out' => false
-        ]);
-        DB::table('menu')->insert([
-            'name' => 'Lẩu',
-            'cost' => 40000,
-            'image' => 'http://165.227.99.160/image/lau.png',
-            'hotpot' => false,
             'category_id' => $combo->_id,
             'is_sold_out' => false
         ]);
@@ -64,7 +53,6 @@ class Menu extends Seeder
             'name' => 'Nầm heo',
             'cost' => 100000,
             'image' => 'http://165.227.99.160/image/no-image.png',
-            'hotpot' => false,
             'category_id' => $normal->_id,
             'is_sold_out' => false
         ]);
@@ -73,7 +61,6 @@ class Menu extends Seeder
             'name' => 'Sụn heo',
             'cost' => 100000,
             'image' => 'http://165.227.99.160/image/no-image.png',
-            'hotpot' => false,
             'category_id' => $normal->_id,
             'is_sold_out' => false
         ]);
@@ -82,7 +69,6 @@ class Menu extends Seeder
             'name' => 'Ba chỉ bò',
             'cost' => 100000,
             'image' => 'http://165.227.99.160/image/no-image.png',
-            'hotpot' => false,
             'category_id' => $normal->_id,
             'is_sold_out' => false
         ]);
@@ -91,7 +77,6 @@ class Menu extends Seeder
             'name' => 'Ba chỉ heo',
             'cost' => 100000,
             'image' => 'http://165.227.99.160/image/no-image.png',
-            'hotpot' => false,
             'category_id' => $normal->_id,
             'is_sold_out' => false
         ]);
@@ -100,7 +85,6 @@ class Menu extends Seeder
             'name' => 'Dẻ sườn',
             'cost' => 100000,
             'image' => 'http://165.227.99.160/image/no-image.png',
-            'hotpot' => false,
             'category_id' => $normal->_id,
             'is_sold_out' => false
         ]);
@@ -109,7 +93,6 @@ class Menu extends Seeder
             'name' => 'Cổ bò',
             'cost' => 100000,
             'image' => 'http://165.227.99.160/image/no-image.png',
-            'hotpot' => false,
             'category_id' => $normal->_id,
             'is_sold_out' => false
         ]);
@@ -118,7 +101,6 @@ class Menu extends Seeder
             'name' => 'Bò cuốn nấm',
             'cost' => 60000,
             'image' => 'http://165.227.99.160/image/no-image.png',
-            'hotpot' => false,
             'category_id' => $normal->_id,
             'is_sold_out' => false
         ]);
@@ -127,7 +109,6 @@ class Menu extends Seeder
             'name' => 'Tôm sú',
             'cost' => 100000,
             'image' => 'http://165.227.99.160/image/no-image.png',
-            'hotpot' => false,
             'category_id' => $normal->_id,
             'is_sold_out' => false
         ]);
@@ -136,7 +117,6 @@ class Menu extends Seeder
             'name' => 'Mực',
             'cost' => 100000,
             'image' => 'http://165.227.99.160/image/no-image.png',
-            'hotpot' => false,
             'category_id' => $normal->_id,
             'is_sold_out' => false
         ]);
@@ -145,7 +125,6 @@ class Menu extends Seeder
             'name' => 'Chân gà',
             'cost' => 100000,
             'image' => 'http://165.227.99.160/image/no-image.png',
-            'hotpot' => false,
             'category_id' => $normal->_id,
             'is_sold_out' => false
         ]);
@@ -155,7 +134,6 @@ class Menu extends Seeder
             'name' => 'Kimchi',
             'cost' => 10000,
             'image' => 'http://165.227.99.160/image/no-image.png',
-            'hotpot' => false,
             'category_id' => $fastFood->_id,
             'is_sold_out' => false
         ]);
@@ -164,7 +142,6 @@ class Menu extends Seeder
             'name' => 'Khoai tây chiên',
             'cost' => 30000,
             'image' => 'http://165.227.99.160/image/no-image.png',
-            'hotpot' => false,
             'category_id' => $fastFood->_id,
             'is_sold_out' => false
         ]);
@@ -173,7 +150,6 @@ class Menu extends Seeder
             'name' => 'Bánh bao chiên',
             'cost' => 20000,
             'image' => 'http://165.227.99.160/image/no-image.png',
-            'hotpot' => false,
             'category_id' => $fastFood->_id,
             'is_sold_out' => false
         ]);
@@ -182,7 +158,6 @@ class Menu extends Seeder
             'name' => 'Nem chua rán',
             'cost' => 30000,
             'image' => 'http://165.227.99.160/image/nem-chua-ran.png',
-            'hotpot' => false,
             'category_id' => $fastFood->_id,
             'is_sold_out' => false
         ]);
@@ -191,7 +166,6 @@ class Menu extends Seeder
             'name' => 'Khoai lang kén',
             'cost' => 30000,
             'image' => 'http://165.227.99.160/image/khoai-lang-ken.png',
-            'hotpot' => false,
             'category_id' => $fastFood->_id,
             'is_sold_out' => false
         ]);
@@ -199,7 +173,6 @@ class Menu extends Seeder
             'name' => 'Ngô chiên',
             'cost' => 30000,
             'image' => 'http://165.227.99.160/image/ngo-chien.png',
-            'hotpot' => false,
             'category_id' => $fastFood->_id,
             'is_sold_out' => false
         ]);
@@ -207,7 +180,6 @@ class Menu extends Seeder
             'name' => 'Gà lắc',
             'cost' => 50000,
             'image' => 'http://165.227.99.160/image/ga-lac.png',
-            'hotpot' => false,
             'category_id' => $fastFood->_id,
             'is_sold_out' => false
         ]);
@@ -217,7 +189,6 @@ class Menu extends Seeder
             'name' => '7Up',
             'cost' => 10000,
             'image' => 'http://165.227.99.160/image/7-up.png',
-            'hotpot' => false,
             'category_id' => $drink->_id,
             'is_sold_out' => false
         ]);
@@ -226,7 +197,6 @@ class Menu extends Seeder
             'name' => 'Coca lon',
             'cost' => 10000,
             'image' => 'http://165.227.99.160/image/coca.png',
-            'hotpot' => false,
             'category_id' => $drink->_id,
             'is_sold_out' => false
         ]);
@@ -235,7 +205,6 @@ class Menu extends Seeder
             'name' => 'Pepsi',
             'cost' => 10000,
             'image' => 'http://165.227.99.160/image/pepsi.png',
-            'hotpot' => false,
             'category_id' => $drink->_id,
             'is_sold_out' => false
         ]);
@@ -245,7 +214,6 @@ class Menu extends Seeder
             'name' => 'Bia Hà Nội',
             'cost' => 15000,
             'image' => 'http://165.227.99.160/image/bia.png',
-            'hotpot' => false,
             'category_id' => $beer->_id,
             'is_sold_out' => false
         ]);
@@ -254,7 +222,6 @@ class Menu extends Seeder
             'name' => 'Bia Sài Gòn',
             'cost' => 15000,
             'image' => 'http://165.227.99.160/image/bia-sai-gon.png',
-            'hotpot' => false,
             'category_id' => $beer->_id,
             'is_sold_out' => false
         ]);
@@ -265,7 +232,6 @@ class Menu extends Seeder
             'name' => 'Rượu Soju Hàn Quốc',
             'cost' => 70000,
             'image' => 'http://165.227.99.160/image/soju.png',
-            'hotpot' => false,
             'category_id' => $alcohol->_id,
             'is_sold_out' => false
         ]);
@@ -274,7 +240,6 @@ class Menu extends Seeder
             'name' => 'Rượu chuối hột 500ml',
             'cost' => 50000,
             'image' => 'http://165.227.99.160/image/no-image.png',
-            'hotpot' => false,
             'category_id' => $alcohol->_id,
             'is_sold_out' => false
         ]);
@@ -283,7 +248,6 @@ class Menu extends Seeder
             'name' => 'Rượu ngô 500ml',
             'cost' => 50000,
             'image' => 'http://165.227.99.160/image/no-image.png',
-            'hotpot' => false,
             'category_id' => $alcohol->_id,
             'is_sold_out' => false
         ]);
@@ -292,7 +256,6 @@ class Menu extends Seeder
             'name' => 'Rượu táo mèo 500ml',
             'cost' => 50000,
             'image' => 'http://165.227.99.160/image/tao-meo.png',
-            'hotpot' => false,
             'category_id' => $alcohol->_id,
             'is_sold_out' => false
         ]);
@@ -301,7 +264,6 @@ class Menu extends Seeder
             'name' => 'Rượu nếp trắng 500ml',
             'cost' => 50000,
             'image' => 'http://165.227.99.160/image/nep-trang.png',
-            'hotpot' => false,
             'category_id' => $alcohol->_id,
             'is_sold_out' => false
         ]);

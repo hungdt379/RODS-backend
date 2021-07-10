@@ -53,21 +53,8 @@ class MenuService
                     $combo = $value['detail_item'];
                 }
             }
-            if ($combo['hotpot'] == false) {
-                $menu['combo'] = $this->menuRepository->getItemByID($combo['_id']);
-                $menu['combo']['cost'] = 0;
-
-            } else {
-                $menu['combo'] = $this->menuRepository->getItemByID($combo['_id']);
-                $menu['hotpot'] = $this->menuRepository->getHotpot();
-                $menu['combo']['cost'] = 0;
-            }
-            foreach ($confirmOrder['item'] as $value) {
-                if (strpos($value['detail_item']['name'], 'Lẩu') !== false) {
-                    $menu['hotpot'][0]['cost'] = 0;
-                }
-            }
-
+            $menu['combo'] = $this->menuRepository->getItemByID($combo['_id'])->toArray();
+            $menu['combo']['cost'] = 0;
             $menu['fast'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getFast()->_id);
             $menu['normal'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getNormal()->_id);
             $menu['drink'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getDink()->_id);
@@ -147,10 +134,10 @@ class MenuService
 
     public function getItem($textSearch)
     {
-        if ($textSearch == null || $textSearch == ''){
+        if ($textSearch == null || $textSearch == '') {
             $menu = $this->menuRepository->getAllMenu()->toArray();
             $dishInCombo = $this->dishInComboRepository->getAllDishInCombo();
-        }else{
+        } else {
             $menu = $this->menuRepository->getMenu($textSearch)->toArray();
             $dishInCombo = $this->dishInComboRepository->getDishInCombo($textSearch);
         }
