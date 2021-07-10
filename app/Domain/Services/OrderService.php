@@ -163,8 +163,8 @@ class OrderService
     {
         foreach ($queueOrder['item'] as $value) {
             $dishInOrder = new DishInOrder();
-            $dishInOrder->table_id = $queueOrder->table_id;
-            $dishInOrder->table_name = $queueOrder->table_name;
+            $dishInOrder->table_id = $queueOrder['table_id'];
+            $dishInOrder->table_name = $queueOrder['table_name'];
             $dishInOrder->item_name = $value['detail_item']['name'];
             $dishInOrder->quantity = $value['quantity'];
             $dishInOrder->status = DishInOrder::ORDER_ITEM_STATUS_PREPARE;
@@ -174,8 +174,8 @@ class OrderService
                 $length = count($dishInCombo);
                 for ($i = 0; $i < $length; $i++) {
                     $dishInOrder = new DishInOrder();
-                    $dishInOrder->table_id = $queueOrder->table_id;
-                    $dishInOrder->table_name = $queueOrder->table_name;
+                    $dishInOrder->table_id = $queueOrder['table_id'];
+                    $dishInOrder->table_name = $queueOrder['table_name'];
                     $dishInOrder->item_name = $value['dish_in_combo'][$i];
                     $dishInOrder->quantity = $value['quantity'];
                     $dishInOrder->status = DishInOrder::ORDER_ITEM_STATUS_PREPARE;
