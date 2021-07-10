@@ -161,7 +161,7 @@ class OrderService
 
     public function insertToDishInOrder($queueOrder)
     {
-        foreach ($queueOrder['item'] as $value) {
+        foreach ($queueOrder['item']->toArray() as $value) {
             $dishInOrder = new DishInOrder();
             $dishInOrder->table_id = $queueOrder['table_id'];
             $dishInOrder->table_name = $queueOrder['table_name'];
