@@ -114,7 +114,7 @@ class OrderService
     public function addNewConfirmOrder($queueOrder)
     {
         $confirmOrder = new Order();
-        $item = $queueOrder->item;
+        $item = $queueOrder['item'];
 
         $confirmOrder->table_id = $queueOrder->table_id;
         $confirmOrder->table_name = $queueOrder->table_name;
