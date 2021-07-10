@@ -54,20 +54,17 @@ class MenuService
                 }
             }
             if ($combo['hotpot'] == false) {
-                $menu['combo']['detail'] = $this->menuRepository->getItemByID($combo['_id']);
-                $menu['combo']['dish_in_combo'] = $this->dishInComboRepository->getDishesByCombo($combo['_id']);
-                $menu['combo']['detail'][0]['cost'] = 0;
+                $menu['combo'] = $this->menuRepository->getItemByID($combo['_id']);
+                $menu['combo']['cost'] = 0;
 
             } else {
-                $menu['combo']['detail'] = $this->menuRepository->getItemByID($combo['_id']);
-                $menu['combo']['dish_in_combo'] = $this->dishInComboRepository->getDishesByCombo($combo['_id']);
-                $menu['hotpot']['detail'] = $this->menuRepository->getHotpot();
-                $menu['hotpot']['dish_in_hotpot'] = $this->dishInComboRepository->getDishesByCombo($menu['hotpot']['detail'][0]['_id']);
-                $menu['combo']['detail']['cost'] = 0;
+                $menu['combo'] = $this->menuRepository->getItemByID($combo['_id']);
+                $menu['hotpot'] = $this->menuRepository->getHotpot();
+                $menu['combo']['cost'] = 0;
             }
             foreach ($confirmOrder['item'] as $value) {
                 if (strpos($value['detail_item']['name'], 'Lẩu') !== false) {
-                    $menu['hotpot']['detail'][0]['cost'] = 0;
+                    $menu['hotpot'][0]['cost'] = 0;
                 }
             }
 
