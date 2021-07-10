@@ -21,6 +21,11 @@ class QueueOrderRepository
             ->first();
     }
 
+    public function getQueueOrderByID($queueOrderID){
+        return QueueOrder::where([['status', QueueOrder::QUEUE_ORDER_STATUS_QUEUED], ['_id', $queueOrderID]])
+            ->first();
+}
+
     public function delete($id)
     {
         return QueueOrder::where('_id', $id)->delete();
