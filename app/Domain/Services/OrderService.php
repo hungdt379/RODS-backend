@@ -116,12 +116,12 @@ class OrderService
         $confirmOrder = new Order();
         $item = $queueOrder['item'];
 
-        $confirmOrder->table_id = $queueOrder->table_id;
-        $confirmOrder->table_name = $queueOrder->table_name;
-        $confirmOrder->number_of_customer = $queueOrder->number_of_customer;
+        $confirmOrder->table_id = $queueOrder['table_id'];
+        $confirmOrder->table_name = $queueOrder['table_name'];
+        $confirmOrder->number_of_customer = $queueOrder['number_of_customer'];
         $confirmOrder->status = Order::ORDER_STATUS_CONFIRMED;
         $confirmOrder->item = $item;
-        $confirmOrder->total_cost = $queueOrder->total_cost;
+        $confirmOrder->total_cost = $queueOrder['total_cost'];
         $confirmOrder->ts = time();
 
         $this->insertToDishInOrder($queueOrder);
