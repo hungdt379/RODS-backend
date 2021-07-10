@@ -177,9 +177,9 @@ class UserController extends Controller
 
         $table = $this->userService->getUserById($param['table_id']);
 
-        if ($table != null){
+        if ($table != null) {
             $check = $this->userService->checkExistedTableForUpdate($username, $table->username);
-        }else{
+        } else {
             return $this->errorResponse('Table does not exist', null, false, 400);
         }
 
@@ -202,8 +202,12 @@ class UserController extends Controller
             return $this->errorResponse('Invalid param', null, false, 400);
         }
 
-        $this->userService->deleteTable($param['table_id']);
+        $table = $this->userService->getUserById($param['table_id']);
+        if ($table == null) {
+            return $this->errorResponse('Table does not exist', null, false, 400);
+        }
 
+        $this->userService->deleteTable($param['table_id']);
         return $this->successResponse('', 'Delete successful');
     }
 
@@ -240,7 +244,7 @@ class UserController extends Controller
         $toTableID = $param['to_table_id'];
 
         $toTable = $this->userService->getUserById($toTableID);
-        if($toTable && $toTable['is_active'] == false){
+        if ($toTable && $toTable['is_active'] == false) {
             $fromTable = $this->userService->getUserById($fromTableID);
             $this->userService->openTable($toTableID, $fromTable['number_of_customer']);
             $this->cartService->addNewCart($toTableID);
@@ -257,12 +261,12 @@ class UserController extends Controller
             }
 
             $fromQueueOrder = $this->queueOrderService->getQueueOrderByTableID($fromTableID);
-            if($fromQueueOrder){
+            if ($fromQueueOrder) {
                 $this->queueOrderService->updateQueueOrderToNewTable($fromQueueOrder, $toTable);
             }
 
             return $this->successResponse(null, 'Success');
-        }else{
+        } else {
             return $this->errorResponse('Table not found or not empty', null, false, 404);
         }
 
