@@ -85,6 +85,9 @@ class QueueOrderService
         return $this->queueOrderRepository->getQueueOrderByTableID($tableID);
     }
 
+    public function getQueueOrderByID($queueOrderID){
+        return $this->queueOrderRepository->getQueueOrderByID($queueOrderID);
+}
     public function delete($id)
     {
         return $this->queueOrderRepository->delete($id);

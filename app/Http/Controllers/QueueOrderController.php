@@ -91,9 +91,14 @@ class QueueOrderController extends Controller
         if ($validator->fails()) {
             return $this->errorResponse($validator->errors(), null, false, 404);
         }
-        $this->queueOrderService->delete($param['_id']);
+        $queueOrder = $this->queueOrderService->getQueueOrderByID($param['_id']);
+        if($queueOrder){
+            $this->queueOrderService->delete($param['_id']);
+            return $this->successResponse(null, 'Delete Success');
+        }else{
+            return $this->errorResponse('Not found queue order', null, false, 404);
+        }
 
-        return $this->successResponse(null, 'Delete Success');
     }
 
     public function confirmQueueOrder()
