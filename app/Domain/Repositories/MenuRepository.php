@@ -12,18 +12,14 @@ use App\Domain\Entities\SearchCombo209K;
 class MenuRepository
 {
 
-    public function getAllMenu(){
+    public function getAllMenu()
+    {
         return Menu::all();
     }
 
     public function getMenuByCategory($categoryID)
     {
-        return Menu::where('category_id', $categoryID)->where('name', 'not like', 'Lẩu')->get();
-    }
-
-    public function getHotpot()
-    {
-        return Menu::Where('name', 'like', 'Lẩu')->get();
+        return Menu::where('category_id', $categoryID)->get();
     }
 
 
@@ -40,7 +36,7 @@ class MenuRepository
     public function getItemByName($name)
     {
         return Menu::whereRaw(array('$text' => array('$search' => $name)))
-            ->Where('name', 'not like', 'Lẩu')->get();
+            ->get();
     }
 
     public function searchCombo129($name)
