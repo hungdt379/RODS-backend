@@ -16,8 +16,7 @@ class DishInCombo extends Seeder
 
         $combo1 = Menu::where('name', 'Combo nướng 139k')->first();
         $combo2 = Menu::where('name', 'Combo nướng 169k')->first();
-        $combo3 = Menu::where('name', 'Combo lẩu nướng 249k')->first();
-        $hotpot = Menu::where('name', 'Lẩu')->first();
+        $combo3 = Menu::where('name', 'Combo nướng 249k')->first();
         DB::table('dish_in_combo')->truncate();
         DB::table('dish_in_combo')->insert([
             'pid' => [$combo1->_id, $combo2->_id, $combo3->_id],
