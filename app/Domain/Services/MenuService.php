@@ -40,7 +40,7 @@ class MenuService
     {
         $confirmOrder = $this->orderRepository->getConfirmOrder($tableID);
         $combo = null;
-        if (!$confirmOrder || $confirmOrder) {
+        if (!$confirmOrder) {
             $menu['combo'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getCombo()->_id);
             $menu['fast'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getFast()->_id);
             $menu['normal'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getNormal()->_id);
