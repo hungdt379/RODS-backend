@@ -38,4 +38,19 @@ class CategoryService
     {
         return $this->categoryRepository->getDink();
     }
+
+    public function getNormalCategory()
+    {
+        return $this->categoryRepository->getNormal();
+    }
+
+    public function getAlcoholCategory()
+    {
+        return $this->categoryRepository->getAlcohol();
+    }
+
+    public function getBeerCategory()
+    {
+        return $this->categoryRepository->getBeer();
+    }
 }

@@ -35,6 +35,10 @@ class OrderService
         return $this->orderRepository->getAllConfirmOrder($pageSize);
     }
 
+    public function getConfirmOrderByID($orderID)
+    {
+        return $this->orderRepository->getConfirmOrderByID($orderID);
+    }
     public function getCompletedOrderByID($orderID)
     {
         return $this->orderRepository->getCompletedOrderByID($orderID);
@@ -203,17 +207,15 @@ class OrderService
         return $this->orderRepository->update($confirmOrder);
     }
 
-    public function addNoteForRemainItem($orderID, $note)
+    public function addNoteForRemainItem($confirmOrder, $note)
     {
-        $confirmOrder = $this->orderRepository->getConfirmOrderByID($orderID);
         $confirmOrder->note = $note;
 
         return $this->orderRepository->update($confirmOrder);
     }
 
-    public function addVoucherToConfirmOrder($orderID, $voucher)
+    public function addVoucherToConfirmOrder($confirmOrder, $voucher)
     {
-        $confirmOrder = $this->orderRepository->getConfirmOrderByID($orderID);
         $confirmOrder->voucher = $voucher;
         $confirmOrder->total_cost_of_voucher = (int)$confirmOrder['total_cost'] * $voucher / 100;
         $confirmOrder->total_cost = (int)$confirmOrder['total_cost'] - $confirmOrder->total_cost_of_voucher;
@@ -221,9 +223,8 @@ class OrderService
         return $this->orderRepository->update($confirmOrder);
     }
 
-    public function increaseQuantity($orderID, $itemID)
+    public function increaseQuantity($confirmOrder, $itemID)
     {
-        $confirmOrder = $this->orderRepository->getConfirmOrderByID($orderID);
         $item = [];
         $totalCost = 0;
         foreach ($confirmOrder['item'] as $value) {
@@ -240,9 +241,8 @@ class OrderService
         return $this->orderRepository->update($confirmOrder);
     }
 
-    public function decreaseQuantity($id, $itemID)
+    public function decreaseQuantity($confirmOrder, $itemID)
     {
-        $confirmOrder = $this->orderRepository->getConfirmOrderByID($id);
         $item = [];
         $totalCost = 0;
         foreach ($confirmOrder['item'] as $value) {

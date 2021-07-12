@@ -6,6 +6,7 @@ namespace App\Domain\Services;
 
 use App\Domain\Entities\DishInOrder;
 use App\Domain\Repositories\DishInOrderRepository;
+use phpDocumentor\Reflection\DocBlock\Tags\Return_;
 
 class DishInOrderService
 {
@@ -44,9 +45,11 @@ class DishInOrderService
         }
     }
 
-    public function updateStatus($id)
+    public function getDishInOrderByID($dishInOrderID){
+        return $this->dishInOrderRepository->getDishInOrderByID($dishInOrderID);
+    }
+    public function updateStatus($dishInOrder)
     {
-        $dishInOrder = $this->dishInOrderRepository->getDishInOrderByID($id);
         $dishInOrder->status = DishInOrder::ORDER_ITEM_STATUS_COMPLETED;
         return $this->dishInOrderRepository->update($dishInOrder);
     }

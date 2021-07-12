@@ -36,7 +36,7 @@ class OrderController extends Controller
             'table_id' => 'required'
         ]);
         if ($validator->fails()) {
-            return $this->errorResponse($validator->errors(), null, false, 404);
+            return $this->errorResponse($validator->errors(), null, false, 204);
         }
         $tableID = $param['table_id'];
 
@@ -44,7 +44,7 @@ class OrderController extends Controller
         if ($data) {
             return $this->successResponse($data, 'Success');
         } else {
-            return $this->errorResponse('Not found confirm order', null, false, 404);
+            return $this->errorResponse('Not found confirm order', null, false, 204);
         }
     }
 
@@ -56,15 +56,20 @@ class OrderController extends Controller
             'item_id' => 'required'
         ]);
         if ($validator->fails()) {
-            return $this->errorResponse($validator->errors(), null, false, 404);
+            return $this->errorResponse($validator->errors(), null, false, 204);
         }
         $tableID = $param['table_id'];
         $itemID = $param['item_id'];
 
         $confirmOrder = $this->orderService->getConfirmOrderByTableID($tableID);
-        $this->orderService->deleteItemInConfirmOrder($confirmOrder, $itemID);
+        if($confirmOrder){
+            $this->orderService->deleteItemInConfirmOrder($confirmOrder, $itemID);
 
-        return $this->successResponse(null, 'Delete Success');
+            return $this->successResponse(null, 'Delete Success');
+        }else{
+            return $this->errorResponse('Not found confirm order', null, false, 204);
+        }
+
     }
 
     public function getListConfirmOrder()
@@ -74,7 +79,7 @@ class OrderController extends Controller
             'pageSize' => 'required|numeric|'
         ]);
         if ($validator->fails()) {
-            return $this->errorResponse($validator->errors(), null, false, 404);
+            return $this->errorResponse($validator->errors(), null, false, 204);
         }
 
         $pageSize = $param['pageSize'];
@@ -89,7 +94,7 @@ class OrderController extends Controller
             'table_id' => 'required'
         ]);
         if ($validator->fails()) {
-            return $this->errorResponse($validator->errors(), null, false, 404);
+            return $this->errorResponse($validator->errors(), null, false, 204);
         }
         $tableID = $param['table_id'];
         $confirmOrder = $this->orderService->getConfirmOrderByTableID($tableID);
@@ -98,7 +103,7 @@ class OrderController extends Controller
             $data = $this->orderService->getCompletedOrderByID($confirmOrder->_id);
             return $this->successResponse($data, 'Success');
         } else {
-            return $this->errorResponse('Not found confirm order', null, false, 404);
+            return $this->errorResponse('Not found confirm order', null, false, 204);
         }
     }
 
@@ -110,13 +115,18 @@ class OrderController extends Controller
             '_id' => 'required'
         ]);
         if ($validator->fails()) {
-            return $this->errorResponse($validator->errors(), null, false, 404);
+            return $this->errorResponse($validator->errors(), null, false, 204);
         }
         $note = $param['note'];
         $orderID = $param['_id'];
-        $this->orderService->addNoteForRemainItem($orderID, $note);
+        $confirmOrder = $this->orderService->getConfirmOrderByID($orderID);
+        if ($confirmOrder) {
+            $this->orderService->addNoteForRemainItem($confirmOrder, $note);
+            return $this->successResponse(null, 'Success');
+        } else {
+            return $this->errorResponse('Not found confirm order', null, false, 204);
+        }
 
-        return $this->successResponse(null, 'Success');
     }
 
     public function addVoucherToConfirmOrder()
@@ -127,13 +137,18 @@ class OrderController extends Controller
             'voucher' => 'required|numeric|min:5|max:90'
         ]);
         if ($validator->fails()) {
-            return $this->errorResponse($validator->errors(), null, false, 404);
+            return $this->errorResponse($validator->errors(), null, false, 204);
         }
         $orderID = $param['_id'];
         $voucher = (int)$param['voucher'];
-        $this->orderService->addVoucherToConfirmOrder($orderID, $voucher);
+        $confirmOrder = $this->orderService->getConfirmOrderByID($orderID);
+        if ($confirmOrder) {
+            $this->orderService->addVoucherToConfirmOrder($confirmOrder, $voucher);
+            return $this->successResponse(null, 'Success');
+        } else {
+            return $this->errorResponse('Not found confirm order', null, false, 204);
+        }
 
-        return $this->successResponse(null, 'Success');
 
     }
 
@@ -146,18 +161,24 @@ class OrderController extends Controller
             'status' => 'required|boolean'
         ]);
         if ($validator->fails()) {
-            return $this->errorResponse($validator->errors(), null, false, 404);
+            return $this->errorResponse($validator->errors(), null, false, 204);
         }
         $orderID = $param['_id'];
         $itemID = $param['item_id'];
         $status = $param['status'];
-        if ($status) {
-            $this->orderService->increaseQuantity($orderID, $itemID);
+        $confirmOrder = $this->orderService->getConfirmOrderByID($orderID);
+        if ($confirmOrder) {
+            if ($status) {
+                $this->orderService->increaseQuantity($confirmOrder, $itemID);
+            } else {
+                $this->orderService->decreaseQuantity($confirmOrder, $itemID);
+            }
+            return $this->successResponse(null, 'Success');
         } else {
-            $this->orderService->decreaseQuantity($orderID, $itemID);
+            return $this->errorResponse('Not found confirm order', null, false, 204);
         }
 
-        return $this->successResponse(null, 'Success');
+
     }
 
     public function matchingConfirmOrder()
@@ -167,12 +188,16 @@ class OrderController extends Controller
             'table_id' => 'required'
         ]);
         if ($validator->fails()) {
-            return $this->errorResponse($validator->errors(), null, false, 404);
+            return $this->errorResponse($validator->errors(), null, false, 204);
         }
         $tableID = $param['table_id'];
         $listConfirmOrder = $this->orderService->getListConfirmOrderByTableID($tableID)->toArray();
-        $this->orderService->matchingConfirmOrder($listConfirmOrder);
+        if (count($tableID) == count($listConfirmOrder)) {
+            $this->orderService->matchingConfirmOrder($listConfirmOrder);
+            return $this->successResponse(null, 'Success');
+        } else {
+            return $this->errorResponse('One or more table_id not found', null, false, 204);
+        }
 
-        return $this->successResponse(null, 'Success');
     }
 }
