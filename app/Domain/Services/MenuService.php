@@ -40,7 +40,7 @@ class MenuService
     {
         $confirmOrder = $this->orderRepository->getConfirmOrder($tableID);
         $combo = null;
-        if (!$confirmOrder) {
+        if (!$confirmOrder || $confirmOrder) {
             $menu['combo'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getCombo()->_id);
             $menu['fast'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getFast()->_id);
             $menu['normal'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getNormal()->_id);
@@ -51,10 +51,13 @@ class MenuService
             foreach ($confirmOrder['item'] as $value) {
                 if (strpos($value['detail_item']['name'], 'Combo') !== false) {
                     $combo = $value['detail_item'];
+                    $menu['combo'] = $this->menuRepository->getItemByID($combo['_id'])->toArray();
+                    $menu['combo']['cost'] = 0;
+                }else{
+                    $menu['combo'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getCombo()->_id);
                 }
             }
-            $menu['combo'] = $this->menuRepository->getItemByID($combo['_id'])->toArray();
-            $menu['combo']['cost'] = 0;
+
             $menu['fast'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getFast()->_id);
             $menu['normal'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getNormal()->_id);
             $menu['drink'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getDink()->_id);
