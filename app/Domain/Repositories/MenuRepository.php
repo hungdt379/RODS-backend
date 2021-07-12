@@ -28,6 +28,11 @@ class MenuRepository
         return Menu::where('_id', $id)->first();
     }
 
+    public function getItemByIdOfMenu($id)
+    {
+        return Menu::where('_id', $id)->get();
+    }
+
     public function update($menuItem)
     {
         $menuItem->save();
