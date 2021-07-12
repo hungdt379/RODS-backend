@@ -127,6 +127,15 @@ class MenuService
             }
         }
 
+        $confirmOrder = $this->orderRepository->getConfirmOrder($tableID);
+        if ($confirmOrder){
+            foreach ($confirmOrder['item'] as $value) {
+                if (strpos($value['detail_item']['name'], 'Combo') !== false) {
+                    $item[0]['cost'] = 0;
+                }
+            }
+        }
+
         return $item;
     }
 
