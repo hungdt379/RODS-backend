@@ -52,7 +52,7 @@ class MenuService
                 if (strpos($value['detail_item']['name'], 'Combo') !== false) {
                     $combo = $value['detail_item'];
                     $menu['combo'] = $this->menuRepository->getItemByIdOfMenu($combo['_id']);
-                    $menu['combo']['cost'] = 0;
+                    $menu['combo'][0]['cost'] = 0;
                 }else{
                     $menu['combo'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getCombo()->_id);
                 }
