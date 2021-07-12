@@ -11,6 +11,7 @@ use App\Domain\Services\QueueOrderService;
 use App\Traits\ApiResponse;
 use JWTAuth;
 use Validator;
+use \Illuminate\Http\Response as Res;
 
 class QueueOrderController extends Controller
 {
@@ -54,11 +55,11 @@ class QueueOrderController extends Controller
                 $this->notificationService->notification(null, Notification::TITLE_SEND_ORDER_VN, Notification::TITLE_SEND_ORDER_EN, $user, $re);
                 return $this->successResponse($data, 'Send order success');
             } else {
-                return $this->errorResponse('Table exist queue order', null, false, 405);
+                return $this->errorResponse('Table exist queue order', null, false, Res::HTTP_CONFLICT);
             }
 
         } else {
-            return $this->errorResponse('Not found item to send', null, false, 404);
+            return $this->errorResponse('Not found item to send', null, false, Res::HTTP_NO_CONTENT);
         }
 
     }
@@ -70,14 +71,14 @@ class QueueOrderController extends Controller
             'table_id' => 'required'
         ]);
         if ($validator->fails()) {
-            return $this->errorResponse($validator->errors(), null, false, 404);
+            return $this->errorResponse($validator->errors(), null, false, Res::HTTP_BAD_REQUEST);
         }
         $tableID = $param['table_id'];
         $queueOrder = $this->queueOrderService->getQueueOrderByTableID($tableID);
         if ($queueOrder) {
             return $this->successResponse($queueOrder, 'Success');
         } else {
-            return $this->errorResponse('Not found queue order', null, false, 404);
+            return $this->errorResponse('Not found queue order', null, false, Res::HTTP_NO_CONTENT);
         }
 
     }
@@ -95,8 +96,8 @@ class QueueOrderController extends Controller
         if ($queueOrder) {
             $this->queueOrderService->delete($param['_id']);
             return $this->successResponse(null, 'Delete Success');
-        } else {
-            return $this->errorResponse('Not found queue order', null, false, 404);
+        }else{
+            return $this->errorResponse('Not found queue order', null, false, Res::HTTP_NO_CONTENT);
         }
 
     }
@@ -108,7 +109,7 @@ class QueueOrderController extends Controller
             'table_id' => 'required'
         ]);
         if ($validator->fails()) {
-            return $this->errorResponse($validator->errors(), null, false, 404);
+            return $this->errorResponse($validator->errors(), null, false, Res::HTTP_NO_CONTENT);
         }
 
         $tableID = $param['table_id'];
@@ -124,7 +125,7 @@ class QueueOrderController extends Controller
 
             return $this->successResponse(null, 'Confirm Success');
         } else {
-            return $this->errorResponse('Not found queue order', null, false, 404);
+            return $this->errorResponse('Not found queue order', null, false, Res::HTTP_NO_CONTENT);
         }
 
     }
