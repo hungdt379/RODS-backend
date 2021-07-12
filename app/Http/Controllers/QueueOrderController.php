@@ -93,7 +93,7 @@ class QueueOrderController extends Controller
             return $this->errorResponse($validator->errors(), null, false, 404);
         }
         $queueOrder = $this->queueOrderService->getQueueOrderByID($param['_id']);
-        if($queueOrder){
+        if ($queueOrder) {
             $this->queueOrderService->delete($param['_id']);
             return $this->successResponse(null, 'Delete Success');
         }else{
@@ -113,16 +113,21 @@ class QueueOrderController extends Controller
         }
 
         $tableID = $param['table_id'];
-        $confirmOrder = $this->orderService->getConfirmOrderByTableID($tableID);
         $queueOrder = $this->queueOrderService->getQueueOrderByTableID($tableID);
-        if (!$confirmOrder) {
-            $this->orderService->addNewConfirmOrder($queueOrder);
-        } else {
-            $this->orderService->mergeOrder($queueOrder, $confirmOrder);
-        }
-        $this->queueOrderService->delete($queueOrder['_id']);
+        if ($queueOrder) {
+            $confirmOrder = $this->orderService->getConfirmOrderByTableID($tableID);
+            if (!$confirmOrder) {
+                $this->orderService->addNewConfirmOrder($queueOrder);
+            } else {
+                $this->orderService->mergeOrder($queueOrder, $confirmOrder);
+            }
+            $this->queueOrderService->delete($queueOrder['_id']);
 
-        return $this->successResponse(null, 'Confirm Success');
+            return $this->successResponse(null, 'Confirm Success');
+        } else {
+            return $this->errorResponse('Not found queue order', null, false, Res::HTTP_NO_CONTENT);
+        }
+
     }
 
 }

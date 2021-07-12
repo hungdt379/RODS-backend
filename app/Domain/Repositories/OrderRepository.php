@@ -11,7 +11,8 @@ class OrderRepository
 {
     public function getConfirmOrderByID($orderID)
     {
-        return Order::where('_id', $orderID)->first();
+        return Order::where('status', Order::ORDER_STATUS_CONFIRMED)
+            ->where('_id', $orderID)->first();
     }
 
     public function getConfirmOrder($tableID)
