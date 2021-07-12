@@ -131,7 +131,10 @@ class MenuService
         if ($confirmOrder){
             foreach ($confirmOrder['item'] as $value) {
                 if (strpos($value['detail_item']['name'], 'Combo') !== false) {
-                    $item[0]['cost'] = 0;
+                    $category = $this->categoryRepository->getCombo();
+                    if ($item[0]['category_id'] == $category->_id){
+                        $item[0]['cost'] = 0;
+                    }
                 }
             }
         }
