@@ -82,8 +82,8 @@ class DishInOrderController extends Controller
         $dishInOrder = $this->dishInOrderService->getDishInOrderByID($dishInOrderID);
         if ($dishInOrder) {
             $this->dishInOrderService->updateStatus($dishInOrder);
-
-            return $this->successResponse(null, 'Update Success');
+            $data = $this->dishInOrderService->exportPdf($dishInOrder);
+            return $this->successResponse($data, 'Update Success');
         } else {
             return $this->errorResponse('Not found dish in order', null, false, 204);
         }

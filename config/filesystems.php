@@ -62,6 +62,12 @@ return [
             'url' => env('APP_URL').'/public',
             'visibility' => 'public',
         ],
+        'completeDish' => [
+            'driver' => 'local',
+            'root' => public_path() . '/completeDish',
+            'url' => env('APP_URL').'/public',
+            'visibility' => 'public',
+        ],
 
         // save file to storage
 //        'public' => [

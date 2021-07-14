@@ -98,13 +98,14 @@ Route::group([
         Route::get('notifications/read', 'NotificationController@markAsRead');
         Route::get('order/dish', 'DishInOrderController@getDishInOrder');
         Route::get('order/drink', 'DishInOrderController@getDrinkInOrder');
-        Route::post('order/status/update', 'DishInOrderController@updateStatus');
         Route::get('items/all', 'MenuController@getAllItem')->name('all-item');
         Route::get('items/update/sold', 'MenuController@updateItemSoldOutStatus');
     });
 });
 
 Route::group(['middleware' => 'auth.jwt'], function () {
+    Route::post('order/dish/status/update', 'DishInOrderController@updateStatus');
+    Route::post('order/drink/status/update', 'DishInOrderController@updateStatus');
     Route::get('search', 'MenuController@searchItem');
     Route::get('table/order/confirm/detail', 'OrderController@viewDetailConfirmOrder');
     Route::get('order/confirm/list', 'OrderController@getListConfirmOrder');
