@@ -89,12 +89,15 @@ class NotificationService
             $notifications = $this->notificationRepository->getUnreadNotification($receiver);
         }
 
-        //dd($notifications);
-
         foreach ($notifications as $notification) {
             $notification->read = true;
             $this->notificationRepository->insertMongo($notification);
         }
+    }
+
+    public function removeReferenceAfterRead($ref)
+    {
+        return $this->notificationRepository->removeReferenceAfterRead($ref);
     }
 
 }

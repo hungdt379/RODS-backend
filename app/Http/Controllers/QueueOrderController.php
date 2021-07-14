@@ -96,7 +96,7 @@ class QueueOrderController extends Controller
         if ($queueOrder) {
             $this->queueOrderService->delete($param['_id']);
             return $this->successResponse(null, 'Delete Success');
-        }else{
+        } else {
             return $this->errorResponse('Not found queue order', null, false, Res::HTTP_NO_CONTENT);
         }
 
@@ -122,7 +122,7 @@ class QueueOrderController extends Controller
                 $this->orderService->mergeOrder($queueOrder, $confirmOrder);
             }
             $this->queueOrderService->delete($queueOrder['_id']);
-
+            $this->notificationService->removeReferenceAfterRead('waiter/' . $tableID . '/send-order');
             return $this->successResponse(null, 'Confirm Success');
         } else {
             return $this->errorResponse('Not found queue order', null, false, Res::HTTP_NO_CONTENT);
