@@ -136,6 +136,7 @@ class QueueOrderController extends Controller
                     }
                 }
 
+                dd([$tempQueueCombo, $tempConfirmCombo]);
                 if (($tempConfirmCombo == $tempQueueCombo) || ($tempQueueCombo == '' && $tempConfirmCombo != '') || ($tempQueueCombo != '' && $tempConfirmCombo == '')) {
                     $this->orderService->mergeOrder($queueOrder, $confirmOrder);
                     $this->queueOrderService->delete($queueOrder['_id']);
