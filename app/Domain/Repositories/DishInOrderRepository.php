@@ -13,11 +13,11 @@ class DishInOrderRepository
         return $dishInOrder->save();
     }
 
-    public function getDishInOrder($tableID, $categoryID, $pageSize)
+    public function getDishInOrder($categoryID, $pageSize)
     {
         return DishInOrder::where('status', DishInOrder::ORDER_ITEM_STATUS_PREPARE)
-            ->where('table_id', $tableID)
             ->whereIn('category_id', $categoryID)
+            ->orderBy('ts', 'DESC')
             ->paginate((int)$pageSize);
     }
 

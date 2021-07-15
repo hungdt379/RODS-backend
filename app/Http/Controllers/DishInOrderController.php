@@ -29,21 +29,19 @@ class DishInOrderController extends Controller
     {
         $param = request()->all();
         $validator = Validator::make($param, [
-            'table_id' => 'required',
             'pageSize' => 'required|numeric|'
         ]);
         if ($validator->fails()) {
             return $this->errorResponse($validator->errors(), null, false, 404);
         }
 
-        $tableID = $param['table_id'];
         $pageSize = $param['pageSize'];
         $categoryCombo = $this->categoryService->getComboCategory();
         $categoryFast = $this->categoryService->getFastCategory();
         $categoryNormal = $this->categoryService->getNormalCategory();
         $categoryID = [$categoryCombo['_id'], $categoryFast['_id'], $categoryNormal['_id']];
 
-        $data = $this->dishInOrderService->getDishInOrder($tableID, $categoryID, $pageSize);
+        $data = $this->dishInOrderService->getDishInOrder($categoryID, $pageSize);
         return $this->successResponseWithPaging($data->items(), 'Success', $data->currentPage(), $pageSize, $data->total());
     }
 
@@ -51,21 +49,19 @@ class DishInOrderController extends Controller
     {
         $param = request()->all();
         $validator = Validator::make($param, [
-            'table_id' => 'required',
             'pageSize' => 'required|numeric|'
         ]);
         if ($validator->fails()) {
             return $this->errorResponse($validator->errors(), null, false, 204);
         }
 
-        $tableID = $param['table_id'];
         $pageSize = $param['pageSize'];
         $categoryDrink = $this->categoryService->getDrinkCategory();
         $categoryAlcohol = $this->categoryService->getAlcoholCategory();
         $categoryBeer = $this->categoryService->getBeerCategory();
         $categoryID = [$categoryDrink['_id'], $categoryAlcohol['_id'], $categoryBeer['_id']];
 
-        $data = $this->dishInOrderService->getDishInOrder($tableID, $categoryID, $pageSize);
+        $data = $this->dishInOrderService->getDishInOrder($categoryID, $pageSize);
         return $this->successResponseWithPaging($data->items(), 'Success', $data->currentPage(), $pageSize, $data->total());
     }
 
