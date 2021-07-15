@@ -118,12 +118,36 @@ class QueueOrderController extends Controller
             $confirmOrder = $this->orderService->getConfirmOrderByTableID($tableID);
             if (!$confirmOrder) {
                 $this->orderService->addNewConfirmOrder($queueOrder);
+                $this->queueOrderService->delete($queueOrder['_id']);
+                $this->notificationService->removeReferenceAfterRead('waiter/' . $tableID . '/send-order');
+                return $this->successResponse(null, 'Confirm Success');
             } else {
-                $this->orderService->mergeOrder($queueOrder, $confirmOrder);
+                $tempConfirmCombo = '';
+                $tempQueueCombo = '';
+                foreach ($confirmOrder['item'] as $value) {
+                    if (strpos($value['detail_item']['name'], 'Combo') !== false) {
+                        $value['detail_item']['name'] = $tempConfirmCombo;
+                    }
+                }
+
+                foreach ($queueOrder['item'] as $value) {
+                    if (strpos($value['detail_item']['name'], 'Combo') !== false) {
+                        $value['detail_item']['name'] = $tempQueueCombo;
+                    }
+                }
+
+                if (($tempConfirmCombo == $tempQueueCombo) || ($tempQueueCombo == '' && $tempConfirmCombo != '') || ($tempQueueCombo != '' && $tempConfirmCombo == '')) {
+                    $this->orderService->mergeOrder($queueOrder, $confirmOrder);
+                    $this->queueOrderService->delete($queueOrder['_id']);
+                    $this->notificationService->removeReferenceAfterRead('waiter/' . $tableID . '/send-order');
+                    return $this->successResponse(null, 'Confirm Success');
+                } else if ($tempConfirmCombo != $tempQueueCombo) {
+                    $this->notificationService->removeReferenceAfterRead('waiter/' . $tableID . '/send-order');
+                    return $this->errorResponse('Exist a combo in order', null, false, Res::HTTP_CONFLICT);
+                }
+
             }
-            $this->queueOrderService->delete($queueOrder['_id']);
-            $this->notificationService->removeReferenceAfterRead('waiter/' . $tableID . '/send-order');
-            return $this->successResponse(null, 'Confirm Success');
+
         } else {
             return $this->errorResponse('Not found queue order', null, false, Res::HTTP_NO_CONTENT);
         }
