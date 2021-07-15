@@ -9,6 +9,7 @@ use App\Domain\Services\MenuService;
 use App\Traits\ApiResponse;
 use Illuminate\Support\Facades\Validator;
 use JWTAuth;
+use \Illuminate\Http\Response as Res;
 
 class MenuController
 {
@@ -48,7 +49,7 @@ class MenuController
 
         $data = $this->menuService->getDetailItemByID($param['_id']);
         if (sizeof($data) == 0) {
-            return $this->errorResponse('Not found item', null, false, 404);
+            return $this->errorResponse('Not found item', null, false, Res::HTTP_NO_CONTENT);
         }
 
         return $this->successResponse($data, 'Success');
@@ -58,13 +59,13 @@ class MenuController
     {
         $param = request()->all();
         if ($param['q'] == null) {
-            return $this->errorResponse('Not found items', null, false, 404);
+            return $this->errorResponse('Not found items', null, false, Res::HTTP_NO_CONTENT);
         }
 
         $data = $this->menuService->getItemByName($param['q'], JWTAuth::user()->_id);
 
         if (sizeof($data) == 0) {
-            return $this->errorResponse('Not found items', null, false, 404);
+            return $this->errorResponse('Not found items', null, false, Res::HTTP_NO_CONTENT);
         }
 
         return $this->successResponse($data, 'Success');
@@ -83,7 +84,7 @@ class MenuController
         }
 
         $data = $this->menuService->getItem($param['q']);
-        if (sizeof($data) == 0) return $this->errorResponse('Not found items', null, false, 404);
+        if (sizeof($data) == 0) return $this->errorResponse('Not found items', null, false, Res::HTTP_NO_CONTENT);
 
         $dataWithPaging = [];
         $start = ($param['page'] - 1) * $param['pageSize'];
@@ -92,7 +93,7 @@ class MenuController
         $totalPage = ceil($total / $param['pageSize']);
 
         if ($param['page'] > (int)$totalPage) {
-            return $this->errorResponse('Not found items', null, false, 404);
+            return $this->errorResponse('Not found items', null, false, Res::HTTP_NO_CONTENT);
         }
 
         if ($end >= $total) $end = $total;
@@ -117,7 +118,7 @@ class MenuController
         $menuItem = $this->menuService->getItemByID($param['item_id']);
         $dishItem = $this->dishInComboService->getDishInComboById($param['item_id']);
         if ($menuItem == null && $dishItem == null) {
-            return $this->errorResponse('Not found items', null, false, 404);
+            return $this->errorResponse('Not found items', null, false, Res::HTTP_NO_CONTENT);
         }
 
         $this->menuService->updateItemSoldOutStatus($menuItem, $dishItem);

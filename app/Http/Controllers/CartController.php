@@ -11,6 +11,7 @@ use App\Domain\Services\MenuService;
 use App\Traits\ApiResponse;
 use Illuminate\Support\Facades\Validator;
 use JWTAuth;
+use \Illuminate\Http\Response as Res;
 
 class CartController extends Controller
 {
@@ -54,7 +55,7 @@ class CartController extends Controller
             $data = ['table_id' => $tableID, 'item_in_cart' => $listItem, 'total_cost' => $totalCost];
             return $this->successResponse($data, 'Success');
         } else {
-            return $this->errorResponse('Not found cart to show', null, false, 404);
+            return $this->errorResponse('Not found cart to show', null, false, Res::HTTP_NO_CONTENT);
         }
 
     }
@@ -69,7 +70,7 @@ class CartController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return $this->errorResponse($validator->errors(), null, false, 404);
+            return $this->errorResponse($validator->errors(), null, false, Res::HTTP_BAD_REQUEST);
         }
 
         $tableID = JWTAuth::user()->_id;
@@ -92,7 +93,7 @@ class CartController extends Controller
                 if ((strpos($itemInCart['name'], 'Combo') !== false) &&
                     (strpos($item['name'], 'Combo') !== false) &&
                     ($itemInCart['_id'] != $item['_id'])) {
-                    return $this->errorResponse('The cart already exist combo', null, false, 400);
+                    return $this->errorResponse('The cart already exist combo', null, false, Res::HTTP_CONFLICT);
                 }
             }
             if ($cartItem) {
@@ -104,7 +105,7 @@ class CartController extends Controller
                 return $this->successResponse(null, 'Add item Success');
             }
         } else {
-            return $this->errorResponse('Not found cart to add', null, false, 404);
+            return $this->errorResponse('Not found cart to add', null, false, Res::HTTP_NO_CONTENT);
         }
     }
 
@@ -121,7 +122,7 @@ class CartController extends Controller
                 $this->cartItemService->deleteItemInCart($tableID, $itemID);
                 return $this->successResponse(null, 'Delete Success');
             } else
-                return $this->errorResponse('One or more item not found', null, false, 404);
+                return $this->errorResponse('One or more item not found', null, false, Res::HTTP_NO_CONTENT);
         }
     }
 

@@ -90,7 +90,7 @@ class QueueOrderController extends Controller
             '_id' => 'required'
         ]);
         if ($validator->fails()) {
-            return $this->errorResponse($validator->errors(), null, false, 404);
+            return $this->errorResponse($validator->errors(), null, false, Res::HTTP_BAD_REQUEST);
         }
         $queueOrder = $this->queueOrderService->getQueueOrderByID($param['_id']);
         if ($queueOrder) {

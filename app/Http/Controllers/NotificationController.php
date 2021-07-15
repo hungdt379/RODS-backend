@@ -10,6 +10,7 @@ use App\Traits\ApiResponse;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use JWTAuth;
+use \Illuminate\Http\Response as Res;
 
 class NotificationController extends Controller
 {
@@ -82,7 +83,7 @@ class NotificationController extends Controller
 
         $data = $this->notificationService->getNotificationOfEachTable($param['table_id'], $param['pageSize']);
         if (sizeof($data) == 0) {
-            return $this->errorResponse('Have no notification', null, false, 404);
+            return $this->errorResponse('Have no notification', null, false, Res::HTTP_NO_CONTENT);
         }
 
         return $this->successResponseWithPaging($data->items(), 'Success', $data->currentPage(), $param['pageSize'], $data->total());
@@ -106,7 +107,7 @@ class NotificationController extends Controller
 
         $data = $this->notificationService->getNotificationByReceiver($param['receiver'], $param['pageSize']);
         if (sizeof($data) == 0) {
-            return $this->errorResponse('Have no notification', null, false, 404);
+            return $this->errorResponse('Have no notification', null, false, Res::HTTP_NO_CONTENT);
         }
 
         return $this->successResponseWithPaging($data->items(), 'Success', $data->currentPage(), $param['pageSize'], $data->total());

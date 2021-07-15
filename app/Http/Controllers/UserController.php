@@ -66,7 +66,7 @@ class UserController extends Controller
         $data = $this->userService->getUserById($param['table_id']);
 
         if ($data == null) {
-            return $this->errorResponse('Table is not exist', '', false, 404);
+            return $this->errorResponse('Table is not exist', '', false, Res::HTTP_NO_CONTENT);
         }
 
         return $this->successResponse($data, 'Success');
@@ -223,7 +223,7 @@ class UserController extends Controller
         }
 
         $table = $this->userService->getUserById($param['table_id']);
-        if ($table == null) return $this->errorResponse('Not found table', null, false, 404);
+        if ($table == null) return $this->errorResponse('Not found table', null, false, Res::HTTP_NO_CONTENT);
 
         $data = $this->userService->generateNewQrCode($table);
         return $this->successResponse($data, 'Success');
@@ -267,7 +267,7 @@ class UserController extends Controller
 
             return $this->successResponse(null, 'Success');
         } else {
-            return $this->errorResponse('Table not found or not empty', null, false, 404);
+            return $this->errorResponse('Table not found or not empty', null, false, Res::HTTP_NO_CONTENT);
         }
 
     }

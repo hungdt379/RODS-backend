@@ -4,12 +4,11 @@
 namespace App\Http\Controllers;
 
 
-use App\Domain\Entities\Notification;
 use App\Domain\Services\NotificationService;
 use App\Domain\Services\OrderService;
 use App\Traits\ApiResponse;
 use Validator;
-use JWTAuth;
+use \Illuminate\Http\Response as Res;
 
 class OrderController extends Controller
 {
@@ -36,7 +35,7 @@ class OrderController extends Controller
             'table_id' => 'required'
         ]);
         if ($validator->fails()) {
-            return $this->errorResponse($validator->errors(), null, false, 204);
+            return $this->errorResponse($validator->errors(), null, false, Res::HTTP_BAD_REQUEST);
         }
         $tableID = $param['table_id'];
 
@@ -44,7 +43,7 @@ class OrderController extends Controller
         if ($data) {
             return $this->successResponse($data, 'Success');
         } else {
-            return $this->errorResponse('Not found confirm order', null, false, 204);
+            return $this->errorResponse('Not found confirm order', null, false, Res::HTTP_NO_CONTENT);
         }
     }
 
@@ -56,7 +55,7 @@ class OrderController extends Controller
             'item_id' => 'required'
         ]);
         if ($validator->fails()) {
-            return $this->errorResponse($validator->errors(), null, false, 204);
+            return $this->errorResponse($validator->errors(), null, false, Res::HTTP_BAD_REQUEST);
         }
         $tableID = $param['table_id'];
         $itemID = $param['item_id'];
@@ -67,7 +66,7 @@ class OrderController extends Controller
 
             return $this->successResponse(null, 'Delete Success');
         }else{
-            return $this->errorResponse('Not found confirm order', null, false, 204);
+            return $this->errorResponse('Not found confirm order', null, false, Res::HTTP_NO_CONTENT);
         }
 
     }
@@ -79,7 +78,7 @@ class OrderController extends Controller
             'pageSize' => 'required|numeric|'
         ]);
         if ($validator->fails()) {
-            return $this->errorResponse($validator->errors(), null, false, 204);
+            return $this->errorResponse($validator->errors(), null, false, Res::HTTP_BAD_REQUEST);
         }
 
         $pageSize = $param['pageSize'];
@@ -94,7 +93,7 @@ class OrderController extends Controller
             'table_id' => 'required'
         ]);
         if ($validator->fails()) {
-            return $this->errorResponse($validator->errors(), null, false, 204);
+            return $this->errorResponse($validator->errors(), null, false, Res::HTTP_BAD_REQUEST);
         }
         $tableID = $param['table_id'];
         $confirmOrder = $this->orderService->getConfirmOrderByTableID($tableID);
@@ -103,7 +102,7 @@ class OrderController extends Controller
             $data = $this->orderService->getCompletedOrderByID($confirmOrder->_id);
             return $this->successResponse($data, 'Success');
         } else {
-            return $this->errorResponse('Not found confirm order', null, false, 204);
+            return $this->errorResponse('Not found confirm order', null, false, Res::HTTP_NO_CONTENT);
         }
     }
 
@@ -115,7 +114,7 @@ class OrderController extends Controller
             '_id' => 'required'
         ]);
         if ($validator->fails()) {
-            return $this->errorResponse($validator->errors(), null, false, 204);
+            return $this->errorResponse($validator->errors(), null, false, Res::HTTP_BAD_REQUEST);
         }
         $note = $param['note'];
         $orderID = $param['_id'];
@@ -124,7 +123,7 @@ class OrderController extends Controller
             $this->orderService->addNoteForRemainItem($confirmOrder, $note);
             return $this->successResponse(null, 'Success');
         } else {
-            return $this->errorResponse('Not found confirm order', null, false, 204);
+            return $this->errorResponse('Not found confirm order', null, false, Res::HTTP_NO_CONTENT);
         }
 
     }
@@ -137,7 +136,7 @@ class OrderController extends Controller
             'voucher' => 'required|numeric|min:5|max:90'
         ]);
         if ($validator->fails()) {
-            return $this->errorResponse($validator->errors(), null, false, 204);
+            return $this->errorResponse($validator->errors(), null, false, Res::HTTP_BAD_REQUEST);
         }
         $orderID = $param['_id'];
         $voucher = (int)$param['voucher'];
@@ -146,7 +145,7 @@ class OrderController extends Controller
             $this->orderService->addVoucherToConfirmOrder($confirmOrder, $voucher);
             return $this->successResponse(null, 'Success');
         } else {
-            return $this->errorResponse('Not found confirm order', null, false, 204);
+            return $this->errorResponse('Not found confirm order', null, false, Res::HTTP_NO_CONTENT);
         }
 
 
@@ -161,7 +160,7 @@ class OrderController extends Controller
             'status' => 'required|boolean'
         ]);
         if ($validator->fails()) {
-            return $this->errorResponse($validator->errors(), null, false, 204);
+            return $this->errorResponse($validator->errors(), null, false, Res::HTTP_BAD_REQUEST);
         }
         $orderID = $param['_id'];
         $itemID = $param['item_id'];
@@ -175,7 +174,7 @@ class OrderController extends Controller
             }
             return $this->successResponse(null, 'Success');
         } else {
-            return $this->errorResponse('Not found confirm order', null, false, 204);
+            return $this->errorResponse('Not found confirm order', null, false, Res::HTTP_NO_CONTENT);
         }
 
 
@@ -188,7 +187,7 @@ class OrderController extends Controller
             'table_id' => 'required'
         ]);
         if ($validator->fails()) {
-            return $this->errorResponse($validator->errors(), null, false, 204);
+            return $this->errorResponse($validator->errors(), null, false, Res::HTTP_BAD_REQUEST);
         }
         $tableID = $param['table_id'];
         $listConfirmOrder = $this->orderService->getListConfirmOrderByTableID($tableID)->toArray();
@@ -196,7 +195,7 @@ class OrderController extends Controller
             $this->orderService->matchingConfirmOrder($listConfirmOrder);
             return $this->successResponse(null, 'Success');
         } else {
-            return $this->errorResponse('One or more table_id not found', null, false, 204);
+            return $this->errorResponse('One or more table_id not found', null, false, Res::HTTP_NO_CONTENT);
         }
 
     }

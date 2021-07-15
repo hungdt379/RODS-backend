@@ -6,6 +6,7 @@ use App\Domain\Services\CategoryService;
 use App\Domain\Services\DishInOrderService;
 use App\Traits\ApiResponse;
 use Validator;
+use \Illuminate\Http\Response as Res;
 
 class DishInOrderController extends Controller
 {
@@ -32,7 +33,7 @@ class DishInOrderController extends Controller
             'pageSize' => 'required|numeric|'
         ]);
         if ($validator->fails()) {
-            return $this->errorResponse($validator->errors(), null, false, 404);
+            return $this->errorResponse($validator->errors(), null, false, Res::HTTP_NO_CONTENT);
         }
 
         $pageSize = $param['pageSize'];
@@ -52,7 +53,7 @@ class DishInOrderController extends Controller
             'pageSize' => 'required|numeric|'
         ]);
         if ($validator->fails()) {
-            return $this->errorResponse($validator->errors(), null, false, 204);
+            return $this->errorResponse($validator->errors(), null, false, Res::HTTP_BAD_REQUEST);
         }
 
         $pageSize = $param['pageSize'];
@@ -72,7 +73,7 @@ class DishInOrderController extends Controller
             '_id' => 'required',
         ]);
         if ($validator->fails()) {
-            return $this->errorResponse($validator->errors(), null, false, 204);
+            return $this->errorResponse($validator->errors(), null, false, Res::HTTP_BAD_REQUEST);
         }
         $dishInOrderID = $param['_id'];
         $dishInOrder = $this->dishInOrderService->getDishInOrderByID($dishInOrderID);
@@ -81,7 +82,7 @@ class DishInOrderController extends Controller
 
             return $this->successResponse(null, 'Update Success');
         } else {
-            return $this->errorResponse('Not found dish in order', null, false, 204);
+            return $this->errorResponse('Not found dish in order', null, false, Res::HTTP_NO_CONTENT);
         }
 
     }
