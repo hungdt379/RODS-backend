@@ -126,23 +126,22 @@ class QueueOrderController extends Controller
                 $tempQueueCombo = '';
                 foreach ($confirmOrder['item'] as $value) {
                     if (strpos($value['detail_item']['name'], 'Combo') !== false) {
-                        $value['detail_item']['name'] = $tempConfirmCombo;
+                        $tempConfirmCombo = $value['detail_item']['name'];
                     }
                 }
 
                 foreach ($queueOrder['item'] as $value) {
                     if (strpos($value['detail_item']['name'], 'Combo') !== false) {
-                        $value['detail_item']['name'] = $tempQueueCombo;
+                        $tempQueueCombo = $value['detail_item']['name'];
                     }
                 }
 
-                dd([$tempQueueCombo, $tempConfirmCombo]);
                 if (($tempConfirmCombo == $tempQueueCombo) || ($tempQueueCombo == '' && $tempConfirmCombo != '') || ($tempQueueCombo != '' && $tempConfirmCombo == '')) {
                     $this->orderService->mergeOrder($queueOrder, $confirmOrder);
                     $this->queueOrderService->delete($queueOrder['_id']);
                     $this->notificationService->removeReferenceAfterRead('waiter/' . $tableID . '/send-order');
                     return $this->successResponse(null, 'Confirm Success');
-                } else if ($tempConfirmCombo != $tempQueueCombo) {
+                } else if ($tempQueueCombo != $tempConfirmCombo) {
                     $this->notificationService->removeReferenceAfterRead('waiter/' . $tableID . '/send-order');
                     return $this->errorResponse('Exist a combo in order', null, false, Res::HTTP_CONFLICT);
                 }
