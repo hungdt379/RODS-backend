@@ -9,28 +9,36 @@ use App\Domain\Repositories\CategoryRepository;
 use App\Domain\Repositories\DishInComboRepository;
 use App\Domain\Repositories\MenuRepository;
 use App\Domain\Repositories\OrderRepository;
+use App\Domain\Repositories\QueueOrderRepository;
 use JWTAuth;
+use App\Traits\ApiResponse;
 
 class MenuService
 {
+    use ApiResponse;
+
     private $menuRepository;
     private $categoryRepository;
     private $orderRepository;
+    private $queueOrderRepository;
     private $dishInComboRepository;
     private $cartItemService;
 
     /**
      * MenuService constructor.
-     * @param $menuRepository
-     * @param $categoryRepository
-     * @param $orderRepository
-     * @param $dishInComboRepository
+     * @param MenuRepository $menuRepository
+     * @param CategoryRepository $categoryRepository
+     * @param OrderRepository $orderRepository
+     * @param QueueOrderRepository $queueOrderRepository
+     * @param DishInComboRepository $dishInComboRepository
+     * @param CartItemService $cartItemService
      */
-    public function __construct(MenuRepository $menuRepository, CategoryRepository $categoryRepository, OrderRepository $orderRepository, DishInComboRepository $dishInComboRepository, CartItemService $cartItemService)
+    public function __construct(MenuRepository $menuRepository, CategoryRepository $categoryRepository, OrderRepository $orderRepository, QueueOrderRepository $queueOrderRepository, DishInComboRepository $dishInComboRepository, CartItemService $cartItemService)
     {
         $this->menuRepository = $menuRepository;
         $this->categoryRepository = $categoryRepository;
         $this->orderRepository = $orderRepository;
+        $this->queueOrderRepository = $queueOrderRepository;
         $this->dishInComboRepository = $dishInComboRepository;
         $this->cartItemService = $cartItemService;
     }
@@ -39,8 +47,9 @@ class MenuService
     public function getMenu($tableID)
     {
         $confirmOrder = $this->orderRepository->getConfirmOrder($tableID);
+        $queueOrder = $this->queueOrderRepository->getQueueOrderByTableID($tableID);
         $combo = null;
-        if (!$confirmOrder) {
+        if (!$confirmOrder && !$queueOrder) {
             $menu['combo'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getCombo()->_id);
             $menu['fast'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getFast()->_id);
             $menu['normal'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getNormal()->_id);
@@ -48,13 +57,25 @@ class MenuService
             $menu['alcohol'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getAlcohol()->_id);
             $menu['beer'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getBeer()->_id);
         } else {
-            foreach ($confirmOrder['item'] as $value) {
-                if (strpos($value['detail_item']['name'], 'Combo') !== false) {
-                    $combo = $value['detail_item'];
-                    $menu['combo'] = $this->menuRepository->getItemByIdOfMenu($combo['_id']);
-                    $menu['combo'][0]['cost'] = 0;
-                }else{
-                    $menu['combo'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getCombo()->_id);
+            if ($confirmOrder) {
+                foreach ($confirmOrder['item'] as $value) {
+                    if (strpos($value['detail_item']['name'], 'Combo') !== false) {
+                        $combo = $value['detail_item'];
+                        $menu['combo'] = $this->menuRepository->getItemByIdOfMenu($combo['_id']);
+                        $menu['combo'][0]['cost'] = 0;
+                    } else {
+                        $menu['combo'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getCombo()->_id);
+                    }
+                }
+            } else if ($queueOrder && !$confirmOrder) {
+                foreach ($queueOrder['item'] as $value) {
+                    if (strpos($value['detail_item']['name'], 'Combo') !== false) {
+                        $combo = $value['detail_item'];
+                        $menu['combo'] = $this->menuRepository->getItemByIdOfMenu($combo['_id']);
+                        $menu['combo'][0]['cost'] = 0;
+                    } else {
+                        $menu['combo'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getCombo()->_id);
+                    }
                 }
             }
 
@@ -128,12 +149,28 @@ class MenuService
         }
 
         $confirmOrder = $this->orderRepository->getConfirmOrder($tableID);
-        if ($confirmOrder){
+        if ($confirmOrder) {
             foreach ($confirmOrder['item'] as $value) {
                 if (strpos($value['detail_item']['name'], 'Combo') !== false) {
                     $category = $this->categoryRepository->getCombo();
-                    if ($item[0]['category_id'] == $category->_id){
+                    if ($item[0]['category_id'] == $category->_id) {
                         $item[0]['cost'] = 0;
+                    }else if ($value['detail_item']['name'] != $item[0]['name']){
+                        return $this->errorResponse('Combo not found combo in order', null, false, 204);
+                    }
+                }
+            }
+        }
+
+        $queueOrder = $this->queueOrderRepository->getQueueOrderByTableID($tableID);
+        if ($queueOrder && !$confirmOrder) {
+            foreach ($queueOrder['item'] as $value) {
+                if (strpos($value['detail_item']['name'], 'Combo') !== false) {
+                    $category = $this->categoryRepository->getCombo();
+                    if ($item[0]['category_id'] == $category->_id) {
+                        $item[0]['cost'] = 0;
+                    }else if ($value['detail_item']['name'] != $item[0]['name']){
+                        return $this->errorResponse('Combo not found combo in order', null, false, 204);
                     }
                 }
             }
