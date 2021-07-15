@@ -68,6 +68,7 @@ Route::group([
         Route::post('table/order/confirm/item/delete', 'OrderController@deleteItemInConfirmOrder');
         Route::post('table/order/confirm/note/add', 'OrderController@addNoteForRemainItem');
         Route::post('table/change', 'UserController@changeTable');
+        Route::get('order/drink', 'DishInOrderController@getDrinkInOrder');
     });
 });
 
@@ -97,7 +98,6 @@ Route::group([
         Route::get('notifications', 'NotificationController@getAllNotification');
         Route::get('notifications/read', 'NotificationController@markAsRead');
         Route::get('order/dish', 'DishInOrderController@getDishInOrder');
-        Route::get('order/drink', 'DishInOrderController@getDrinkInOrder');
         Route::post('order/status/update', 'DishInOrderController@updateStatus');
         Route::get('items/all', 'MenuController@getAllItem')->name('all-item');
         Route::get('items/update/sold', 'MenuController@updateItemSoldOutStatus');

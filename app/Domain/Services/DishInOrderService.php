@@ -26,9 +26,9 @@ class DishInOrderService
         return $this->dishInOrderRepository->insert($dishInOrder);
     }
 
-    public function getDishInOrder($tableID, $categoryID, $pageSize)
+    public function getDishInOrder($categoryID, $pageSize)
     {
-        return $this->dishInOrderRepository->getDishInOrder($tableID, $categoryID, $pageSize);
+        return $this->dishInOrderRepository->getDishInOrder($categoryID, $pageSize);
     }
 
     public function getAllDishInOrderByTableID($tableID)
