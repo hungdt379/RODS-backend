@@ -6,6 +6,7 @@ namespace App\Domain\Services;
 
 use App\Domain\Entities\DishInOrder;
 use App\Domain\Entities\Order;
+use App\Domain\Repositories\DishInOrderRepository;
 use App\Domain\Repositories\OrderRepository;
 
 
@@ -13,16 +14,19 @@ class OrderService
 {
     private $orderRepository;
     private $dishInOrderService;
+    private $dishInOrderRepository;
 
     /**
      * OrderService constructor.
      * @param OrderRepository $orderRepository
      * @param DishInOrderService $dishInOrderService
+     * @param DishInOrderRepository $dishInOrderRepository
      */
-    public function __construct(OrderRepository $orderRepository, DishInOrderService $dishInOrderService)
+    public function __construct(OrderRepository $orderRepository, DishInOrderService $dishInOrderService, DishInOrderRepository $dishInOrderRepository)
     {
         $this->orderRepository = $orderRepository;
         $this->dishInOrderService = $dishInOrderService;
+        $this->dishInOrderRepository = $dishInOrderRepository;
     }
 
     public function getConfirmOrderByTableID($tableID)
@@ -39,6 +43,7 @@ class OrderService
     {
         return $this->orderRepository->getConfirmOrderByID($orderID);
     }
+
     public function getCompletedOrderByID($orderID)
     {
         return $this->orderRepository->getCompletedOrderByID($orderID);
@@ -55,7 +60,8 @@ class OrderService
         return $this->orderRepository->getListConfirmOrderByTableID($tableID);
     }
 
-    public function updateOrderToNewTable($fromOrder, $table){
+    public function updateOrderToNewTable($fromOrder, $table)
+    {
         $fromOrder->table_id = $table['_id'];
         $fromOrder->table_name = $table['full_name'];
         $fromOrder->number_of_customer = $table['number_of_customer'];
@@ -73,8 +79,8 @@ class OrderService
         $note = '';
         $orderID = [];
         foreach ($listConfirmOrder as $confirmOrder) {
-            if(isset($confirmOrder['note'])){
-                $note = $note.', '.$confirmOrder['note'];
+            if (isset($confirmOrder['note'])) {
+                $note = $note . ', ' . $confirmOrder['note'];
             }
             $numberOfCustomer += (int)$confirmOrder['number_of_customer'];
             array_push($tableID, $confirmOrder['table_id']);
@@ -108,7 +114,7 @@ class OrderService
         $newConfirmOrder->item = array_values($item);
         $newConfirmOrder->total_cost = $totalCost;
         $newConfirmOrder->total_cost = $totalCost;
-        $newConfirmOrder->note = substr($note,2);
+        $newConfirmOrder->note = substr($note, 2);
         $newConfirmOrder->ts = time();
 
         $this->orderRepository->deleteConfirmOrderByID($orderID);
@@ -169,6 +175,7 @@ class OrderService
             $dishInOrder = new DishInOrder();
             $dishInOrder->table_id = $queueOrder['table_id'];
             $dishInOrder->table_name = $queueOrder['table_name'];
+            $dishInOrder->item_id = $value['item_id'];
             $dishInOrder->item_name = $value['detail_item']['name'];
             $dishInOrder->quantity = $value['quantity'];
             $dishInOrder->status = DishInOrder::ORDER_ITEM_STATUS_PREPARE;
@@ -180,8 +187,9 @@ class OrderService
                     $dishInOrder = new DishInOrder();
                     $dishInOrder->table_id = $queueOrder['table_id'];
                     $dishInOrder->table_name = $queueOrder['table_name'];
+                    $dishInOrder->item_id = $value['item_id'];
                     $dishInOrder->item_name = $value['dish_in_combo'][$i];
-                    $dishInOrder->quantity = $value['quantity'];
+                    $dishInOrder->quantity = 1;
                     $dishInOrder->status = DishInOrder::ORDER_ITEM_STATUS_PREPARE;
                     $dishInOrder->category_id = $value['detail_item']['category_id'];
                     $this->dishInOrderService->insert($dishInOrder);
@@ -194,17 +202,19 @@ class OrderService
     public function deleteItemInConfirmOrder($confirmOrder, $itemID)
     {
         $item = $confirmOrder['item'];
+        $itemDeletedCost = 0;
         for ($i = 0; $i < count($item); $i++) {
-            for ($j = 0; $j < count($itemID); $j++) {
-                if ($item[$i]['item_id'] == $itemID[$j]) {
-                    unset($item[$i]);
-                    $item = array_values($item);
-                }
+            if ($item[$i]['item_id'] == $itemID) {
+                $itemDeletedCost = $item[$i]['total_cost'];
+                unset($item[$i]);
+                $item = array_values($item);
             }
         }
         $confirmOrder['item'] = $item;
+        $confirmOrder['total_cost'] -= $itemDeletedCost;
 
-        return $this->orderRepository->update($confirmOrder);
+        $this->orderRepository->update($confirmOrder);
+        $this->dishInOrderRepository->deleteMany($itemID, $confirmOrder['table_id']);
     }
 
     public function addNoteForRemainItem($confirmOrder, $note)

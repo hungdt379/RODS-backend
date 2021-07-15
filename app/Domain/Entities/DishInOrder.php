@@ -15,6 +15,6 @@ class DishInOrder extends Model
     protected $collection = 'dish_in_order';
 
     protected $fillable = [
-        '_id', 'table_id', 'table_name', 'item_id', 'item_name', 'dish_in_combo', 'quantity', 'status', 'category_id', 'ts'
+        '_id', 'table_id', 'table_name', 'item_id', 'item_name', 'quantity', 'status', 'category_id', 'ts'
     ];
 }

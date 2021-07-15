@@ -37,4 +37,9 @@ class DishInOrderRepository
         return $dishInOrder->update();
     }
 
+    public function deleteMany($itemID, $tableID)
+    {
+        DishInOrder::where('table_id', $tableID)->where('item_id', $itemID)->delete();
+    }
+
 }
