@@ -55,7 +55,7 @@ class QueueOrderController extends Controller
                 $this->notificationService->notification(null, Notification::TITLE_SEND_ORDER_VN, Notification::TITLE_SEND_ORDER_EN, $user, $re);
                 return $this->successResponse($data, 'Send order success');
             } else {
-                return $this->errorResponse('Table exist queue order', null, false, Res::HTTP_CONFLICT);
+                return $this->errorResponse('Table exist queue order', null, false, Res::HTTP_CREATED);
             }
 
         } else {
