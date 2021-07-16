@@ -35,7 +35,7 @@ class CartItemService
         return $this->cartItemRepository->getCartItemByItemID($tableID, $itemID);
     }
 
-    public function update($tableID, $itemID, $quantity, $note, $dishInCombo, $cost, $categoryID)
+    public function update($tableID, $itemID, $quantity, $note, $dishInCombo, $cost)
     {
         $item = $this->cartItemRepository->getCartItemByItemID($tableID, $itemID);
         $item['quantity'] = $quantity;
@@ -46,12 +46,11 @@ class CartItemService
             $item['dish_in_combo'] = $dishInCombo;
         }
         $item['total_cost'] = (int)$cost * (int)$quantity;
-        $item['category_id'] = $categoryID;
 
         return $this->cartItemRepository->update($item);
     }
 
-    public function addNewItem($tableID, $itemID, $quantity, $note, $dishInCombo, $cost, $categoryID)
+    public function addNewItem($tableID, $itemID, $quantity, $note, $dishInCombo, $cost)
     {
         $data = [
             'table_id' => $tableID,
@@ -59,8 +58,7 @@ class CartItemService
             'quantity' => $quantity,
             'note' => $note,
             'dish_in_combo' => $dishInCombo,
-            'total_cost' => (int)$cost * (int)$quantity,
-            'category_id' => $categoryID
+            'total_cost' => (int)$cost * (int)$quantity
         ];
         $cartItem = new CartItem($data);
 

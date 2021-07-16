@@ -46,12 +46,12 @@ class MenuService
     function in_array_field($needle, $needle_field, $haystack, $strict = false) {
         if ($strict) {
             foreach ($haystack as $item)
-                if (isset($item->$needle_field) && $item->$needle_field === $needle)
+                if (isset($item['detail_item']->$needle_field) && $item['detail_item']->$needle_field === $needle)
                     return true;
         }
         else {
             foreach ($haystack as $item)
-                if (isset($item->$needle_field) && $item->$needle_field == $needle)
+                if (isset($item['detail_item']->$needle_field) && $item['detail_item']->$needle_field == $needle)
                     return true;
         }
         return false;
@@ -61,9 +61,9 @@ class MenuService
     {
         $confirmOrder = $this->orderRepository->getConfirmOrder($tableID);
         $combo = null;
-
+        //dd($this->in_array_field($this->categoryRepository->getCombo(), 'category_id', $confirmOrder['item']));
+        //dd($confirmOrder['item'][0]['detail_item']);
         if (!$confirmOrder || !$this->in_array_field($this->categoryRepository->getCombo(), 'category_id', $confirmOrder['item'])) {
-
             $menu['combo'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getCombo()->_id);
             $menu['fast'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getFast()->_id);
             $menu['normal'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getNormal()->_id);

@@ -98,10 +98,10 @@ class CartController extends Controller
             }
             if ($cartItem) {
                 $cartItem->quantity = $quantity;
-                $this->cartItemService->update($tableID, $itemID, $quantity, $note, $dishInCombo, $cost, $item['category_id']);
+                $this->cartItemService->update($tableID, $itemID, $quantity, $note, $dishInCombo, $cost);
                 return $this->successResponse(null, 'Update success');
             } else {
-                $this->cartItemService->addNewItem($tableID, $itemID, $quantity, $note, $dishInCombo, $cost, $item['category_id']);
+                $this->cartItemService->addNewItem($tableID, $itemID, $quantity, $note, $dishInCombo, $cost);
                 return $this->successResponse(null, 'Add item Success');
             }
         } else {
