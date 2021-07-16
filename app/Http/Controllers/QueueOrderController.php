@@ -95,6 +95,7 @@ class QueueOrderController extends Controller
         $queueOrder = $this->queueOrderService->getQueueOrderByID($param['_id']);
         if ($queueOrder) {
             $this->queueOrderService->delete($param['_id']);
+            $this->notificationService->removeReferenceAfterRead('waiter/' . $queueOrder['table_id'] . '/send-order');
             return $this->successResponse(null, 'Delete Success');
         } else {
             return $this->errorResponse('Not found queue order', null, false, Res::HTTP_NO_CONTENT);
