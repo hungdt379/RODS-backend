@@ -43,12 +43,27 @@ class MenuService
         $this->cartItemService = $cartItemService;
     }
 
+    function in_array_field($needle, $needle_field, $haystack, $strict = false) {
+        if ($strict) {
+            foreach ($haystack as $item)
+                if (isset($item->$needle_field) && $item->$needle_field === $needle)
+                    return true;
+        }
+        else {
+            foreach ($haystack as $item)
+                if (isset($item->$needle_field) && $item->$needle_field == $needle)
+                    return true;
+        }
+        return false;
+    }
 
     public function getMenu($tableID)
     {
         $confirmOrder = $this->orderRepository->getConfirmOrder($tableID);
         $combo = null;
-        if (!$confirmOrder) {
+
+        if (!$confirmOrder || !$this->in_array_field($this->categoryRepository->getCombo(), 'category_id', $confirmOrder['item'])) {
+
             $menu['combo'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getCombo()->_id);
             $menu['fast'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getFast()->_id);
             $menu['normal'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getNormal()->_id);
@@ -56,7 +71,6 @@ class MenuService
             $menu['alcohol'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getAlcohol()->_id);
             $menu['beer'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getBeer()->_id);
         } else {
-
             foreach ($confirmOrder['item'] as $value) {
                 if (strpos($value['detail_item']['name'], 'Combo') !== false) {
                     $combo = $value['detail_item'];
@@ -64,6 +78,7 @@ class MenuService
                     $menu['combo'][0]['cost'] = 0;
                 }
             }
+
 
             $menu['fast'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getFast()->_id);
             $menu['normal'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getNormal()->_id);
