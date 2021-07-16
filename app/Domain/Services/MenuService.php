@@ -62,7 +62,7 @@ class MenuService
         $confirmOrder = $this->orderRepository->getConfirmOrder($tableID);
         $combo = null;
 
-        if (!$confirmOrder || $this->in_array_field($this->categoryRepository->getCombo(), 'category_id', $confirmOrder['item'])) {
+        if (!$confirmOrder || !$this->in_array_field($this->categoryRepository->getCombo(), 'category_id', $confirmOrder['item'])) {
 
             $menu['combo'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getCombo()->_id);
             $menu['fast'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getFast()->_id);
@@ -78,7 +78,6 @@ class MenuService
                     $menu['combo'][0]['cost'] = 0;
                 }
             }
-
 
             $menu['fast'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getFast()->_id);
             $menu['normal'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getNormal()->_id);
