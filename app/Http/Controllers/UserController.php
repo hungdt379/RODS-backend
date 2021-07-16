@@ -229,6 +229,12 @@ class UserController extends Controller
         return $this->successResponse($data, 'Success');
     }
 
+    public function getTableNotActive()
+    {
+        $data = $this->userService->getTableNotActive();
+        return $this->successResponse($data, 'Success');
+    }
+
     public function changeTable()
     {
         $param = request()->all();

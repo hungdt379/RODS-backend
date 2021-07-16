@@ -42,4 +42,9 @@ class UserRepository
     {
         User::where('_id', $tableId)->delete();
     }
+
+    public function getTableNotActive()
+    {
+        return User::where('role', 't')->where('is_active', false)->get();
+    }
 }

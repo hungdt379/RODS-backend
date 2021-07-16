@@ -123,4 +123,9 @@ class UserService
         Storage::disk('export')->put($nameFile, $pdf->output());
         return $url = asset('export/' . $nameFile);
     }
+
+    public function getTableNotActive()
+    {
+        return $this->userRepository->getTableNotActive();
+    }
 }
