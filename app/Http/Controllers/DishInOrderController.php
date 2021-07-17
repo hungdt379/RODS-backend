@@ -77,9 +77,16 @@ class DishInOrderController extends Controller
         }
         $dishInOrderID = $param['_id'];
         $dishInOrder = $this->dishInOrderService->getDishInOrderByID($dishInOrderID);
+        $categoryDrink = $this->categoryService->getDrinkCategory();
+        $categoryAlcohol = $this->categoryService->getAlcoholCategory();
+        $categoryBeer = $this->categoryService->getBeerCategory();
+        $categoryID = [$categoryDrink['_id'], $categoryAlcohol['_id'], $categoryBeer['_id']];
         if ($dishInOrder) {
             $this->dishInOrderService->updateStatus($dishInOrder);
-
+            if (!in_array($dishInOrder['category_id'], $categoryID)) {
+                $data = $this->dishInOrderService->exportPdf($dishInOrder);
+                return $this->successResponse($data, 'Update Success');
+            }
             return $this->successResponse(null, 'Update Success');
         } else {
             return $this->errorResponse('Not found dish in order', null, false, Res::HTTP_NO_CONTENT);

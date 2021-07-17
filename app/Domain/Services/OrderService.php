@@ -180,6 +180,7 @@ class OrderService
             $dishInOrder->quantity = $value['quantity'];
             $dishInOrder->status = DishInOrder::ORDER_ITEM_STATUS_PREPARE;
             $dishInOrder->category_id = $value['detail_item']['category_id'];
+            $dishInOrder->ts = time();
             if ($value['dish_in_combo'] != null) {
                 $dishInCombo = $value['dish_in_combo'];
                 $length = count($dishInCombo);
@@ -193,6 +194,7 @@ class OrderService
                     $dishInOrder->status = DishInOrder::ORDER_ITEM_STATUS_PREPARE;
                     $dishInOrder->category_id = $value['detail_item']['category_id'];
                     $this->dishInOrderService->insert($dishInOrder);
+                    $dishInOrder->ts = time();
                 }
             }
             $this->dishInOrderService->insert($dishInOrder);
