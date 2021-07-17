@@ -17,4 +17,8 @@ class DishInOrder extends Model
     protected $fillable = [
         '_id', 'table_id', 'table_name', 'item_id', 'item_name', 'quantity', 'status', 'category_id', 'ts'
     ];
+
+    protected $hidden =[
+        'updated_at', 'created_at'
+    ];
 }

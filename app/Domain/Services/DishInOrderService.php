@@ -6,19 +6,25 @@ namespace App\Domain\Services;
 
 use App\Domain\Entities\DishInOrder;
 use App\Domain\Repositories\DishInOrderRepository;
-use phpDocumentor\Reflection\DocBlock\Tags\Return_;
+use Dompdf\Canvas;
+use Dompdf\Dompdf;
+use PDF;
+use Illuminate\Support\Facades\Storage;
 
 class DishInOrderService
 {
     private $dishInOrderRepository;
+    private $menuService;
 
     /**
      * DishInOrderService constructor.
-     * @param $dishInOrderRepository
+     * @param DishInOrderRepository $dishInOrderRepository
+     * @param MenuService $menuService
      */
-    public function __construct(DishInOrderRepository $dishInOrderRepository)
+    public function __construct(DishInOrderRepository $dishInOrderRepository, MenuService $menuService)
     {
         $this->dishInOrderRepository = $dishInOrderRepository;
+        $this->menuService = $menuService;
     }
 
     public function insert($dishInOrder)
@@ -38,19 +44,67 @@ class DishInOrderService
 
     public function updateDishInOrderToNewTable($dishInOrder, $toTable)
     {
-        foreach ($dishInOrder as $value){
+        foreach ($dishInOrder as $value) {
             $value->table_id = $toTable['_id'];
             $value->table_name = $toTable['full_name'];
             $this->dishInOrderRepository->update($value);
         }
     }
 
-    public function getDishInOrderByID($dishInOrderID){
+    public function getDishInOrderByID($dishInOrderID)
+    {
         return $this->dishInOrderRepository->getDishInOrderByID($dishInOrderID);
     }
+
     public function updateStatus($dishInOrder)
     {
         $dishInOrder->status = DishInOrder::ORDER_ITEM_STATUS_COMPLETED;
         return $this->dishInOrderRepository->update($dishInOrder);
+    }
+
+    public function exportPdf($dishInOrder, $type)
+    {
+        $html = '
+
+                <table style=" font-size: 10px; width: 200px; font-family: DejaVu Sans; border: 1px">
+                    <tr>
+                        <td style="width: 40%">
+                            <b>Bàn:</b>
+                        </td>
+                        <td style="width: 60%">
+                            ' . $dishInOrder->table_name . '
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 40%">
+                            <b>Tên món:</b>
+                        </td>
+                        <td style="width: 60%">
+                            ' . $dishInOrder->item_name . '
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 40%">
+                            <b>Số lượng:</b>
+                        </td>
+                        <td style="width: 60%">
+                            ' . $dishInOrder->quantity . '
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 40%">
+                            <b>Loại:</b>
+                        </td>
+                        <td style="width: 60%">
+                            ' . $type . '
+                        </td>
+                    </tr>
+                </table>
+        ';
+
+        $dompdf = PDF::loadHTML($html)->setPaper(array(20, 0, 150, 80 * 2.838), 'landscape');
+        $nameFile = 'cd_' . time() . '.pdf';
+        Storage::disk('completeDish')->put($nameFile, $dompdf->output());
+        return $url = asset('completeDish/' . $nameFile);
     }
 }

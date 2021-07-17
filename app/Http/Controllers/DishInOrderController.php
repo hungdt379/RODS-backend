@@ -77,9 +77,21 @@ class DishInOrderController extends Controller
         }
         $dishInOrderID = $param['_id'];
         $dishInOrder = $this->dishInOrderService->getDishInOrderByID($dishInOrderID);
+        $categoryCombo = $this->categoryService->getComboCategory();
+        $categoryFast = $this->categoryService->getFastCategory();
+        $categoryNormal = $this->categoryService->getNormalCategory();
+        $categoryID = [$categoryCombo['_id'], $categoryFast['_id'], $categoryNormal['_id']];
         if ($dishInOrder) {
             $this->dishInOrderService->updateStatus($dishInOrder);
+            if (in_array($dishInOrder['category_id'], $categoryID)) {
+                if ($dishInOrder['category_id'] == $categoryCombo['_id']){
+                    $data = $this->dishInOrderService->exportPdf($dishInOrder, $categoryCombo['name']);
+                }else{
+                    $data = $this->dishInOrderService->exportPdf($dishInOrder, 'Thường');
+                }
 
+                return $this->successResponse($data, 'Update Success');
+            }
             return $this->successResponse(null, 'Update Success');
         } else {
             return $this->errorResponse('Not found dish in order', null, false, Res::HTTP_NO_CONTENT);
