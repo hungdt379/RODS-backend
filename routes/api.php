@@ -101,7 +101,6 @@ Route::group([
         Route::get('notifications', 'NotificationController@getAllNotification');
         Route::get('notifications/read', 'NotificationController@markAsRead');
         Route::get('order/dish', 'DishInOrderController@getDishInOrder');
-        Route::post('order/status/update', 'DishInOrderController@updateStatus');
         Route::get('items/all', 'MenuController@getAllItem')->name('all-item');
         Route::get('items/update/sold', 'MenuController@updateItemSoldOutStatus');
     });
