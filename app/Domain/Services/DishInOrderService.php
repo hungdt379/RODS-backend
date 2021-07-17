@@ -6,6 +6,7 @@ namespace App\Domain\Services;
 
 use App\Domain\Entities\DishInOrder;
 use App\Domain\Repositories\DishInOrderRepository;
+use Dompdf\Canvas;
 use Dompdf\Dompdf;
 use PDF;
 use Illuminate\Support\Facades\Storage;
@@ -61,52 +62,48 @@ class DishInOrderService
         return $this->dishInOrderRepository->update($dishInOrder);
     }
 
-    public function exportPdf($dishInOrder)
+    public function exportPdf($dishInOrder, $type)
     {
-
-        $pdf = new Dompdf();
-        $customPaper = array(0, 0, 50.10, 283.80);
-        $pdf->setPaper($customPaper, 'landscape');
         $html = '
-            <div align="center" style="width: 300px; border: 1px solid #000000; font-family: DejaVu Sans";>
-            <div><b style="font-size: 20px">' . $dishInOrder->table_name . '</b></div>
-            <div style="padding-top: 10px; padding-bottom: 20px">
-                <table style="width: 250px">
+
+                <table style=" font-size: 10px; width: 200px; font-family: DejaVu Sans; border: 1px">
                     <tr>
-                        <td style="width: 150px; padding-left: 20px">
+                        <td style="width: 40%">
+                            <b>Bàn:</b>
+                        </td>
+                        <td style="width: 60%">
+                            ' . $dishInOrder->table_name . '
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 40%">
                             <b>Tên món:</b>
                         </td>
-                        <td style="width: 100px">
+                        <td style="width: 60%">
                             ' . $dishInOrder->item_name . '
                         </td>
                     </tr>
                     <tr>
-                        <td style="width: 150px; padding-left: 20px">
+                        <td style="width: 40%">
                             <b>Số lượng:</b>
                         </td>
-                        <td style="width: 100px">
+                        <td style="width: 60%">
                             ' . $dishInOrder->quantity . '
                         </td>
                     </tr>
                     <tr>
-                        <td style="width: 130px; padding-left: 20px">
-                            <b>Trạng thái:</b>
+                        <td style="width: 40%">
+                            <b>Loại:</b>
                         </td>
-                        <td style="width: 120px">
-                            Đã hoàn thành
+                        <td style="width: 60%">
+                            ' . $type . '
                         </td>
                     </tr>
                 </table>
-            </div>
-            </div>
         ';
-        $pdf->loadHtml($html);
-        $pdf->render();
-        $pageCount = $pdf->getCanvas()->get_page_count();
-        var_dump($pageCount);
-        unset($pdf);
-        $dompdf = PDF::loadHTML($html)->setPaper(array(0, 0, 50.10 * $pageCount, 290), 'landscape');
-        $nameFile = '_' . time() . '.pdf';
+
+        $dompdf = PDF::loadHTML($html)->setPaper(array(20, 0, 150, 80 * 2.838), 'landscape');
+        $nameFile = 'cd_' . time() . '.pdf';
         Storage::disk('completeDish')->put($nameFile, $dompdf->output());
         return $url = asset('completeDish/' . $nameFile);
     }

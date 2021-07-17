@@ -77,14 +77,19 @@ class DishInOrderController extends Controller
         }
         $dishInOrderID = $param['_id'];
         $dishInOrder = $this->dishInOrderService->getDishInOrderByID($dishInOrderID);
-        $categoryDrink = $this->categoryService->getDrinkCategory();
-        $categoryAlcohol = $this->categoryService->getAlcoholCategory();
-        $categoryBeer = $this->categoryService->getBeerCategory();
-        $categoryID = [$categoryDrink['_id'], $categoryAlcohol['_id'], $categoryBeer['_id']];
+        $categoryCombo = $this->categoryService->getComboCategory();
+        $categoryFast = $this->categoryService->getFastCategory();
+        $categoryNormal = $this->categoryService->getNormalCategory();
+        $categoryID = [$categoryCombo['_id'], $categoryFast['_id'], $categoryNormal['_id']];
         if ($dishInOrder) {
             $this->dishInOrderService->updateStatus($dishInOrder);
-            if (!in_array($dishInOrder['category_id'], $categoryID)) {
-                $data = $this->dishInOrderService->exportPdf($dishInOrder);
+            if (in_array($dishInOrder['category_id'], $categoryID)) {
+                if ($dishInOrder['category_id'] == $categoryCombo['_id']){
+                    $data = $this->dishInOrderService->exportPdf($dishInOrder, $categoryCombo['name']);
+                }else{
+                    $data = $this->dishInOrderService->exportPdf($dishInOrder, 'Thường');
+                }
+
                 return $this->successResponse($data, 'Update Success');
             }
             return $this->successResponse(null, 'Update Success');
