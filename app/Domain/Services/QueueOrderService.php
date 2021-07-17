@@ -97,4 +97,21 @@ class QueueOrderService
     {
         return $this->queueOrderRepository->update($queueOrder);
     }
+
+    public function deleteItemInQueueOrder($queueOrder, $itemID)
+    {
+        $item = $queueOrder['item'];
+        $itemDeletedCost = 0;
+        for ($i = 0; $i < count($item); $i++) {
+            if ($item[$i]['item_id'] == $itemID) {
+                $itemDeletedCost = $item[$i]['total_cost'];
+                unset($item[$i]);
+                $item = array_values($item);
+            }
+        }
+        $queueOrder['item'] = $item;
+        $queueOrder['total_cost'] -= $itemDeletedCost;
+
+        $this->queueOrderRepository->update($queueOrder);
+    }
 }

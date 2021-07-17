@@ -110,7 +110,7 @@ class QueueOrderController extends Controller
             'table_id' => 'required'
         ]);
         if ($validator->fails()) {
-            return $this->errorResponse($validator->errors(), null, false, Res::HTTP_NO_CONTENT);
+            return $this->errorResponse($validator->errors(), null, false, Res::HTTP_BAD_REQUEST);
         }
 
         $tableID = $param['table_id'];
@@ -144,15 +144,38 @@ class QueueOrderController extends Controller
                     return $this->successResponse(null, 'Confirm Success');
                 } else if ($tempQueueCombo != $tempConfirmCombo) {
                     $this->notificationService->removeReferenceAfterRead('waiter/' . $tableID . '/send-order');
-                    return $this->errorResponse('Exist a combo in order', null, false, Res::HTTP_CONFLICT);
+                    return $this->errorResponse('Exist a combo in order', null, false, Res::HTTP_ACCEPTED);
                 }
 
             }
 
         } else {
-            return $this->errorResponse('Not found queue order', null, false, Res::HTTP_NO_CONTENT);
+            return $this->errorResponse('Not found queue order', null, false, Res::HTTP_ACCEPTED);
         }
 
+    }
+
+    public function deleteItemInQueueOrder()
+    {
+        $param = request()->all();
+        $validator = Validator::make($param, [
+            'table_id' => 'required',
+            'item_id' => 'required'
+        ]);
+        if ($validator->fails()) {
+            return $this->errorResponse($validator->errors(), null, false, Res::HTTP_BAD_REQUEST);
+        }
+        $tableID = $param['table_id'];
+        $itemID = $param['item_id'];
+
+        $queueOrder = $this->queueOrderService->getQueueOrderByTableID($tableID);
+        if($queueOrder){
+            $this->queueOrderService->deleteItemInQueueOrder($queueOrder, $itemID);
+
+            return $this->successResponse(null, 'Delete Success');
+        }else{
+            return $this->errorResponse('Not found queue order', null, false, Res::HTTP_ACCEPTED);
+        }
     }
 
 }
