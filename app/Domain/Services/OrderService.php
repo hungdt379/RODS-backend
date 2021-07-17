@@ -39,6 +39,10 @@ class OrderService
         return $this->orderRepository->getAllConfirmOrder($pageSize);
     }
 
+    public function getAllCompleteOrder($pageSize){
+        return $this->orderRepository->getAllCompleteOrder($pageSize);
+    }
+
     public function getConfirmOrderByID($orderID)
     {
         return $this->orderRepository->getConfirmOrderByID($orderID);

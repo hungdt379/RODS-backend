@@ -52,6 +52,13 @@ class OrderRepository
             ->paginate((int)$pageSize);
     }
 
+    public function getAllCompleteOrder($pageSize)
+    {
+        return Order::where('status', Order::ORDER_STATUS_COMPLETED)
+            ->orderBy('ts', 'DESC')
+            ->paginate((int)$pageSize);
+    }
+
     public function insert($confirmOrder)
     {
         return $confirmOrder->save();

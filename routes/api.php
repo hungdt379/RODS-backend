@@ -88,6 +88,7 @@ Route::group([
         Route::post('order/confirm/item/quantity/update', 'OrderController@updateQuantityOfItem');
         Route::post('order/confirm/match', 'OrderController@matchingConfirmOrder');
         Route::get('order/completed/view', 'OrderController@getCompletedOrderByTableID');
+        Route::get('order/completed/list', 'OrderController@getListCompleteOrder');
 
     });
 });

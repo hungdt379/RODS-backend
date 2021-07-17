@@ -86,6 +86,20 @@ class OrderController extends Controller
         return $this->successResponseWithPaging($data->items(), 'Success', $data->currentPage(), $pageSize, $data->total());
     }
 
+    public function getListCompleteOrder(){
+        $param = request()->all();
+        $validator = Validator::make($param, [
+            'pageSize' => 'required|numeric|'
+        ]);
+        if ($validator->fails()) {
+            return $this->errorResponse($validator->errors(), null, false, Res::HTTP_BAD_REQUEST);
+        }
+
+        $pageSize = $param['pageSize'];
+        $data = $this->orderService->getAllCompleteOrder($pageSize);
+        return $this->successResponseWithPaging($data->items(), 'Success', $data->currentPage(), $pageSize, $data->total());
+    }
+
     public function getCompletedOrderByTableID()
     {
         $param = request()->all();
