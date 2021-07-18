@@ -24,6 +24,7 @@ class Order extends Model
         'note',
         'voucher',
         'total_cost_of_voucher',
+        'new_total_cost',
         'ts'
     ];
 
