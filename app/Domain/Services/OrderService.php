@@ -8,7 +8,10 @@ use App\Domain\Entities\DishInOrder;
 use App\Domain\Entities\Order;
 use App\Domain\Repositories\DishInOrderRepository;
 use App\Domain\Repositories\OrderRepository;
+use PDF;
 use Dompdf\Dompdf;
+use Dompdf\Options;
+use Illuminate\Support\Facades\Storage;
 
 
 class OrderService
@@ -57,29 +60,66 @@ class OrderService
 
     public function invoiceOrder($order)
     {
-        if (!str_contains($order['table_id'], '--')){
+        if (!str_contains($order['table_id'], '--')) {
             $order->status = Order::ORDER_STATUS_COMPLETED;
             $this->orderRepository->update($order);
-        }else{
+        } else {
             $arrOrder = $this->orderRepository->getOrderOfMatchingOrder($order['arr_order_id']);
-            foreach ($arrOrder as $order){
-                $order->status = Order::ORDER_STATUS_COMPLETED;
-                $this->orderRepository->update($order);
+            foreach ($arrOrder as $value) {
+                $value->status = Order::ORDER_STATUS_COMPLETED;
+                $this->orderRepository->update($value);
             }
         }
 
         $tempPdf = new Dompdf();
-        $tempPdf->setPaper([], 'landscape');
-        $tempPdf->setPaper(array(20, 0, 150, 80 * 2.838));
-
         $html = '
-                <img src="public/image/Logo.png" width="50px" height="50px">
-                <div align="center" style="font-size: 12px; font-family: DejaVu Sans"><b>HÓA ĐƠN THANH TOÁN</b></div>
-                <table style="font-size: 10px; width: 200px; font-family: DejaVu Sans; border: 1px solid black">
+                <div align="center"><img src="http://165.227.99.160/image/Logo.png" width="100px" height="100px" alt=""></div>
+                <br>
+                <div align="center" style="font-size: 12px; font-family: DejaVu Sans;"><b>HÓA ĐƠN THANH TOÁN</b></div>
+                <div align="center" style="font-size: 10px; font-family: DejaVu Sans;"><b>' . $order['table_name'] . '</b></div>
+                <br>
+                <div style="font-size: 10px; font-family: DejaVu Sans">Thời gian: ' . date('d-m-Y H:i:s', time()) . '</div>
+                <div style="font-size: 10px; font-family: DejaVu Sans">Số lượng khách: ' . $order['number_of_customer'] . '</div>
+                <br>
+                <table style="font-size: 10px; width: 290px; font-family: DejaVu Sans; border-top: 1px solid black">
+                    <tr>
+                        <th style="border-bottom: 1px solid black">Tên món</th>
+                        <th style="border-bottom: 1px solid black">SL</th>
+                        <th style="border-bottom: 1px solid black">Đ.Giá</th>
+                        <th style="border-bottom: 1px solid black">T.Tiền</th>
+                    </tr>
+                    ';
+        for ($i = 0; $i < sizeof($order['item']); $i++) {
+            $html = $html . '<tr>
+                                <td style="border-bottom: 1px solid black">' . $order['item'][$i]['detail_item']['name'] . '</td>
+                                <td align="center" style="border-bottom: 1px solid black">' . $order['item'][$i]['quantity'] . '</td>
+                                <td align="right" style="border-bottom: 1px solid black">' . number_format($order['item'][$i]['detail_item']['cost']) . '</td>
+                                <td align="right" style="border-bottom: 1px solid black">' . number_format($order['item'][$i]['total_cost']) . '</td>
+                            </tr>';
+        }
+        $html = $html . '</table>
+                         <br>
+                         <div align="right" style="font-size: 12px; font-family: DejaVu Sans;">Thành tiền: '. number_format($order['total_cost']) .'</div>
+                         <div align="right" style="font-size: 12px; font-family: DejaVu Sans;">Giảm giá: '. $order['voucher'] .'%</div>
+                         <div align="right" style="font-size: 12px; font-family: DejaVu Sans;"><b>Thành tiền: '. number_format($order['total_cost_of_voucher']) .'</b></div>
+                         <br>
+                         <div align="center" style="font-size: 10px; font-family: DejaVu Sans;">Cảm ơn quý khách! Hẹn gặp lại</div>';
+        $tempPdf->loadHtml($html);
+        $tempPdf->setPaper(array(0, 0, 150, 100 * 2.838), 'landscape');
+        $tempPdf->render();
+        $pageCount = $tempPdf->getCanvas()->get_page_count();
+        unset($tempPdf);
 
-                </table>
-                ';
-
+        $option = new Options();
+        $option->setIsRemoteEnabled(true);
+        $pdf = new Dompdf($option);
+        $customPaper = array(0, 0, 150 * $pageCount / 1.5, 100 * 2.838);
+        $pdf->loadHtml($html);
+        $pdf->setPaper($customPaper, 'landscape');
+        $pdf->render();
+        $nameFile = 'eb_' . time() . '.pdf';
+        Storage::disk('export-bill')->put($nameFile, $pdf->output());
+        return asset('export-bill/' . $nameFile);
     }
 
     public function getListConfirmOrderByTableID($tableID)
