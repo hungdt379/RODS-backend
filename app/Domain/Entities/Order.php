@@ -10,6 +10,7 @@ class Order extends Model
 {
     const ORDER_STATUS_CONFIRMED = 'confirmed';
     const ORDER_STATUS_COMPLETED = 'completed';
+    const ORDER_STATUS_MATCHING = 'matching';
 
     protected $connection = 'mongodb';
     protected $collection = 'order';
@@ -25,4 +26,6 @@ class Order extends Model
         'total_cost_of_voucher',
         'ts'
     ];
+
+    protected $hidden = ['updated_at', 'created_at'];
 }

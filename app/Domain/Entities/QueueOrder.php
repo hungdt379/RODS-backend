@@ -21,4 +21,6 @@ class QueueOrder extends Model
         'total_cost',
         'ts'
     ];
+
+    protected $hidden = ['updated_at', 'created_at'];
 }

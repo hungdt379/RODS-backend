@@ -14,4 +14,6 @@ class DishInCombo extends Model
     protected $fillable = [
         '_id', 'pid', 'name'
     ];
+
+    protected $hidden = ['updated_at', 'created_at'];
 }

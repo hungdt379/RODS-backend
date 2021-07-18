@@ -14,4 +14,6 @@ class Feedback extends Model
     protected $fillable = [
         '_id', 'rate_service', 'rate_dish', 'content', 'ts'
     ];
+
+    protected $hidden = ['updated_at', 'created_at'];
 }
