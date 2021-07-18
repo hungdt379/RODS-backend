@@ -244,7 +244,7 @@ class OrderController extends Controller
 
         $data = $this->orderService->invoiceOrder($order);
 
-        return response()->json($order);
+        return $this->successResponse($data, 'Success');
     }
 
     public function getOrderByID()
@@ -259,6 +259,7 @@ class OrderController extends Controller
         }
 
         $data = $this->orderService->getOrderByID($param['_id']);
+
         if (!$data){
             $this->errorResponse('Not found Order', null, false, Res::HTTP_ACCEPTED);
         }
