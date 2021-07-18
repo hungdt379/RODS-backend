@@ -234,7 +234,7 @@ class OrderService
     {
         $confirmOrder->voucher = $voucher;
         $confirmOrder->total_cost_of_voucher = (int)$confirmOrder['total_cost'] * $voucher / 100;
-        $confirmOrder->total_cost = (int)$confirmOrder['total_cost'] - $confirmOrder->total_cost_of_voucher;
+        $confirmOrder->new_total_cost = (int)$confirmOrder['total_cost'] - $confirmOrder->total_cost_of_voucher;
 
         return $this->orderRepository->update($confirmOrder);
     }

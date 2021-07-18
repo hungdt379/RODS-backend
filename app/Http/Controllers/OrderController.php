@@ -61,11 +61,10 @@ class OrderController extends Controller
         $itemID = $param['item_id'];
 
         $confirmOrder = $this->orderService->getConfirmOrderByTableID($tableID);
-        if($confirmOrder){
+        if ($confirmOrder) {
             $this->orderService->deleteItemInConfirmOrder($confirmOrder, $itemID);
-
             return $this->successResponse(null, 'Delete Success');
-        }else{
+        } else {
             return $this->errorResponse('Not found confirm order', null, false, Res::HTTP_NO_CONTENT);
         }
 
@@ -86,7 +85,8 @@ class OrderController extends Controller
         return $this->successResponseWithPaging($data->items(), 'Success', $data->currentPage(), $pageSize, $data->total());
     }
 
-    public function getListCompleteOrder(){
+    public function getListCompleteOrder()
+    {
         $param = request()->all();
         $validator = Validator::make($param, [
             'pageSize' => 'required|numeric|'
