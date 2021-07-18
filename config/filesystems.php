@@ -70,6 +70,13 @@ return [
             'visibility' => 'public',
         ],
 
+        'export-bill' => [
+            'driver' => 'local',
+            'root' => public_path() . '/export-bill',
+            'url' => env('APP_URL').'/public',
+            'visibility' => 'public',
+        ],
+
         // save file to storage
 //        'public' => [
 //            'driver' => 'local',
