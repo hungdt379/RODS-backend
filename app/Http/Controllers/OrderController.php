@@ -63,7 +63,6 @@ class OrderController extends Controller
         $confirmOrder = $this->orderService->getConfirmOrderByTableID($tableID);
         if ($confirmOrder) {
             $this->orderService->deleteItemInConfirmOrder($confirmOrder, $itemID);
-
             return $this->successResponse(null, 'Delete Success');
         } else {
             return $this->errorResponse('Not found confirm order', null, false, Res::HTTP_NO_CONTENT);
