@@ -14,4 +14,5 @@ class Cart extends Model
 
     protected $fillable = ['table_id', 'total_cost'];
 
+    protected $hidden = ['updated_at', 'created_at'];
 }

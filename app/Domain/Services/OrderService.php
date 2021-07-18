@@ -39,7 +39,8 @@ class OrderService
         return $this->orderRepository->getAllConfirmOrder($pageSize);
     }
 
-    public function getAllCompleteOrder($pageSize){
+    public function getAllCompleteOrder($pageSize)
+    {
         return $this->orderRepository->getAllCompleteOrder($pageSize);
     }
 
@@ -77,19 +78,17 @@ class OrderService
     {
         $item = [];
         $totalCost = 0;
-        $tableID = [];
-        $tableName = [];
+        $tableID = '';
+        $tableName = '';
         $numberOfCustomer = 0;
         $note = '';
-        $orderID = [];
         foreach ($listConfirmOrder as $confirmOrder) {
             if (isset($confirmOrder['note'])) {
                 $note = $note . ', ' . $confirmOrder['note'];
             }
             $numberOfCustomer += (int)$confirmOrder['number_of_customer'];
-            array_push($tableID, $confirmOrder['table_id']);
-            array_push($tableName, $confirmOrder['table_name']);
-            array_push($orderID, $confirmOrder['_id']);
+            $tableID = $tableID . '--' . $confirmOrder['table_id'] . '--';
+            $tableName = $tableName . '--' . $confirmOrder['table_name'] . '--';
             foreach ($confirmOrder['item'] as $value) {
                 array_push($item, $value);
             }
@@ -110,19 +109,31 @@ class OrderService
         foreach ($item as $value) {
             $totalCost += $value['total_cost'];
         }
+
         $newConfirmOrder = new Order();
         $newConfirmOrder->table_id = $tableID;
         $newConfirmOrder->table_name = $tableName;
         $newConfirmOrder->number_of_customer = $numberOfCustomer;
-        $newConfirmOrder->status = Order::ORDER_STATUS_CONFIRMED;
+        $newConfirmOrder->status = Order::ORDER_STATUS_MATCHING;
         $newConfirmOrder->item = array_values($item);
         $newConfirmOrder->total_cost = $totalCost;
         $newConfirmOrder->total_cost = $totalCost;
         $newConfirmOrder->note = substr($note, 2);
         $newConfirmOrder->ts = time();
 
-        $this->orderRepository->deleteConfirmOrderByID($orderID);
-        return $this->orderRepository->insert($newConfirmOrder);
+        $this->orderRepository->insert($newConfirmOrder);
+
+        return $newConfirmOrder;
+    }
+
+    public function getMatchingOrder($tableID)
+    {
+        $strTableID = '';
+        foreach ($tableID as $value) {
+            $strTableID = $strTableID . '--' . $value . '--';
+        }
+
+        return $this->orderRepository->getMatchingOrder($strTableID);
     }
 
     public function addNewConfirmOrder($queueOrder)
@@ -274,5 +285,6 @@ class OrderService
 
         return $this->orderRepository->update($confirmOrder);
     }
+
 
 }

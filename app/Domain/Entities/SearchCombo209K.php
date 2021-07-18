@@ -13,4 +13,6 @@ class SearchCombo209K extends Model
     protected $fillable = [
         '_id', 'name', 'cost', 'description', 'image', 'hotpot', 'category_id'
     ];
+
+    protected $hidden = ['updated_at', 'created_at'];
 }

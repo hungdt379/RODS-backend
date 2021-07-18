@@ -18,4 +18,6 @@ class Menu extends Model
     protected $fillable = [
         '_id', 'name', 'cost', 'image', 'hotpot', 'category_id'
     ];
+
+    protected $hidden = ['updated_at', 'created_at'];
 }
