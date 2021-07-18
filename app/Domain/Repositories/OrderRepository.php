@@ -78,4 +78,9 @@ class OrderRepository
     {
         return Order::where('status', Order::ORDER_STATUS_MATCHING)->where('table_id', $strTableID)->first();
     }
+
+    public function getOrderOfMatchingOrder($arrOrderID)
+    {
+        return Order::whereIn('_id', $arrOrderID)->get();
+    }
 }

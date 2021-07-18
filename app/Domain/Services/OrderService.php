@@ -8,6 +8,7 @@ use App\Domain\Entities\DishInOrder;
 use App\Domain\Entities\Order;
 use App\Domain\Repositories\DishInOrderRepository;
 use App\Domain\Repositories\OrderRepository;
+use Dompdf\Dompdf;
 
 
 class OrderService
@@ -54,10 +55,31 @@ class OrderService
         return $this->orderRepository->getCompletedOrderByID($orderID);
     }
 
-    public function invoiceOrder($confirmOrder)
+    public function invoiceOrder($order)
     {
-        $confirmOrder->status = Order::ORDER_STATUS_COMPLETED;
-        return $this->orderRepository->update($confirmOrder);
+        if (!str_contains($order['table_id'], '--')){
+            $order->status = Order::ORDER_STATUS_COMPLETED;
+            $this->orderRepository->update($order);
+        }else{
+            $arrOrder = $this->orderRepository->getOrderOfMatchingOrder($order['arr_order_id']);
+            foreach ($arrOrder as $order){
+                $order->status = Order::ORDER_STATUS_COMPLETED;
+                $this->orderRepository->update($order);
+            }
+        }
+
+        $tempPdf = new Dompdf();
+        $tempPdf->setPaper([], 'landscape');
+        $tempPdf->setPaper(array(20, 0, 150, 80 * 2.838));
+
+        $html = '
+                <img src="public/image/Logo.png" width="50px" height="50px">
+                <div align="center" style="font-size: 12px; font-family: DejaVu Sans"><b>HÓA ĐƠN THANH TOÁN</b></div>
+                <table style="font-size: 10px; width: 200px; font-family: DejaVu Sans; border: 1px solid black">
+
+                </table>
+                ';
+
     }
 
     public function getListConfirmOrderByTableID($tableID)
@@ -85,6 +107,7 @@ class OrderService
         $totalCost = 0;
         $tableID = '';
         $tableName = '';
+        $arrOrderID = [];
         $numberOfCustomer = 0;
         $note = '';
         foreach ($listConfirmOrder as $confirmOrder) {
@@ -94,6 +117,7 @@ class OrderService
             $numberOfCustomer += (int)$confirmOrder['number_of_customer'];
             $tableID = $tableID . '--' . $confirmOrder['table_id'] . '--';
             $tableName = $tableName . '--' . $confirmOrder['table_name'] . '--';
+            array_push($arrOrderID, $confirmOrder['_id']);
             foreach ($confirmOrder['item'] as $value) {
                 array_push($item, $value);
             }
@@ -116,6 +140,7 @@ class OrderService
         }
 
         $newConfirmOrder = new Order();
+        $newConfirmOrder->arr_order_id = $arrOrderID;
         $newConfirmOrder->table_id = $tableID;
         $newConfirmOrder->table_name = $tableName;
         $newConfirmOrder->number_of_customer = $numberOfCustomer;
