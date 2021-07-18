@@ -74,9 +74,9 @@ class OrderRepository
         return $confirmOrder->update();
     }
 
-    public function getMatchingOrder($strTableID)
+    public function getMatchingOrder($id)
     {
-        return Order::where('status', Order::ORDER_STATUS_MATCHING)->where('table_id', $strTableID)->first();
+        return Order::where('status', Order::ORDER_STATUS_MATCHING)->where('_id', $id)->first();
     }
 
     public function getOrderOfMatchingOrder($arrOrderID)

@@ -205,12 +205,12 @@ class OrderService
 
         $this->orderRepository->insert($newConfirmOrder);
 
-        return $this->getMatchingOrder($tableID);
+        return $this->getMatchingOrder($newConfirmOrder->_id);
     }
 
-    public function getMatchingOrder($tableID)
+    public function getMatchingOrder($id)
     {
-        return $this->orderRepository->getMatchingOrder($tableID);
+        return $this->orderRepository->getMatchingOrder($id);
     }
 
     public function addNewConfirmOrder($queueOrder)
