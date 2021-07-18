@@ -212,10 +212,6 @@ class OrderController extends Controller
         }
         $listConfirmOrder = $this->orderService->getListConfirmOrderByTableID($tableID)->toArray();
         if (count($tableID) == count($listConfirmOrder)) {
-            $matchingOrder = $this->orderService->getMatchingOrder($strTableID);
-            if ($matchingOrder) {
-                return $this->successResponse($matchingOrder, 'Success');
-            }
             $data = $this->orderService->matchingConfirmOrder($listConfirmOrder);
             return $this->successResponse($data, 'Success');
         } else {

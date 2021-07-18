@@ -27,6 +27,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('delete:notification')->dailyAt('00:00');
         $schedule->command('delete:token')->dailyAt('00:00');
+        $schedule->command('delete:matching')->dailyAt('00:00');
     }
 
     /**
