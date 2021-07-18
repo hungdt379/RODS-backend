@@ -81,7 +81,7 @@ class OrderService
                 <div style="font-size: 10px; font-family: DejaVu Sans">Thời gian: ' . date('d-m-Y H:i:s', time()) . '</div>
                 <div style="font-size: 10px; font-family: DejaVu Sans">Số lượng khách: ' . $order['number_of_customer'] . '</div>
                 <br>
-                <table style="font-size: 10px; width: 290px; font-family: DejaVu Sans; border-top: 1px solid black">
+                <table style="font-size: 10px; width: 290px; font-family: DejaVu Sans; border: 1px solid black;">
                     <tr>
                         <th style="border-bottom: 1px solid black">Tên món</th>
                         <th style="border-bottom: 1px solid black">SL</th>
