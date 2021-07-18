@@ -97,13 +97,24 @@ class OrderService
                                 <td align="right" style="border-bottom: 1px solid black">' . number_format($order['item'][$i]['total_cost']) . '</td>
                             </tr>';
         }
-        $html = $html . '</table>
+        $html = $html . '
+                            <tr>
+                                <td colspan="3" align="right" style="font-size: 12px; font-family: DejaVu Sans; width: 60%;">Tồng cộng: </td>
+                                <td colspan="1" align="right" style="font-size: 12px; font-family: DejaVu Sans; width: 40%">' . number_format($order['total_cost']) . '</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" align="right" style="font-size: 12px; font-family: DejaVu Sans;">Giảm giá: </td>
+                                <td colspan="1" align="right" style="font-size: 12px; font-family: DejaVu Sans;">' . (isset($order['voucher']) ? $order['voucher'] : 0) . '%</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" align="right" style="font-size: 12px; font-family: DejaVu Sans;">Thành tiền: </td>
+                                <td colspan="1" align="right" style="font-size: 12px; font-family: DejaVu Sans; width: 30%"><b>' . (isset($order['new_total_cost']) ? number_format($order['new_total_cost']) : number_format($order['total_cost'])) . '</b></td>
+                            </tr>
+                         </table>
                          <br>
-                         <div align="right" style="font-size: 12px; font-family: DejaVu Sans;">Thành tiền: '. number_format($order['total_cost']) .'</div>
-                         <div align="right" style="font-size: 12px; font-family: DejaVu Sans;">Giảm giá: '. $order['voucher'] .'%</div>
-                         <div align="right" style="font-size: 12px; font-family: DejaVu Sans;"><b>Thành tiền: '. number_format($order['total_cost_of_voucher']) .'</b></div>
-                         <br>
-                         <div align="center" style="font-size: 10px; font-family: DejaVu Sans;">Cảm ơn quý khách! Hẹn gặp lại</div>';
+                         <hr>
+                    <div align="center" style="font-size: 10px; font-family: DejaVu Sans;">Cảm ơn quý khách! Hẹn gặp lại</div>
+                         ';
         $tempPdf->loadHtml($html);
         $tempPdf->setPaper(array(0, 0, 150, 100 * 2.838), 'landscape');
         $tempPdf->render();
@@ -113,7 +124,7 @@ class OrderService
         $option = new Options();
         $option->setIsRemoteEnabled(true);
         $pdf = new Dompdf($option);
-        $customPaper = array(0, 0, 150 * $pageCount / 1.5, 100 * 2.838);
+        $customPaper = array(0, 0, 150 * $pageCount / 1.7, 100 * 2.838);
         $pdf->loadHtml($html);
         $pdf->setPaper($customPaper, 'landscape');
         $pdf->render();
