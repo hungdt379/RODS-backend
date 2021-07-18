@@ -113,6 +113,7 @@ class OrderService
                          </table>
                          <br>
                          <hr>
+                    <div align="center" style="font-size: 10px; font-family: DejaVu Sans;">Tất cả các đơn giá đều tính theo đơn vị VND</div>
                     <div align="center" style="font-size: 10px; font-family: DejaVu Sans;">Cảm ơn quý khách! Hẹn gặp lại</div>
                          ';
         $tempPdf->loadHtml($html);
