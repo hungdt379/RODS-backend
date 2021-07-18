@@ -101,25 +101,25 @@ class OrderController extends Controller
         return $this->successResponseWithPaging($data->items(), 'Success', $data->currentPage(), $pageSize, $data->total());
     }
 
-    public function getCompletedOrderByTableID()
-    {
-        $param = request()->all();
-        $validator = Validator::make($param, [
-            'table_id' => 'required'
-        ]);
-        if ($validator->fails()) {
-            return $this->errorResponse($validator->errors(), null, false, Res::HTTP_BAD_REQUEST);
-        }
-        $tableID = $param['table_id'];
-        $confirmOrder = $this->orderService->getConfirmOrderByTableID($tableID);
-        if ($confirmOrder) {
-            $this->orderService->invoiceOrder($confirmOrder);
-            $data = $this->orderService->getCompletedOrderByID($confirmOrder->_id);
-            return $this->successResponse($data, 'Success');
-        } else {
-            return $this->errorResponse('Not found confirm order', null, false, Res::HTTP_NO_CONTENT);
-        }
-    }
+//    public function getCompletedOrderByTableID()
+//    {
+//        $param = request()->all();
+//        $validator = Validator::make($param, [
+//            'table_id' => 'required'
+//        ]);
+//        if ($validator->fails()) {
+//            return $this->errorResponse($validator->errors(), null, false, Res::HTTP_BAD_REQUEST);
+//        }
+//        $tableID = $param['table_id'];
+//        $confirmOrder = $this->orderService->getConfirmOrderByTableID($tableID);
+//        if ($confirmOrder) {
+//            $this->orderService->invoiceOrder($confirmOrder);
+//            $data = $this->orderService->getCompletedOrderByID($confirmOrder->_id);
+//            return $this->successResponse($data, 'Success');
+//        } else {
+//            return $this->errorResponse('Not found confirm order', null, false, Res::HTTP_NO_CONTENT);
+//        }
+//    }
 
     public function addNoteForRemainItem()
     {
@@ -237,7 +237,15 @@ class OrderController extends Controller
         }
 
         $id = $param['_id'];
-        $data = $this->orderService->getOrderByID($id);
+        $order = $this->orderService->getOrderByID($id);
+
+        if (!$order){
+            return $this->errorResponse('Order not found', null, false, Res::HTTP_ACCEPTED);
+        }
+
+        $data = $this->orderService->invoiceOrder($order);
+
+        return response()->json($order);
     }
 
     public function getOrderByID()

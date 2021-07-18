@@ -16,7 +16,7 @@ class Order extends Model
     protected $collection = 'order';
 
     protected $fillable = [
-        '_id',
+        '_id', 'arr_order_id',
         'number_of_customer', 'table_id',
         'table_name', 'status',
         'item',
@@ -27,5 +27,5 @@ class Order extends Model
         'ts'
     ];
 
-    protected $hidden = ['updated_at', 'created_at'];
+    protected $hidden = ['arr_order_id', 'updated_at', 'created_at'];
 }
