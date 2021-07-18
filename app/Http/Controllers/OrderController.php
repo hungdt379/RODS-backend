@@ -201,13 +201,19 @@ class OrderController extends Controller
         $validator = Validator::make($param, [
             'table_id' => 'required'
         ]);
+
         if ($validator->fails()) {
             return $this->errorResponse($validator->errors(), null, false, Res::HTTP_BAD_REQUEST);
         }
+
         $tableID = $param['table_id'];
+        $strTableID = '';
+        foreach ($tableID as $value) {
+            $strTableID = $strTableID . '--' . $value . '--';
+        }
         $listConfirmOrder = $this->orderService->getListConfirmOrderByTableID($tableID)->toArray();
         if (count($tableID) == count($listConfirmOrder)) {
-            $matchingOrder = $this->orderService->getMatchingOrder($tableID);
+            $matchingOrder = $this->orderService->getMatchingOrder($strTableID);
             if ($matchingOrder) {
                 return $this->successResponse($matchingOrder, 'Success');
             }
@@ -221,6 +227,35 @@ class OrderController extends Controller
 
     public function exportBill()
     {
-        return $this->successResponse($this->newConfirmOrder, 'Success');
+        $param = request()->all();
+        $validator = Validator::make($param, [
+            '_id' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->errorResponse($validator->errors(), null, false, Res::HTTP_BAD_REQUEST);
+        }
+
+        $id = $param['_id'];
+        $data = $this->orderService->getOrderByID($id);
+    }
+
+    public function getOrderByID()
+    {
+        $param = request()->all();
+        $validator = Validator::make($param, [
+            '_id' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->errorResponse($validator->errors(), null, false, Res::HTTP_BAD_REQUEST);
+        }
+
+        $data = $this->orderService->getOrderByID($param['_id']);
+        if (!$data){
+            $this->errorResponse('Not found Order', null, false, Res::HTTP_ACCEPTED);
+        }
+
+        return $this->successResponse($data, 'Success');
     }
 }

@@ -74,6 +74,11 @@ class OrderService
         return $this->orderRepository->update($fromOrder);
     }
 
+    public function getOrderByID($id)
+    {
+        return $this->orderRepository->getOrderByID($id);
+    }
+
     public function matchingConfirmOrder($listConfirmOrder)
     {
         $item = [];
@@ -123,17 +128,12 @@ class OrderService
 
         $this->orderRepository->insert($newConfirmOrder);
 
-        return $newConfirmOrder;
+        return $this->getMatchingOrder($tableID);
     }
 
     public function getMatchingOrder($tableID)
     {
-        $strTableID = '';
-        foreach ($tableID as $value) {
-            $strTableID = $strTableID . '--' . $value . '--';
-        }
-
-        return $this->orderRepository->getMatchingOrder($strTableID);
+        return $this->orderRepository->getMatchingOrder($tableID);
     }
 
     public function addNewConfirmOrder($queueOrder)
@@ -284,6 +284,10 @@ class OrderService
         $confirmOrder->total_cost = $totalCost;
 
         return $this->orderRepository->update($confirmOrder);
+    }
+
+    public function getMatchingOrderByID($id)
+    {
     }
 
 

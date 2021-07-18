@@ -110,7 +110,7 @@ Route::group(['middleware' => 'auth.jwt'], function () {
     Route::post('order/dish/status/update', 'DishInOrderController@updateStatus');
     Route::post('order/drink/status/update', 'DishInOrderController@updateStatus');
     Route::get('search', 'MenuController@searchItem');
-    Route::get('table/order/confirm/detail', 'OrderController@viewDetailConfirmOrder');
+    Route::get('table/order/detail', 'OrderController@getOrderByID');
     Route::get('order/confirm/list', 'OrderController@getListConfirmOrder');
 });
 
