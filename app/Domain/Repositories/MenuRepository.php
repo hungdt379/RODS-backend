@@ -40,23 +40,22 @@ class MenuRepository
 
     public function getItemByName($name)
     {
-        return Menu::whereRaw(array('$text' => array('$search' => $name)))->orWhere('name', 'LIKE', "%$name%")
-            ->get();
+        return Menu::whereRaw(array('$text' => array('$search' => $name)))->get();
     }
 
     public function searchCombo129($name)
     {
-        return SearchCombo129K::whereRaw(array('$text' => array('$search' => $name)))->orWhere('name', 'LIKE', "%$name%")->get();
+        return SearchCombo129K::whereRaw(array('$text' => array('$search' => $name)))->get();
     }
 
     public function searchCombo169($name)
     {
-        return SearchCombo169K::whereRaw(array('$text' => array('$search' => $name)))->orWhere('name', 'LIKE', "%$name%")->get();
+        return SearchCombo169K::whereRaw(array('$text' => array('$search' => $name)))->get();
     }
 
     public function searchCombo209($name)
     {
-        return SearchCombo209K::whereRaw(array('$text' => array('$search' => $name)))->orWhere('name', 'LIKE', "%$name%")->get();
+        return SearchCombo209K::whereRaw(array('$text' => array('$search' => $name)))->get();
     }
 
     public function getDetailItemByID($itemID)
