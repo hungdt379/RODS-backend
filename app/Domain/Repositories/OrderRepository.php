@@ -38,18 +38,6 @@ class OrderRepository
             ->whereIn('table_id', $tableID)->get();
     }
 
-    public function deleteConfirmOrderByID($orderID)
-    {
-        return Order::where('status', Order::ORDER_STATUS_CONFIRMED)
-            ->whereIn('_id', $orderID)->delete();
-    }
-
-    public function checkExistingOrderInTable($tableID)
-    {
-        return Order::where('status', Order::ORDER_STATUS_CONFIRMED)
-            ->where('table_id', $tableID)->get();
-    }
-
     public function getAllConfirmOrder($pageSize)
     {
         return Order::where('status', Order::ORDER_STATUS_CONFIRMED)

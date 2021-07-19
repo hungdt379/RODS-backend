@@ -55,17 +55,47 @@ class MenuRepository
 
     public function searchCombo129($name)
     {
-        return SearchCombo129K::whereRaw(array('$text' => array('$search' => $name)))->get();
+        $fullTextResult = SearchCombo129K::whereRaw(array('$text' => array('$search' => $name)))->get()->toArray();
+        $likeResult = SearchCombo129K::where('name', 'LIKE', "%$name%")->get()->toArray();
+
+        if (sizeof($fullTextResult) == 0) {
+            return $likeResult;
+        } else {
+            foreach ($likeResult as $likeItem) {
+                if (!in_array($likeItem, $fullTextResult)) array_push($fullTextResult, $likeItem);
+            }
+            return $fullTextResult;
+        }
     }
 
     public function searchCombo169($name)
     {
-        return SearchCombo169K::whereRaw(array('$text' => array('$search' => $name)))->get();
+        $fullTextResult = SearchCombo169K::whereRaw(array('$text' => array('$search' => $name)))->toArray();
+        $likeResult = SearchCombo169K::where('name', 'LIKE', "%$name%")->get()->toArray();
+
+        if (sizeof($fullTextResult) == 0) {
+            return $likeResult;
+        } else {
+            foreach ($likeResult as $likeItem) {
+                if (!in_array($likeItem, $fullTextResult)) array_push($fullTextResult, $likeItem);
+            }
+            return $fullTextResult;
+        }
     }
 
     public function searchCombo209($name)
     {
-        return SearchCombo209K::whereRaw(array('$text' => array('$search' => $name)))->get();
+        $fullTextResult =  SearchCombo209K::whereRaw(array('$text' => array('$search' => $name)))->get();
+        $likeResult = SearchCombo209K::where('name', 'LIKE', "%$name%")->get()->toArray();
+
+        if (sizeof($fullTextResult) == 0) {
+            return $likeResult;
+        } else {
+            foreach ($likeResult as $likeItem) {
+                if (!in_array($likeItem, $fullTextResult)) array_push($fullTextResult, $likeItem);
+            }
+            return $fullTextResult;
+        }
     }
 
     public function getDetailItemByID($itemID)

@@ -85,16 +85,15 @@ class MenuService
 
     public function getItemByName($name, $tableID)
     {
-        $checkExistingOrder = $this->orderRepository->checkExistingOrderInTable($tableID)->toArray();
-
-        if (($checkExistingOrder) == [] || !isset($checkExistingOrder[0]['combo'])) {
+        $confirmOrder = $this->orderRepository->getConfirmOrder($tableID);
+        if (!$confirmOrder || !$this->in_array_field($this->categoryRepository->getCombo()->_id, 'category_id', $confirmOrder['item'])) {
             $resultSearch = $this->menuRepository->getItemByName($name);
         } else {
-            if ($checkExistingOrder[0]['combo']['name'] == Menu::COMBO_129) {
+            if ($this->in_array_field(Menu::COMBO_129, 'name', $confirmOrder['item'])) {
                 $resultSearch = $this->menuRepository->searchCombo129($name);
-            } else if ($checkExistingOrder[0]['combo']['name'] == Menu::COMBO_169) {
+            } else if ($this->in_array_field(Menu::COMBO_169, 'name', $confirmOrder['item'])) {
                 $resultSearch = $this->menuRepository->searchCombo169($name);
-            } else if ($checkExistingOrder[0]['combo']['name'] == Menu::COMBO_209) {
+            } else if ($this->in_array_field(Menu::COMBO_209, 'name', $confirmOrder['item'])) {
                 $resultSearch = $this->menuRepository->searchCombo209($name);
             }
         }
