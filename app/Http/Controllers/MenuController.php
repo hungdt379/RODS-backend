@@ -65,7 +65,7 @@ class MenuController
         $data = $this->menuService->getItemByName($param['q'], JWTAuth::user()->_id);
 
         if (sizeof($data) == 0) {
-            return $this->errorResponse('Not found items', null, false, Res::HTTP_NO_CONTENT);
+            return $this->errorResponse('Not found items', null, false, Res::HTTP_ACCEPTED);
         }
 
         return $this->successResponse($data, 'Success');

@@ -40,7 +40,17 @@ class MenuRepository
 
     public function getItemByName($name)
     {
-        return Menu::whereRaw(array('$text' => array('$search' => $name)))->get();
+        $fullTextResult = Menu::whereRaw(array('$text' => array('$search' => $name)))->get()->toArray();
+        $likeResult = Menu::where('name', 'LIKE', "%$name%")->get()->toArray();
+
+        if (sizeof($fullTextResult) == 0) {
+            return $likeResult;
+        } else {
+            foreach ($likeResult as $likeItem) {
+                if (!in_array($likeItem, $fullTextResult)) array_push($fullTextResult, $likeItem);
+            }
+            return $fullTextResult;
+        }
     }
 
     public function searchCombo129($name)
