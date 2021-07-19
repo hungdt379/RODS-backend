@@ -19,18 +19,21 @@ class OrderService
     private $orderRepository;
     private $dishInOrderService;
     private $dishInOrderRepository;
+    private $userService;
 
     /**
      * OrderService constructor.
      * @param OrderRepository $orderRepository
      * @param DishInOrderService $dishInOrderService
      * @param DishInOrderRepository $dishInOrderRepository
+     * @param UserService $userService
      */
-    public function __construct(OrderRepository $orderRepository, DishInOrderService $dishInOrderService, DishInOrderRepository $dishInOrderRepository)
+    public function __construct(OrderRepository $orderRepository, DishInOrderService $dishInOrderService, DishInOrderRepository $dishInOrderRepository, UserService $userService)
     {
         $this->orderRepository = $orderRepository;
         $this->dishInOrderService = $dishInOrderService;
         $this->dishInOrderRepository = $dishInOrderRepository;
+        $this->userService = $userService;
     }
 
     public function getConfirmOrderByTableID($tableID)
@@ -63,11 +66,13 @@ class OrderService
         if (!str_contains($order['table_id'], '--')) {
             $order->status = Order::ORDER_STATUS_COMPLETED;
             $this->orderRepository->update($order);
+            $this->userService->closeTable($this->userService->getUserById($order['table_id']));
         } else {
             $arrOrder = $this->orderRepository->getOrderOfMatchingOrder($order['arr_order_id']);
             foreach ($arrOrder as $value) {
                 $value->status = Order::ORDER_STATUS_COMPLETED;
                 $this->orderRepository->update($value);
+                $this->userService->closeTable($this->userService->getUserById($value['table_id']));
             }
         }
 

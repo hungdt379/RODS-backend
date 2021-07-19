@@ -10,15 +10,18 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use PDF;
+use JWTAuth;
 
 class UserService
 {
     private $userRepository;
+    private $cartService;
 
 
-    public function __construct(UserRepository $userRepository)
+    public function __construct(UserRepository $userRepository, CartService $cartService)
     {
         $this->userRepository = $userRepository;
+        $this->cartService = $cartService;
     }
 
     public function appendRememberToken($token, $userID)
@@ -48,6 +51,19 @@ class UserService
 
     public function closeTable($user)
     {
+        if (sizeof($user->remember_token) != 0) {
+            $ctoken = JWTAuth::getToken();
+            foreach ($user['remember_token'] as $token) {
+                if ($token != $ctoken) {
+                    JWTAuth::setToken($token);
+                    JWTAuth::invalidate();
+                }
+            }
+            JWTAuth::setToken($ctoken);
+        }
+
+        $this->cartService->delete($user->_id);
+
         $user['remember_token'] = [];
         $user->is_active = false;
         $user->number_of_customer = 0;

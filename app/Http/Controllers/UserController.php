@@ -100,20 +100,8 @@ class UserController extends Controller
     {
         $param = request()->all();
         $user = $this->userService->getUserById($param['table_id']);
-
-        if (sizeof($user->remember_token) != 0) {
-            $ctoken = JWTAuth::getToken();
-            foreach ($user['remember_token'] as $token) {
-                if ($token != $ctoken) {
-                    JWTAuth::setToken($token);
-                    JWTAuth::invalidate();
-                }
-            }
-            JWTAuth::setToken($ctoken);
-        }
-
         $this->userService->closeTable($user);
-        $this->cartService->delete($param['table_id']);
+
         return $this->successResponse(null, 'Close table successful');
     }
 
