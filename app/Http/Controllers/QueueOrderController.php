@@ -171,7 +171,6 @@ class QueueOrderController extends Controller
         $queueOrder = $this->queueOrderService->getQueueOrderByTableID($tableID);
         if($queueOrder){
             $this->queueOrderService->deleteItemInQueueOrder($queueOrder, $itemID);
-
             return $this->successResponse(null, 'Delete Success');
         }else{
             return $this->errorResponse('Not found queue order', null, false, Res::HTTP_ACCEPTED);
