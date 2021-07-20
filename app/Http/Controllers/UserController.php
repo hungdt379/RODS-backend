@@ -213,6 +213,7 @@ class UserController extends Controller
         $table = $this->userService->getUserById($param['table_id']);
         if ($table == null) return $this->errorResponse('Not found table', null, false, Res::HTTP_NO_CONTENT);
 
+        $this->userService->closeTable($table);
         $data = $this->userService->generateNewQrCode($table);
         return $this->successResponse($data, 'Success');
     }
