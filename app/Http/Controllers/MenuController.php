@@ -117,11 +117,12 @@ class MenuController
 
         $menuItem = $this->menuService->getItemByID($param['item_id']);
         $dishItem = $this->dishInComboService->getDishInComboById($param['item_id']);
-        if ($menuItem == null && $dishItem == null) {
+        $dishItemInMenu = $this->dishInComboService->getDishInComboByName($menuItem['name']);
+        if ($menuItem == null && $dishItem == null && $dishItemInMenu == null) {
             return $this->errorResponse('Not found items', null, false, Res::HTTP_NO_CONTENT);
         }
 
-        $this->menuService->updateItemSoldOutStatus($menuItem, $dishItem);
+        $this->menuService->updateItemSoldOutStatus($menuItem, $dishItem, $dishItemInMenu);
         return $this->successResponse(null, 'Update successful');
     }
 

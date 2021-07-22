@@ -33,7 +33,12 @@ class MenuService
      * @param DishInComboRepository $dishInComboRepository
      * @param CartItemService $cartItemService
      */
-    public function __construct(MenuRepository $menuRepository, CategoryRepository $categoryRepository, OrderRepository $orderRepository, QueueOrderRepository $queueOrderRepository, DishInComboRepository $dishInComboRepository, CartItemService $cartItemService)
+    public function __construct(MenuRepository $menuRepository,
+                                CategoryRepository $categoryRepository,
+                                OrderRepository $orderRepository,
+                                QueueOrderRepository $queueOrderRepository,
+                                DishInComboRepository $dishInComboRepository,
+                                CartItemService $cartItemService)
     {
         $this->menuRepository = $menuRepository;
         $this->categoryRepository = $categoryRepository;
@@ -161,31 +166,47 @@ class MenuService
         return $this->menuRepository->getItemByID($itemID);
     }
 
+    private function in_menu_array($needle, $needle_field, $haystack)
+    {
+        foreach ($haystack as $item) {
+            if (isset($item[$needle_field]) && $item[$needle_field] == $needle)
+                return true;
+        }
+
+        return false;
+    }
+
     public function getItem($textSearch)
     {
         if ($textSearch == null || $textSearch == '') {
             $menu = $this->menuRepository->getAllMenu()->toArray();
             $dishInCombo = $this->dishInComboRepository->getAllDishInCombo();
         } else {
-            $menu = $this->menuRepository->getMenu($textSearch)->toArray();
+            $menu = $this->menuRepository->getItemByName($textSearch);
             $dishInCombo = $this->dishInComboRepository->getDishInCombo($textSearch);
         }
 
         foreach ($dishInCombo as $item) {
-            array_push($menu, $item);
+            if (!$this->in_menu_array($item['name'], 'name', $menu))
+                array_push($menu, $item);
         }
 
         return $menu;
     }
 
-    public function updateItemSoldOutStatus($menuItem, $dishItem)
+    public function updateItemSoldOutStatus($menuItem, $dishItem, $dishItemInMenu)
     {
-        if ($menuItem == null && $dishItem != null) {
+        if ($menuItem == null && $dishItem != null && $dishItemInMenu == null) {
             $dishItem->is_sold_out = true;
             $this->dishInComboRepository->update($dishItem);
-        } else if ($menuItem != null && $dishItem == null) {
+        } else if ($menuItem != null && $dishItem == null && $dishItemInMenu == null) {
             $menuItem->is_sold_out = true;
             $this->menuRepository->update($menuItem);
+        }else if($menuItem != null && $dishItem == null && $dishItemInMenu != null){
+            $menuItem->is_sold_out = true;
+            $this->menuRepository->update($menuItem);
+            $dishItemInMenu->is_sold_out = true;
+            $this->menuRepository->update($dishItemInMenu);
         }
     }
 

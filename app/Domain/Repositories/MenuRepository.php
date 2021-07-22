@@ -125,8 +125,4 @@ class MenuRepository
         });
     }
 
-    public function getMenu($textSearch)
-    {
-        return Menu::whereRaw(array('$text' => array('$search' => $textSearch)))->get();
-    }
 }
