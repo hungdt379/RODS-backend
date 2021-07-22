@@ -100,26 +100,6 @@ class OrderController extends Controller
         return $this->successResponseWithPaging($data->items(), 'Success', $data->currentPage(), $pageSize, $data->total());
     }
 
-//    public function getCompletedOrderByTableID()
-//    {
-//        $param = request()->all();
-//        $validator = Validator::make($param, [
-//            'table_id' => 'required'
-//        ]);
-//        if ($validator->fails()) {
-//            return $this->errorResponse($validator->errors(), null, false, Res::HTTP_BAD_REQUEST);
-//        }
-//        $tableID = $param['table_id'];
-//        $confirmOrder = $this->orderService->getConfirmOrderByTableID($tableID);
-//        if ($confirmOrder) {
-//            $this->orderService->invoiceOrder($confirmOrder);
-//            $data = $this->orderService->getCompletedOrderByID($confirmOrder->_id);
-//            return $this->successResponse($data, 'Success');
-//        } else {
-//            return $this->errorResponse('Not found confirm order', null, false, Res::HTTP_NO_CONTENT);
-//        }
-//    }
-
     public function addNoteForRemainItem()
     {
         $param = request()->all();
@@ -154,7 +134,7 @@ class OrderController extends Controller
         }
         $orderID = $param['_id'];
         $voucher = (int)$param['voucher'];
-        $confirmOrder = $this->orderService->getConfirmOrderByID($orderID);
+        $confirmOrder = $this->orderService->getOrderByID($orderID);
         if ($confirmOrder) {
             $this->orderService->addVoucherToConfirmOrder($confirmOrder, $voucher);
             return $this->successResponse(null, 'Success');
@@ -179,7 +159,7 @@ class OrderController extends Controller
         $orderID = $param['_id'];
         $itemID = $param['item_id'];
         $status = $param['status'];
-        $confirmOrder = $this->orderService->getConfirmOrderByID($orderID);
+        $confirmOrder = $this->orderService->getOrderByID($orderID);
         if ($confirmOrder) {
             if ($status) {
                 $this->orderService->increaseQuantity($confirmOrder, $itemID);
