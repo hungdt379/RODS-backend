@@ -177,4 +177,33 @@ class QueueOrderController extends Controller
         }
     }
 
+    public function updateQuantityOfItem()
+    {
+        $param = request()->all();
+        $validator = Validator::make($param, [
+            '_id' => 'required',
+            'item_id' => 'required',
+            'status' => 'required|boolean'
+        ]);
+        if ($validator->fails()) {
+            return $this->errorResponse($validator->errors(), null, false, Res::HTTP_BAD_REQUEST);
+        }
+        $orderID = $param['_id'];
+        $itemID = $param['item_id'];
+        $status = $param['status'];
+        $queueOrder = $this->queueOrderService->getQueueOrderByID($orderID);
+        if ($queueOrder) {
+            if ($status) {
+                $this->queueOrderService->increaseQuantity($queueOrder, $itemID);
+            } else {
+                $this->queueOrderService->decreaseQuantity($queueOrder, $itemID);
+            }
+            return $this->successResponse(null, 'Success');
+        } else {
+            return $this->errorResponse('Not found confirm order', null, false, Res::HTTP_NO_CONTENT);
+        }
+
+
+    }
+
 }
