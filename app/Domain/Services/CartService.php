@@ -48,9 +48,10 @@ class CartService
     public function delete($tableID)
     {
         $cart = $this->getCartByTableID($tableID);
-        $this->cartItemService->deleteAllItemByTableID($tableID);
-
-        return $this->cartRepository->delete($cart);
+        if ($cart) {
+            $this->cartItemService->deleteAllItemByTableID($tableID);
+            $this->cartRepository->delete($cart);
+        }
     }
 
 
