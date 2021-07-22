@@ -18,7 +18,9 @@ class DishInOrderRepository
         return DishInOrder::where('status', DishInOrder::ORDER_ITEM_STATUS_PREPARE)
             ->whereIn('category_id', $categoryID)
             ->orderBy('ts', 'DESC')
-            ->paginate((int)$pageSize);
+            ->paginate((int)$pageSize)
+            ->join('category','category._id', '=', 'category_id');
+
     }
 
     public function getDishInOrderByID($id)
