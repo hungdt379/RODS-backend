@@ -58,31 +58,67 @@ class MenuService
         return false;
     }
 
+    private function in_menu_array($needle, $needle_field, $haystack)
+    {
+        foreach ($haystack as $item) {
+            if (isset($item[$needle_field]) && $item[$needle_field] == $needle)
+                return true;
+        }
+
+        return false;
+    }
+
+    private function in_menu_array_quantiy($needle, $needle_field, $haystack)
+    {
+        foreach ($haystack as $item) {
+            if (isset($item[$needle_field]) && $item[$needle_field] == $needle)
+                return $item['quantity'];
+        }
+
+        return 0;
+    }
+
+    private function setChosenItemInMenu($cartItem, $menuWithCategory)
+    {
+        foreach ($menuWithCategory as $item) {
+            $quantity = $this->in_menu_array_quantiy($item['_id'], 'item_id', $cartItem);
+            if ($quantity > 0) {
+                $item['in_cart'] = true;
+                $item['quantity'] = $quantity;
+            } else {
+                $item['in_cart'] = false;
+                $item['quantity'] = 0;
+            }
+        }
+
+        return $menuWithCategory;
+    }
+
     public function getMenu($tableID)
     {
         $confirmOrder = $this->orderRepository->getConfirmOrder($tableID);
-        $combo = null;
+        $cartItem = $this->cartItemService->getCartItemByTableID($tableID)->toArray();
         if (!$confirmOrder || !$this->in_array_field($this->categoryRepository->getCombo()->_id, 'category_id', $confirmOrder['item'])) {
-            $menu['combo'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getCombo()->_id);
-            $menu['fast'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getFast()->_id);
-            $menu['normal'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getNormal()->_id);
-            $menu['drink'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getDink()->_id);
-            $menu['alcohol'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getAlcohol()->_id);
-            $menu['beer'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getBeer()->_id);
+            $menu['combo'] = $this->setChosenItemInMenu($cartItem, $this->menuRepository->getMenuByCategory($this->categoryRepository->getCombo()->_id));
+            $menu['fast'] = $this->setChosenItemInMenu($cartItem, $this->menuRepository->getMenuByCategory($this->categoryRepository->getFast()->_id));
+            $menu['normal'] = $this->setChosenItemInMenu($cartItem, $this->menuRepository->getMenuByCategory($this->categoryRepository->getNormal()->_id));
+            $menu['drink'] = $this->setChosenItemInMenu($cartItem, $this->menuRepository->getMenuByCategory($this->categoryRepository->getDink()->_id));
+            $menu['alcohol'] = $this->setChosenItemInMenu($cartItem, $this->menuRepository->getMenuByCategory($this->categoryRepository->getAlcohol()->_id));
+            $menu['beer'] = $this->setChosenItemInMenu($cartItem, $this->menuRepository->getMenuByCategory($this->categoryRepository->getBeer()->_id));
         } else {
             foreach ($confirmOrder['item'] as $value) {
                 if (strpos($value['detail_item']['name'], 'Combo') !== false) {
                     $combo = $value['detail_item'];
-                    $menu['combo'] = $this->menuRepository->getItemByIdOfMenu($combo['_id']);
+                    $menu['combo'] = $this->setChosenItemInMenu($cartItem, $this->menuRepository->getItemByIdOfMenu($combo['_id']));
                     $menu['combo'][0]['cost'] = 0;
                 }
             }
 
-            $menu['fast'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getFast()->_id);
-            $menu['normal'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getNormal()->_id);
-            $menu['drink'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getDink()->_id);
-            $menu['alcohol'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getAlcohol()->_id);
-            $menu['beer'] = $this->menuRepository->getMenuByCategory($this->categoryRepository->getBeer()->_id);
+            $menu['fast'] = $this->setChosenItemInMenu($cartItem, $this->menuRepository->getMenuByCategory($this->categoryRepository->getFast()->_id));
+            $menu['normal'] = $this->setChosenItemInMenu($cartItem, $this->menuRepository->getMenuByCategory($this->categoryRepository->getNormal()->_id));
+            $menu['drink'] = $this->setChosenItemInMenu($cartItem, $this->menuRepository->getMenuByCategory($this->categoryRepository->getDink()->_id));
+            $menu['alcohol'] = $this->setChosenItemInMenu($cartItem, $this->menuRepository->getMenuByCategory($this->categoryRepository->getAlcohol()->_id));
+            $menu['beer'] = $this->setChosenItemInMenu($cartItem, $this->menuRepository->getMenuByCategory($this->categoryRepository->getBeer()->_id));
         }
         return $menu;
     }
@@ -166,16 +202,6 @@ class MenuService
         return $this->menuRepository->getItemByID($itemID);
     }
 
-    private function in_menu_array($needle, $needle_field, $haystack)
-    {
-        foreach ($haystack as $item) {
-            if (isset($item[$needle_field]) && $item[$needle_field] == $needle)
-                return true;
-        }
-
-        return false;
-    }
-
     public function getItem($textSearch)
     {
         if ($textSearch == null || $textSearch == '') {
@@ -202,7 +228,7 @@ class MenuService
         } else if ($menuItem != null && $dishItem == null && $dishItemInMenu == null) {
             $menuItem->is_sold_out = $isSoldOut;
             $this->menuRepository->update($menuItem);
-        }else if($menuItem != null && $dishItem == null && $dishItemInMenu != null){
+        } else if ($menuItem != null && $dishItem == null && $dishItemInMenu != null) {
             $menuItem->is_sold_out = $isSoldOut;
             $this->menuRepository->update($menuItem);
             $dishItemInMenu->is_sold_out = $isSoldOut;
