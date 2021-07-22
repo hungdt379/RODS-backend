@@ -35,7 +35,7 @@ class MenuRepository
 
     public function update($menuItem)
     {
-        $menuItem->save();
+        $menuItem->update();
     }
 
     public function getItemByName($name)

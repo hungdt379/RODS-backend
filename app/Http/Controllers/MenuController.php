@@ -123,7 +123,9 @@ class MenuController
             return $this->errorResponse('Not found items', null, false, Res::HTTP_NO_CONTENT);
         }
 
-        $this->menuService->updateItemSoldOutStatus($menuItem, $dishItem, $dishItemInMenu, (bool)$param['is_sold_out']);
+        if ($param['is_sold_out'] == 'true')
+            $this->menuService->updateItemSoldOutStatus($menuItem, $dishItem, $dishItemInMenu, true);
+        else $this->menuService->updateItemSoldOutStatus($menuItem, $dishItem, $dishItemInMenu, false);
 
         return $this->successResponse(null, 'Update successful');
     }
