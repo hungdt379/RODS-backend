@@ -65,7 +65,8 @@ class DishInOrderService
     public function exportPdf($dishInOrder, $type)
     {
         $html = '
-
+                <div style=" font-size: 14px; font-family: DejaVu Sans;" align="center">NHẤT NƯỚNG QUÁN</div>
+                <hr>
                 <table style=" font-size: 10px; width: 200px; font-family: DejaVu Sans; border: 1px">
                     <tr>
                         <td style="width: 40%">

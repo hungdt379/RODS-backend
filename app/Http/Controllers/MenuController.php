@@ -109,6 +109,7 @@ class MenuController
         $param = request()->all();
         $validator = Validator::make($param, [
             'item_id' => 'required|alpha_num',
+            'is_sold_out' => 'required'
         ]);
 
         if ($validator->fails()) {
@@ -122,7 +123,8 @@ class MenuController
             return $this->errorResponse('Not found items', null, false, Res::HTTP_NO_CONTENT);
         }
 
-        $this->menuService->updateItemSoldOutStatus($menuItem, $dishItem, $dishItemInMenu);
+        $this->menuService->updateItemSoldOutStatus($menuItem, $dishItem, $dishItemInMenu, $param['is_sold_out']);
+
         return $this->successResponse(null, 'Update successful');
     }
 
