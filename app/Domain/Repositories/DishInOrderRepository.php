@@ -13,13 +13,54 @@ class DishInOrderRepository
         return $dishInOrder->save();
     }
 
-    public function getDishInOrder($categoryID, $pageSize)
+    public function getDishInOrder($categoryID, $page, $pageSize)
     {
-        return DishInOrder::where('status', DishInOrder::ORDER_ITEM_STATUS_PREPARE)
-            ->whereIn('category_id', $categoryID)
-            ->orderBy('ts', 'DESC')
-            ->paginate((int)$pageSize);
+        return DishInOrder::raw(function ($collection) use ($categoryID, $page, $pageSize) {
+            return $collection->aggregate([
+                [
+                    '$addFields' => [
+                        'cat_id' => ['$toObjectId' => '$category_id']
+                    ]
+                ],
+                [
+                    '$match' => [
+                        'category_id' => ['$in' => $categoryID]
+                    ]
+                ],
+                [
+                    '$skip' => ((int)$page - 1) * (int)$pageSize
+                ],
+                [
+                    '$limit' => (int)$pageSize
+                ],
+                [
+                    '$lookup' => [
+                        'as' => 'category',
+                        'from' => 'category',
+                        'foreignField' => '_id',
+                        'localField' => 'cat_id'
+                    ]
+                ],
+                [
+                    '$sort' => ['ts' => -1]
+                ]
 
+            ]);
+        });
+
+    }
+
+    public function getTotalDishInOrder($categoryID)
+    {
+        return DishInOrder::raw(function ($collection) use ($categoryID) {
+            return $collection->aggregate([
+                [
+                    '$match' => [
+                        'category_id' => ['$in' => $categoryID]
+                    ]
+                ],
+            ]);
+        });
     }
 
     public function getDishInOrderByID($id)

@@ -30,40 +30,46 @@ class DishInOrderController extends Controller
     {
         $param = request()->all();
         $validator = Validator::make($param, [
-            'pageSize' => 'required|numeric|'
+            'pageSize' => 'required|numeric|',
+            'page' => 'required|numeric|',
         ]);
         if ($validator->fails()) {
             return $this->errorResponse($validator->errors(), null, false, Res::HTTP_NO_CONTENT);
         }
 
         $pageSize = $param['pageSize'];
+        $page = $param['page'];
         $categoryCombo = $this->categoryService->getComboCategory();
         $categoryFast = $this->categoryService->getFastCategory();
         $categoryNormal = $this->categoryService->getNormalCategory();
         $categoryID = [$categoryCombo['_id'], $categoryFast['_id'], $categoryNormal['_id']];
 
-        $data = $this->dishInOrderService->getDishInOrder($categoryID, $pageSize);
-        return $this->successResponseWithPaging($data->items(), 'Success', $data->currentPage(), $pageSize, $data->total());
+        $data = $this->dishInOrderService->getDishInOrder($categoryID, $page, $pageSize);
+        $total = $this->dishInOrderService->getTotalDishInOrder($categoryID);
+        return $this->successResponseWithPaging($data, 'Success', $page, $pageSize, $total);
     }
 
     public function getDrinkInOrder()
     {
         $param = request()->all();
         $validator = Validator::make($param, [
-            'pageSize' => 'required|numeric|'
+            'pageSize' => 'required|numeric|',
+            'page' => 'required|numeric|'
         ]);
         if ($validator->fails()) {
             return $this->errorResponse($validator->errors(), null, false, Res::HTTP_BAD_REQUEST);
         }
 
         $pageSize = $param['pageSize'];
+        $page = $param['page'];
         $categoryDrink = $this->categoryService->getDrinkCategory();
         $categoryAlcohol = $this->categoryService->getAlcoholCategory();
         $categoryBeer = $this->categoryService->getBeerCategory();
         $categoryID = [$categoryDrink['_id'], $categoryAlcohol['_id'], $categoryBeer['_id']];
 
-        $data = $this->dishInOrderService->getDishInOrder($categoryID, $pageSize);
-        return $this->successResponseWithPaging($data->items(), 'Success', $data->currentPage(), $pageSize, $data->total());
+        $data = $this->dishInOrderService->getDishInOrder($categoryID, $page, $pageSize);
+        $total = $this->dishInOrderService->getTotalDishInOrder($categoryID);
+        return $this->successResponseWithPaging($data, 'Success', $page, $pageSize, $total);
     }
 
     public function updateStatus()
