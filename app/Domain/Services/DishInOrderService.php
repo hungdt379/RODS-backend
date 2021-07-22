@@ -65,7 +65,7 @@ class DishInOrderService
     public function exportPdf($dishInOrder, $type)
     {
         $html = '
-                <div style=" font-size: 14px; font-family: DejaVu Sans;" align="center">NHẤT NƯỚNG QUÁN</div>
+                <div style=" font-size: 14px; font-family: DejaVu Sans;" >NHẤT NƯỚNG QUÁN</div>
                 <hr>
                 <table style=" font-size: 10px; width: 200px; font-family: DejaVu Sans; border: 1px">
                     <tr>
@@ -103,7 +103,7 @@ class DishInOrderService
                 </table>
         ';
 
-        $dompdf = PDF::loadHTML($html)->setPaper(array(20, 0, 150, 80 * 2.838), 'landscape');
+        $dompdf = PDF::loadHTML($html)->setPaper(array(20, 0, 200, 80 * 2.838), 'landscape');
         $nameFile = 'cd_' . time() . '.pdf';
         Storage::disk('completeDish')->put($nameFile, $dompdf->output());
         return $url = asset('completeDish/' . $nameFile);
