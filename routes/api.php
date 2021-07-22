@@ -71,6 +71,7 @@ Route::group([
         Route::get('table/active/false', 'UserController@getTableNotActive');
         Route::post('table/change', 'UserController@changeTable');
         Route::get('order/drink', 'DishInOrderController@getDrinkInOrder');
+        Route::post('order/queue/item/quantity/update', 'QueueOrderController@updateQuantityOfItem');
     });
 });
 

@@ -114,4 +114,40 @@ class QueueOrderService
 
         $this->queueOrderRepository->update($queueOrder);
     }
+
+    public function increaseQuantity($queueOrder, $itemID)
+    {
+        $item = [];
+        $totalCost = 0;
+        foreach ($queueOrder['item'] as $value) {
+            if ($value['item_id'] == $itemID) {
+                $value['quantity'] = (int)($value['quantity']) + 1;
+                $value['total_cost'] = $value['quantity'] * (int)$value['detail_item']['cost'];
+            }
+            array_push($item, $value);
+            $totalCost += $value['total_cost'];
+        }
+        $queueOrder->item = $item;
+        $queueOrder->total_cost = $totalCost;
+
+        return $this->queueOrderRepository->update($queueOrder);
+    }
+
+    public function decreaseQuantity($queueOrder, $itemID)
+    {
+        $item = [];
+        $totalCost = 0;
+        foreach ($queueOrder['item'] as $value) {
+            if ($value['item_id'] == $itemID) {
+                $value['quantity'] = (int)($value['quantity']) - 1;
+                $value['total_cost'] = $value['quantity'] * (int)$value['detail_item']['cost'];
+            }
+            array_push($item, $value);
+            $totalCost += $value['total_cost'];
+        }
+        $queueOrder->item = $item;
+        $queueOrder->total_cost = $totalCost;
+
+        return $this->queueOrderRepository->update($queueOrder);
+    }
 }
