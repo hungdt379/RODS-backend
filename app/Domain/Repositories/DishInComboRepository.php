@@ -31,7 +31,22 @@ class DishInComboRepository
 
     public function getDishInCombo($textSearch)
     {
-        return DishInCombo::whereRaw(array('$text' => array('$search' => $textSearch)))->get();
+        $fullTextResult = DishInCombo::whereRaw(array('$text' => array('$search' => $textSearch)))->get();
+        $likeResult = DishInCombo::where('name', 'LIKE', "%$textSearch%")->get()->toArray();
+
+        if (sizeof($fullTextResult) == 0) {
+            return $likeResult;
+        } else {
+            foreach ($likeResult as $likeItem) {
+                if (!in_array($likeItem, $fullTextResult)) array_push($fullTextResult, $likeItem);
+            }
+            return $fullTextResult;
+        }
+    }
+
+    public function getDishInComboByName($name)
+    {
+        return DishInCombo::where('name', $name)->first();
     }
 
 }
