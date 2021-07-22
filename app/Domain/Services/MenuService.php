@@ -194,7 +194,7 @@ class MenuService
         return $menu;
     }
 
-    public function updateItemSoldOutStatus($menuItem, $dishItem, $dishItemInMenu, $isSoldOut)
+    public function updateItemSoldOutStatus($menuItem, $dishItem, $dishItemInMenu, $isSoldOut = false)
     {
         if ($menuItem == null && $dishItem != null && $dishItemInMenu == null) {
             $dishItem->is_sold_out = $isSoldOut;
@@ -206,7 +206,7 @@ class MenuService
             $menuItem->is_sold_out = $isSoldOut;
             $this->menuRepository->update($menuItem);
             $dishItemInMenu->is_sold_out = $isSoldOut;
-            $this->menuRepository->update($dishItemInMenu);
+            $this->dishInComboRepository->update($dishItemInMenu);
         }
     }
 

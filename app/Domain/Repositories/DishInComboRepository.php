@@ -20,7 +20,7 @@ class DishInComboRepository
 
     public function update($dishInCombo)
     {
-        $dishInCombo->save();
+        $dishInCombo->update();
     }
 
     public function getDishesByCombo($comboID)
