@@ -346,7 +346,7 @@ class OrderService
         }
         $confirmOrder->item = $item;
         $confirmOrder->total_cost = $totalCost;
-        if ($confirmOrder->voucher != 0) {
+        if ($confirmOrder->voucher >= 0) {
             $confirmOrder->total_cost_of_voucher = (int)$confirmOrder['total_cost'] * $confirmOrder->voucher / 100;
             $confirmOrder->new_total_cost = (int)$confirmOrder['total_cost'] - $confirmOrder->total_cost_of_voucher;
         }
@@ -368,7 +368,7 @@ class OrderService
         }
         $confirmOrder->item = $item;
         $confirmOrder->total_cost = $totalCost;
-        if ($confirmOrder->voucher != 0) {
+        if ($confirmOrder->voucher >= 0) {
             $confirmOrder->total_cost_of_voucher = (int)$confirmOrder['total_cost'] * $confirmOrder->voucher / 100;
             $confirmOrder->new_total_cost = (int)$confirmOrder['total_cost'] - $confirmOrder->total_cost_of_voucher;
         }
