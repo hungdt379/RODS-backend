@@ -21,7 +21,7 @@ class SearchCombo209 extends Seeder
         $fastFood = Category::where('name', 'fast')->first();
         $alcohol = Category::where('name', 'alcohol')->first();
         $beer = Category::where('name', 'beer')->first();
-        $menu = Menu::where('name', 'Combo lẩu nướng 249k')
+        $menu = Menu::where('name', 'Combo nướng 249k')
             ->orWhere('category_id', $drink->_id)
             ->orWhere('category_id', $normal->_id)
             ->orWhere('category_id', $alcohol->_id)
