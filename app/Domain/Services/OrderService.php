@@ -290,8 +290,8 @@ class OrderService
                     $dishInOrder->quantity = 1;
                     $dishInOrder->status = DishInOrder::ORDER_ITEM_STATUS_PREPARE;
                     $dishInOrder->category_id = $value['detail_item']['category_id'];
-                    $this->dishInOrderService->insert($dishInOrder);
                     $dishInOrder->ts = time();
+                    $this->dishInOrderService->insert($dishInOrder);
                 }
             }
             $this->dishInOrderService->insert($dishInOrder);

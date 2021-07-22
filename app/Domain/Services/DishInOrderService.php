@@ -14,17 +14,14 @@ use Illuminate\Support\Facades\Storage;
 class DishInOrderService
 {
     private $dishInOrderRepository;
-    private $menuService;
 
     /**
      * DishInOrderService constructor.
      * @param DishInOrderRepository $dishInOrderRepository
-     * @param MenuService $menuService
      */
-    public function __construct(DishInOrderRepository $dishInOrderRepository, MenuService $menuService)
+    public function __construct(DishInOrderRepository $dishInOrderRepository)
     {
         $this->dishInOrderRepository = $dishInOrderRepository;
-        $this->menuService = $menuService;
     }
 
     public function insert($dishInOrder)
@@ -32,9 +29,15 @@ class DishInOrderService
         return $this->dishInOrderRepository->insert($dishInOrder);
     }
 
-    public function getDishInOrder($categoryID, $pageSize)
+    public function getDishInOrder($categoryID, $page, $pageSize)
     {
-        return $this->dishInOrderRepository->getDishInOrder($categoryID, $pageSize);
+        return $this->dishInOrderRepository->getDishInOrder($categoryID, $page, $pageSize);
+    }
+
+    public function getTotalDishInOrder($categoryID)
+    {
+        $data = $this->dishInOrderRepository->getTotalDishInOrder($categoryID);
+        return sizeof($data);
     }
 
     public function getAllDishInOrderByTableID($tableID)
@@ -65,7 +68,7 @@ class DishInOrderService
     public function exportPdf($dishInOrder, $type)
     {
         $html = '
-                <div style=" font-size: 14px; font-family: DejaVu Sans;" >NHẤT NƯỚNG QUÁN</div>
+                <div style=" font-size: 14px; font-family: DejaVu Sans;" align="center" ><b>NHẤT NƯỚNG QUÁN</b></div>
                 <hr>
                 <table style=" font-size: 10px; width: 200px; font-family: DejaVu Sans; border: 1px">
                     <tr>
@@ -103,7 +106,7 @@ class DishInOrderService
                 </table>
         ';
 
-        $dompdf = PDF::loadHTML($html)->setPaper(array(20, 0, 200, 80 * 2.838), 'landscape');
+        $dompdf = PDF::loadHTML($html)->setPaper(array(0, 0, 180, 80 * 2.838), 'landscape');
         $nameFile = 'cd_' . time() . '.pdf';
         Storage::disk('completeDish')->put($nameFile, $dompdf->output());
         return $url = asset('completeDish/' . $nameFile);
