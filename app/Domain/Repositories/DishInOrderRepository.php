@@ -86,4 +86,9 @@ class DishInOrderRepository
         DishInOrder::where('table_id', $tableID)->where('item_id', $itemID)->delete();
     }
 
+    public function delete($id)
+    {
+        DishInOrder::where('_id', $id)->delete();
+    }
+
 }

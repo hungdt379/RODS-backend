@@ -109,4 +109,23 @@ class DishInOrderController extends Controller
 
     }
 
+    public function deleteDishInOrder()
+    {
+        $param = request()->all();
+        $validator = Validator::make($param, [
+            '_id' => 'required',
+            'order_id' => 'required',
+            'category_id' => 'required',
+            'item_id' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->errorResponse($validator->errors(), null, false, Res::HTTP_BAD_REQUEST);
+        }
+
+        $this->dishInOrderService->deleteDishInOrder($param['_id'], $param['order_id'], $param['category_id'], $param['item_id']);
+
+        return $this->successResponse(null, 'Delete successful');
+    }
+
 }

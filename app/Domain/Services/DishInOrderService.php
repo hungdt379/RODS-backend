@@ -6,22 +6,25 @@ namespace App\Domain\Services;
 
 use App\Domain\Entities\DishInOrder;
 use App\Domain\Repositories\DishInOrderRepository;
-use Dompdf\Canvas;
-use Dompdf\Dompdf;
 use PDF;
 use Illuminate\Support\Facades\Storage;
 
 class DishInOrderService
 {
     private $dishInOrderRepository;
+    private $categoryService;
+    private $orderService;
 
     /**
      * DishInOrderService constructor.
      * @param DishInOrderRepository $dishInOrderRepository
+     * @param CategoryService $categoryService
      */
-    public function __construct(DishInOrderRepository $dishInOrderRepository)
+    public function __construct(DishInOrderRepository $dishInOrderRepository, CategoryService $categoryService, OrderService $orderService)
     {
         $this->dishInOrderRepository = $dishInOrderRepository;
+        $this->categoryService = $categoryService;
+        $this->orderService = $orderService;
     }
 
     public function insert($dishInOrder)
@@ -110,5 +113,16 @@ class DishInOrderService
         $nameFile = 'cd_' . time() . '.pdf';
         Storage::disk('completeDish')->put($nameFile, $dompdf->output());
         return $url = asset('completeDish/' . $nameFile);
+    }
+
+    public function deleteDishInOrder($id, $orderID, $categoryID, $itemID)
+    {
+        $categoryCombo = $this->categoryService->getComboCategory();
+        if ($categoryCombo->_id == $categoryID) {
+            $this->dishInOrderRepository->delete($id);
+        } else {
+            $order = $this->orderService->getOrderByID($orderID);
+            $this->orderService->deleteItemInConfirmOrder($order, $itemID);
+        }
     }
 }

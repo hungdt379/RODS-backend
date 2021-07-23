@@ -114,9 +114,9 @@ Route::group(['middleware' => 'auth.jwt'], function () {
     Route::get('table/order/confirm/detail', 'OrderController@viewDetailConfirmOrder');
     Route::get('table/order/detail', 'OrderController@getOrderByID');
     Route::get('order/confirm/list', 'OrderController@getListConfirmOrder');
+    Route::post('order/dish/delete', 'DishInOrderController@deleteDishInOrder');
 });
 
-Route::get('testPDF', 'AuthController@hello');
 
 
 
