@@ -13,9 +13,9 @@ class DishInOrderRepository
         return $dishInOrder->save();
     }
 
-    public function getDishInOrder($categoryID, $page, $pageSize)
+    public function getDishInOrder($categoryID, $page, $pageSize, $status)
     {
-        return DishInOrder::raw(function ($collection) use ($categoryID, $page, $pageSize) {
+        return DishInOrder::raw(function ($collection) use ($categoryID, $page, $pageSize, $status) {
             return $collection->aggregate([
                 [
                     '$addFields' => [
@@ -24,7 +24,8 @@ class DishInOrderRepository
                 ],
                 [
                     '$match' => [
-                        'category_id' => ['$in' => $categoryID]
+                        'category_id' => ['$in' => $categoryID],
+                        'status' => $status
                     ]
                 ],
                 [
@@ -50,13 +51,14 @@ class DishInOrderRepository
 
     }
 
-    public function getTotalDishInOrder($categoryID)
+    public function getTotalDishInOrder($categoryID, $status)
     {
-        return DishInOrder::raw(function ($collection) use ($categoryID) {
+        return DishInOrder::raw(function ($collection) use ($categoryID, $status) {
             return $collection->aggregate([
                 [
                     '$match' => [
-                        'category_id' => ['$in' => $categoryID]
+                        'category_id' => ['$in' => $categoryID],
+                        'status' => $status
                     ]
                 ],
             ]);

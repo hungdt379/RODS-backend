@@ -29,14 +29,14 @@ class DishInOrderService
         return $this->dishInOrderRepository->insert($dishInOrder);
     }
 
-    public function getDishInOrder($categoryID, $page, $pageSize)
+    public function getDishInOrder($categoryID, $page, $pageSize, $status)
     {
-        return $this->dishInOrderRepository->getDishInOrder($categoryID, $page, $pageSize);
+        return $this->dishInOrderRepository->getDishInOrder($categoryID, $page, $pageSize, $status);
     }
 
-    public function getTotalDishInOrder($categoryID)
+    public function getTotalDishInOrder($categoryID, $status)
     {
-        $data = $this->dishInOrderRepository->getTotalDishInOrder($categoryID);
+        $data = $this->dishInOrderRepository->getTotalDishInOrder($categoryID, $status);
         return sizeof($data);
     }
 

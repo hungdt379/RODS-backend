@@ -32,6 +32,7 @@ class DishInOrderController extends Controller
         $validator = Validator::make($param, [
             'pageSize' => 'required|numeric|',
             'page' => 'required|numeric|',
+            'status' => 'required'
         ]);
         if ($validator->fails()) {
             return $this->errorResponse($validator->errors(), null, false, Res::HTTP_NO_CONTENT);
@@ -39,13 +40,14 @@ class DishInOrderController extends Controller
 
         $pageSize = $param['pageSize'];
         $page = $param['page'];
+        $status = $param['status'];
         $categoryCombo = $this->categoryService->getComboCategory();
         $categoryFast = $this->categoryService->getFastCategory();
         $categoryNormal = $this->categoryService->getNormalCategory();
         $categoryID = [$categoryCombo['_id'], $categoryFast['_id'], $categoryNormal['_id']];
 
-        $data = $this->dishInOrderService->getDishInOrder($categoryID, $page, $pageSize);
-        $total = $this->dishInOrderService->getTotalDishInOrder($categoryID);
+        $data = $this->dishInOrderService->getDishInOrder($categoryID, $page, $pageSize, $status);
+        $total = $this->dishInOrderService->getTotalDishInOrder($categoryID, $status);
         return $this->successResponseWithPaging($data, 'Success', $page, $pageSize, $total);
     }
 
@@ -54,7 +56,8 @@ class DishInOrderController extends Controller
         $param = request()->all();
         $validator = Validator::make($param, [
             'pageSize' => 'required|numeric|',
-            'page' => 'required|numeric|'
+            'page' => 'required|numeric|',
+            'status' => 'required'
         ]);
         if ($validator->fails()) {
             return $this->errorResponse($validator->errors(), null, false, Res::HTTP_BAD_REQUEST);
@@ -62,13 +65,14 @@ class DishInOrderController extends Controller
 
         $pageSize = $param['pageSize'];
         $page = $param['page'];
+        $status = $param['status'];
         $categoryDrink = $this->categoryService->getDrinkCategory();
         $categoryAlcohol = $this->categoryService->getAlcoholCategory();
         $categoryBeer = $this->categoryService->getBeerCategory();
         $categoryID = [$categoryDrink['_id'], $categoryAlcohol['_id'], $categoryBeer['_id']];
 
-        $data = $this->dishInOrderService->getDishInOrder($categoryID, $page, $pageSize);
-        $total = $this->dishInOrderService->getTotalDishInOrder($categoryID);
+        $data = $this->dishInOrderService->getDishInOrder($categoryID, $page, $pageSize, $status);
+        $total = $this->dishInOrderService->getTotalDishInOrder($categoryID, $status);
         return $this->successResponseWithPaging($data, 'Success', $page, $pageSize, $total);
     }
 
@@ -90,9 +94,9 @@ class DishInOrderController extends Controller
         if ($dishInOrder) {
             $this->dishInOrderService->updateStatus($dishInOrder);
             if (in_array($dishInOrder['category_id'], $categoryID)) {
-                if ($dishInOrder['category_id'] == $categoryCombo['_id']){
+                if ($dishInOrder['category_id'] == $categoryCombo['_id']) {
                     $data = $this->dishInOrderService->exportPdf($dishInOrder, $categoryCombo['name']);
-                }else{
+                } else {
                     $data = $this->dishInOrderService->exportPdf($dishInOrder, 'Thường');
                 }
 
