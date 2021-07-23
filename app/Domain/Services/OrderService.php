@@ -231,9 +231,10 @@ class OrderService
         $confirmOrder->total_cost = $queueOrder['total_cost'];
         $confirmOrder->ts = time();
 
-        $this->insertToDishInOrder($queueOrder);
+        $this->orderRepository->insert($confirmOrder);
 
-        return $this->orderRepository->insert($confirmOrder);
+        $this->insertToDishInOrder($queueOrder, $confirmOrder->_id);
+
     }
 
     public function mergeOrder($queueOrder, $confirmOrder)
@@ -242,7 +243,7 @@ class OrderService
         $totalCost = 0;
         $length = count($item);
 
-        $this->insertToDishInOrder($queueOrder);
+        $this->insertToDishInOrder($queueOrder, $confirmOrder->_id);
 
         for ($i = 0; $i < $length; $i++) {
             for ($j = $i + 1; $j < $length; $j++) {
@@ -266,10 +267,11 @@ class OrderService
         return $this->orderRepository->update($confirmOrder);
     }
 
-    public function insertToDishInOrder($queueOrder)
+    public function insertToDishInOrder($queueOrder, $confirmOrderID)
     {
         foreach ($queueOrder['item'] as $value) {
             $dishInOrder = new DishInOrder();
+            $dishInOrder->order_id = $confirmOrderID;
             $dishInOrder->table_id = $queueOrder['table_id'];
             $dishInOrder->table_name = $queueOrder['table_name'];
             $dishInOrder->item_id = $value['item_id'];
@@ -283,6 +285,7 @@ class OrderService
                 $length = count($dishInCombo);
                 for ($i = 0; $i < $length; $i++) {
                     $dishInOrder = new DishInOrder();
+                    $dishInOrder->order_id = $confirmOrderID;
                     $dishInOrder->table_id = $queueOrder['table_id'];
                     $dishInOrder->table_name = $queueOrder['table_name'];
                     $dishInOrder->item_id = $value['item_id'];
