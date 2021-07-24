@@ -13,18 +13,16 @@ class DishInOrderService
 {
     private $dishInOrderRepository;
     private $categoryService;
-    private $orderService;
 
     /**
      * DishInOrderService constructor.
      * @param DishInOrderRepository $dishInOrderRepository
      * @param CategoryService $categoryService
      */
-    public function __construct(DishInOrderRepository $dishInOrderRepository, CategoryService $categoryService, OrderService $orderService)
+    public function __construct(DishInOrderRepository $dishInOrderRepository, CategoryService $categoryService)
     {
         $this->dishInOrderRepository = $dishInOrderRepository;
         $this->categoryService = $categoryService;
-        $this->orderService = $orderService;
     }
 
     public function insert($dishInOrder)
@@ -115,14 +113,8 @@ class DishInOrderService
         return $url = asset('completeDish/' . $nameFile);
     }
 
-    public function deleteDishInOrder($id, $orderID, $categoryID, $itemID)
+    public function deleteDishInOrder($id)
     {
-        $categoryCombo = $this->categoryService->getComboCategory();
-        if ($categoryCombo->_id == $categoryID) {
-            $this->dishInOrderRepository->delete($id);
-        } else {
-            $order = $this->orderService->getOrderByID($orderID);
-            $this->orderService->deleteItemInConfirmOrder($order, $itemID);
-        }
+        $this->dishInOrderRepository->delete($id);
     }
 }

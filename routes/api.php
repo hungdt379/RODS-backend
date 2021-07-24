@@ -123,4 +123,3 @@ Route::group(['middleware' => 'auth.jwt'], function () {
 
 
 
-
