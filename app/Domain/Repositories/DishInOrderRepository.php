@@ -43,7 +43,7 @@ class DishInOrderRepository
                     ]
                 ],
                 [
-                    '$sort' => ['ts' => -1]
+                    '$sort' => ['ts' => 1]
                 ]
 
             ]);
