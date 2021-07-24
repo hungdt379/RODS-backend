@@ -61,15 +61,19 @@ class OrderService
     public function invoiceOrder($order)
     {
         if (!str_contains($order['table_id'], '--')) {
-            $this->dishInOrderRepository->deleteMany($order['item_id'], $order['table_id']);
+            foreach ($order['item'] as $item) {
+                $this->dishInOrderRepository->deleteMany($item['item_id'], $order['table_id']);
+            }
             $order->status = Order::ORDER_STATUS_COMPLETED;
             $this->orderRepository->update($order);
             $this->userService->closeTable($this->userService->getUserById($order['table_id']));
         } else {
             $arrOrder = $this->orderRepository->getOrderOfMatchingOrder($order['arr_order_id']);
             foreach ($arrOrder as $value) {
+                foreach ($value['item'] as $item) {
+                    $this->dishInOrderRepository->deleteMany($item['item_id'], $value['table_id']);
+                }
                 $value->status = Order::ORDER_STATUS_COMPLETED;
-                $this->dishInOrderRepository->deleteMany($value['item_id'], $value['table_id']);
                 $this->orderRepository->update($value);
                 $this->userService->closeTable($this->userService->getUserById($value['table_id']));
             }
