@@ -17,21 +17,18 @@ use Illuminate\Support\Facades\Storage;
 class OrderService
 {
     private $orderRepository;
-    private $dishInOrderService;
     private $dishInOrderRepository;
     private $userService;
 
     /**
      * OrderService constructor.
      * @param OrderRepository $orderRepository
-     * @param DishInOrderService $dishInOrderService
      * @param DishInOrderRepository $dishInOrderRepository
      * @param UserService $userService
      */
-    public function __construct(OrderRepository $orderRepository, DishInOrderService $dishInOrderService, DishInOrderRepository $dishInOrderRepository, UserService $userService)
+    public function __construct(OrderRepository $orderRepository, DishInOrderRepository $dishInOrderRepository, UserService $userService)
     {
         $this->orderRepository = $orderRepository;
-        $this->dishInOrderService = $dishInOrderService;
         $this->dishInOrderRepository = $dishInOrderRepository;
         $this->userService = $userService;
     }
@@ -294,10 +291,10 @@ class OrderService
                     $dishInOrder->status = DishInOrder::ORDER_ITEM_STATUS_PREPARE;
                     $dishInOrder->category_id = $value['detail_item']['category_id'];
                     $dishInOrder->ts = time();
-                    $this->dishInOrderService->insert($dishInOrder);
+                    $this->dishInOrderRepository->insert($dishInOrder);
                 }
             }
-            $this->dishInOrderService->insert($dishInOrder);
+            $this->dishInOrderRepository->insert($dishInOrder);
         }
     }
 

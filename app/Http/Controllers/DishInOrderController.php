@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Domain\Services\CategoryService;
 use App\Domain\Services\DishInOrderService;
+use App\Domain\Services\OrderService;
 use App\Traits\ApiResponse;
 use Validator;
 use \Illuminate\Http\Response as Res;
@@ -14,16 +15,19 @@ class DishInOrderController extends Controller
 
     private $dishInOrderService;
     private $categoryService;
+    private $orderService;
 
     /**
      * DishInOrderController constructor.
      * @param DishInOrderService $dishInOrderService
      * @param CategoryService $categoryService
+     * @param OrderService $orderService
      */
-    public function __construct(DishInOrderService $dishInOrderService, CategoryService $categoryService)
+    public function __construct(DishInOrderService $dishInOrderService, CategoryService $categoryService, OrderService $orderService)
     {
         $this->dishInOrderService = $dishInOrderService;
         $this->categoryService = $categoryService;
+        $this->orderService = $orderService;
     }
 
     public function getDishInOrder()
@@ -123,7 +127,13 @@ class DishInOrderController extends Controller
             return $this->errorResponse($validator->errors(), null, false, Res::HTTP_BAD_REQUEST);
         }
 
-        $this->dishInOrderService->deleteDishInOrder($param['_id'], $param['order_id'], $param['category_id'], $param['item_id']);
+        $categoryCombo = $this->categoryService->getComboCategory();
+        if ($categoryCombo->_id == $param['category_id']) {
+            $this->dishInOrderService->deleteDishInOrder($param['_id']);
+        } else {
+            $order = $this->orderService->getOrderByID($param['order_id']);
+            $this->orderService->deleteItemInConfirmOrder($order, $param['item_id']);
+        }
 
         return $this->successResponse(null, 'Delete successful');
     }
