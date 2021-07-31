@@ -58,11 +58,18 @@ class MenuController
     public function searchItem()
     {
         $param = request()->all();
+        $validator = Validator::make($param, [
+            'table_id' => 'required'
+        ]);
+        if ($validator->fails()) {
+            return $this->errorResponse('Invalid params', null, false, 400);
+        }
+
         if ($param['q'] == null) {
             return $this->errorResponse('Not found items', null, false, Res::HTTP_NO_CONTENT);
         }
 
-        $data = $this->menuService->getItemByName($param['q'], JWTAuth::user()->_id);
+        $data = $this->menuService->getItemByName($param['q'], $param['table_id']);
 
         if (sizeof($data) == 0) {
             return $this->errorResponse('Not found items', null, false, Res::HTTP_NO_CONTENT);
