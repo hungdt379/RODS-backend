@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Domain\Entities\Notification;
+use App\Domain\Entities\QueueOrder;
 use App\Domain\Services\CartItemService;
+use App\Domain\Services\CategoryService;
 use App\Domain\Services\MenuService;
 use App\Domain\Services\NotificationService;
 use App\Domain\Services\OrderService;
 use App\Domain\Services\QueueOrderService;
+use App\Domain\Services\UserService;
 use App\Traits\ApiResponse;
 use JWTAuth;
 use Validator;
@@ -22,24 +25,92 @@ class QueueOrderController extends Controller
     private $menuService;
     private $cartItemService;
     private $notificationService;
+    private $categoryService;
+    private $userService;
 
     /**
      * QueueOrderController constructor.
+     * @param UserService $userService
      * @param QueueOrderService $queueOrderService
      * @param MenuService $menuService
      * @param CartItemService $cartItemService
      * @param NotificationService $notificationService
      * @param OrderService $orderService
+     * @param CategoryService $categoryService
      */
-    public function __construct(QueueOrderService $queueOrderService, MenuService $menuService, CartItemService $cartItemService, NotificationService $notificationService, OrderService $orderService)
+    public function __construct(UserService $userService,
+                                QueueOrderService $queueOrderService,
+                                MenuService $menuService,
+                                CartItemService $cartItemService,
+                                NotificationService $notificationService,
+                                OrderService $orderService,
+                                CategoryService $categoryService)
     {
         $this->queueOrderService = $queueOrderService;
         $this->menuService = $menuService;
         $this->cartItemService = $cartItemService;
         $this->notificationService = $notificationService;
         $this->orderService = $orderService;
+        $this->categoryService = $categoryService;
+        $this->userService = $userService;
     }
 
+    public function insert()
+    {
+        $param = request()->all();
+        $validator = Validator::make($param, [
+            'table_id' => 'required',
+            'item_id' => 'required',
+            'quantity' => 'required|numeric',
+            'cost' => 'required|numeric',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->errorResponse($validator->errors(), null, false, Res::HTTP_BAD_REQUEST);
+        }
+
+        $tableID = $param['table_id'];
+        $table = $this->userService->getUserById($tableID);
+        $itemID = $param['item_id'];
+        $quantity = (int)$param['quantity'];
+        $item = $this->menuService->getItemByID($itemID);
+        $categoryCombo = $this->categoryService->getComboCategory();
+        if ($item['category_id'] == $categoryCombo['_id']) {
+            $quantity = $table['number_of_customer'];
+        }
+        $note = isset($param['note']) ? $param['note'] : null;
+        $cost = $param['cost'];
+        $dishInCombo = isset($param['dish_in_combo']) ? $param['dish_in_combo'] : null;
+
+        $queueOrder = $this->queueOrderService->checkExistQueueOrderInTable($tableID);
+        if ($queueOrder) {
+
+            $queueOrderArray = $this->queueOrderService->getQueueOrderByTableID($tableID);
+            if ($item['category_id'] == $categoryCombo['_id'] && $this->menuService->in_array_field($categoryCombo['_id'], 'category_id', $queueOrderArray['item'])
+                && !$this->menuService->in_array_field($item['name'], 'name', $queueOrderArray['item'])
+            ) {
+                return $this->errorResponse('Combo existed in queue order', null, false, Res::HTTP_ACCEPTED);
+
+            } elseif ($this->menuService->in_array_field($item['name'], 'name', $queueOrderArray['item']) && $item['category_id'] != $categoryCombo['_id']) {
+                $this->queueOrderService->updateNormalItemExistedInQueueOrder($queueOrderArray, $item, $quantity, $cost);
+                return $this->successResponse(null, 'Successful');
+
+            } elseif (!$this->menuService->in_array_field($item['name'], 'name', $queueOrderArray['item'])) {
+                $this->queueOrderService->insertNewItemInQueueOrder($queueOrderArray, $tableID, $item, $quantity, $cost, $dishInCombo, $note);
+                return $this->successResponse(null, 'Successful');
+
+            } elseif ($item['category_id'] == $categoryCombo['_id'] && $this->menuService->in_array_field($categoryCombo['_id'], 'category_id', $queueOrderArray['item'])
+                && $this->menuService->in_array_field($item['name'], 'name', $queueOrderArray['item'])) {
+                $this->queueOrderService->updateComboItemInQueueOrder($queueOrderArray, $item, $dishInCombo, $note);
+                return $this->successResponse(null, 'Successful');
+
+            }
+        } else {
+            $this->queueOrderService->insertNewQueueOrder($tableID, $table, $item, $dishInCombo, $quantity, $cost, $note);
+            return $this->successResponse(null, 'Successful');
+        }
+        return null;
+    }
 
     public function sendOrder()
     {
@@ -169,10 +240,10 @@ class QueueOrderController extends Controller
         $itemID = $param['item_id'];
 
         $queueOrder = $this->queueOrderService->getQueueOrderByTableID($tableID);
-        if($queueOrder){
+        if ($queueOrder) {
             $this->queueOrderService->deleteItemInQueueOrder($queueOrder, $itemID);
             return $this->successResponse(null, 'Delete Success');
-        }else{
+        } else {
             return $this->errorResponse('Not found queue order', null, false, Res::HTTP_ACCEPTED);
         }
     }

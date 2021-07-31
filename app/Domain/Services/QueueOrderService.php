@@ -85,9 +85,11 @@ class QueueOrderService
         return $this->queueOrderRepository->getQueueOrderByTableID($tableID);
     }
 
-    public function getQueueOrderByID($queueOrderID){
+    public function getQueueOrderByID($queueOrderID)
+    {
         return $this->queueOrderRepository->getQueueOrderByID($queueOrderID);
-}
+    }
+
     public function delete($id)
     {
         return $this->queueOrderRepository->delete($id);
@@ -96,6 +98,11 @@ class QueueOrderService
     public function update($queueOrder)
     {
         return $this->queueOrderRepository->update($queueOrder);
+    }
+
+    public function insert($queueOrder)
+    {
+        return $this->queueOrderRepository->insert($queueOrder);
     }
 
     public function deleteItemInQueueOrder($queueOrder, $itemID)
@@ -149,5 +156,89 @@ class QueueOrderService
         $queueOrder->total_cost = $totalCost;
 
         return $this->queueOrderRepository->update($queueOrder);
+    }
+
+    public function updateNormalItemExistedInQueueOrder($queueOrderArray, $item, $quantity, $cost)
+    {
+        $itemArray = [];
+        foreach ($queueOrderArray['item'] as $value) {
+
+            if ($value['item_id'] = $item['_id']) {
+                $value['quantity'] += $quantity;
+                $value['total_cost'] += $quantity * $cost;
+                $queueOrderArray['total_cost'] += $quantity * $cost;
+            }
+            array_push($itemArray, $value);
+        }
+        $queueOrderArray['item'] = $itemArray;
+        $this->queueOrderRepository->update($queueOrderArray);
+    }
+
+    public function insertNewItemInQueueOrder($queueOrderArray, $tableID, $item, $quantity, $cost, $dishInCombo, $note )
+    {
+        $newQueueOrderItem['table_id'] = $tableID;
+        $newQueueOrderItem['item_id'] = $item['_id'];
+        $newQueueOrderItem['quantity'] = $quantity;
+        $newQueueOrderItem['note'] = $note;
+        $newQueueOrderItem['dish_in_combo'] = $dishInCombo;
+        $newQueueOrderItem['total_cost'] = $quantity * $cost;
+        $newQueueOrderItem['detail_item']['_id'] = $item['_id'];
+        $newQueueOrderItem['detail_item']['name'] = $item['name'];
+        $newQueueOrderItem['detail_item']['cost'] = $item['cost'];
+        $newQueueOrderItem['detail_item']['image'] = $item['image'];
+        $newQueueOrderItem['detail_item']['category_id'] = $item['category_id'];
+        $newQueueOrderItem['detail_item']['is_sold_out'] = $item['is_sold_out'];
+
+        $arrayItem = [];
+        foreach ($queueOrderArray['item'] as $value) {
+            array_push($arrayItem, $value);
+        }
+        array_push($arrayItem, $newQueueOrderItem);
+        $queueOrderArray['item'] = $arrayItem;
+        $queueOrderArray['total_cost'] += $quantity * $cost;
+        $this->queueOrderRepository->update($queueOrderArray);
+    }
+
+    public function updateComboItemInQueueOrder($queueOrderArray, $item, $dishInCombo, $note)
+    {
+        $itemArray = [];
+        foreach ($queueOrderArray['item'] as $value) {
+            if ($value['item_id'] = $item['_id']) {
+                $value['dish_in_combo'] = $dishInCombo;
+                $value['note'] = $note;
+            }
+            array_push($itemArray, $value);
+        }
+        $queueOrderArray['item'] = $itemArray;
+        $this->queueOrderRepository->update($queueOrderArray);
+    }
+
+    public function insertNewQueueOrder($tableID, $table, $item, $dishInCombo, $quantity, $cost, $note)
+    {
+        $newQueueOrder = new QueueOrder();
+        $newQueueOrder->table_id = $tableID;
+        $newQueueOrder->table_name = $table['full_name'];
+        $newQueueOrder->number_of_customer = $table['number_of_customer'];
+        $newQueueOrder->status = QueueOrder::QUEUE_ORDER_STATUS_QUEUED;
+
+        $newQueueOrderItemArray = [];
+        $newQueueOrderItem['table_id'] = $tableID;
+        $newQueueOrderItem['item_id'] = $item['_id'];
+        $newQueueOrderItem['quantity'] = $quantity;
+        $newQueueOrderItem['note'] = $note;
+        $newQueueOrderItem['dish_in_combo'] = $dishInCombo;
+        $newQueueOrderItem['total_cost'] = $quantity * $cost;
+        $newQueueOrderItem['detail_item']['_id'] = $item['_id'];
+        $newQueueOrderItem['detail_item']['name'] = $item['name'];
+        $newQueueOrderItem['detail_item']['cost'] = $item['cost'];
+        $newQueueOrderItem['detail_item']['image'] = $item['image'];
+        $newQueueOrderItem['detail_item']['category_id'] = $item['category_id'];
+        $newQueueOrderItem['detail_item']['is_sold_out'] = $item['is_sold_out'];
+
+        array_push($newQueueOrderItemArray, $newQueueOrderItem);
+        $newQueueOrder->item = $newQueueOrderItemArray;
+        $newQueueOrder->total_cost = $quantity * $cost;
+        $newQueueOrder->ts = time();
+        $this->queueOrderRepository->insert($newQueueOrder);
     }
 }
