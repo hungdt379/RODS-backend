@@ -100,15 +100,38 @@ class UserController extends Controller
     {
         $param = request()->all();
         $user = $this->userService->getUserById($param['table_id']);
-        $this->userService->closeTable($user);
+        $confirmOrder = $this->orderService->getConfirmOrderByTableID($param['table_id']);
+        $queueOrder = $this->queueOrderService->getQueueOrderByTableID($param['table_id']);
+        if ($confirmOrder || $queueOrder) {
+            return $this->errorResponse('Can not close table', null, false, Res::HTTP_ACCEPTED);
+        }
 
+        $this->userService->closeTable($user);
         return $this->successResponse(null, 'Close table successful');
     }
 
     public function updateNumberOfCustomer()
     {
         $param = request()->all();
-        $this->userService->updateNumberOfCustomer($param['table_id'], $param['number_of_customer']);
+        $validator = Validator::make($param, [
+            'table_id' => 'required',
+            'number_of_customer' => 'required|integer|min:1'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->errorResponse('Invalid params', null, false, Res::HTTP_BAD_REQUEST);
+        }
+
+        $table = $this->userService->getUserById($param['table_id']);
+        if ((int)$param['number_of_customer'] > $table['max_customer'] || (int)$param['number_of_customer'] < 1) {
+            return $this->errorResponse('Số khách phải lớn hơn 1 và nhỏ hơn ' . $table['max_customer'], null, false, Res::HTTP_ACCEPTED);
+        }
+
+        if ((int)$param['number_of_customer'] == $table['number_of_customer']) {
+            return $this->successResponse(null, 'Success');
+        }
+
+        $this->userService->updateNumberOfCustomer($param['table_id'], (int)$param['number_of_customer']);
         return $this->successResponse('', 'Update successfully');
     }
 
@@ -125,11 +148,11 @@ class UserController extends Controller
         }
 
         if ($param['table_number'] < 10) {
-            $username = 'MB0' . $param['table_number'];
-            $fullname = 'Bàn 0' . $param['table_number'];
+            $username = 'MB0' . (int)$param['table_number'];
+            $fullname = 'Bàn 0' . (int)$param['table_number'];
         } else {
-            $username = 'MB' . $param['table_number'];
-            $fullname = 'Bàn ' . $param['table_number'];
+            $username = 'MB' . (int)$param['table_number'];
+            $fullname = 'Bàn ' . (int)$param['table_number'];
         }
 
         $check = $this->userService->checkExistedTable($username);
@@ -156,11 +179,11 @@ class UserController extends Controller
         }
 
         if ($param['table_number'] < 10) {
-            $username = 'MB0' . $param['table_number'];
-            $fullname = 'Bàn 0' . $param['table_number'];
+            $username = 'MB0' . (int)$param['table_number'];
+            $fullname = 'Bàn 0' . (int)$param['table_number'];
         } else {
-            $username = 'MB' . $param['table_number'];
-            $fullname = 'Bàn ' . $param['table_number'];
+            $username = 'MB' . (int)$param['table_number'];
+            $fullname = 'Bàn ' . (int)$param['table_number'];
         }
 
         $table = $this->userService->getUserById($param['table_id']);
@@ -175,7 +198,7 @@ class UserController extends Controller
             return $this->errorResponse('Table existed', null, false, 409);
         }
 
-        $this->userService->updateTable($param['table_id'], $username, $fullname, $param['max_customer']);
+        $this->userService->updateTable($param['table_id'], $username, $fullname, (int)$param['max_customer']);
         return $this->successResponse('', 'Update successful');
     }
 
