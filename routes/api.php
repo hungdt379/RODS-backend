@@ -67,7 +67,6 @@ Route::group([
         Route::post('table/order/queue/confirm', 'QueueOrderController@confirmQueueOrder');
         Route::post('table/order/confirm/item/delete', 'OrderController@deleteItemInConfirmOrder');
         Route::post('table/order/queue/item/delete', 'QueueOrderController@deleteItemInQueueOrder');
-        Route::post('table/order/confirm/note/add', 'OrderController@addNoteForRemainItem');
         Route::get('table/active/false', 'UserController@getTableNotActive');
         Route::post('table/change', 'UserController@changeTable');
         Route::get('order/drink', 'DishInOrderController@getDrinkInOrder');
