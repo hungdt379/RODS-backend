@@ -59,25 +59,23 @@ class DishInOrderController extends Controller
     {
         $param = request()->all();
         $validator = Validator::make($param, [
-            'pageSize' => 'required|numeric|',
-            'page' => 'required|numeric|',
-            'status' => 'required'
+            'status' => 'required',
+            'table_id' => 'required'
         ]);
         if ($validator->fails()) {
             return $this->errorResponse($validator->errors(), null, false, Res::HTTP_BAD_REQUEST);
         }
 
-        $pageSize = $param['pageSize'];
-        $page = $param['page'];
         $status = $param['status'];
+        $tableID = $param['table_id'];
         $categoryDrink = $this->categoryService->getDrinkCategory();
         $categoryAlcohol = $this->categoryService->getAlcoholCategory();
         $categoryBeer = $this->categoryService->getBeerCategory();
         $categoryID = [$categoryDrink['_id'], $categoryAlcohol['_id'], $categoryBeer['_id']];
 
-        $data = $this->dishInOrderService->getDishInOrder($categoryID, $page, $pageSize, $status);
-        $total = $this->dishInOrderService->getTotalDishInOrder($categoryID, $status);
-        return $this->successResponseWithPaging($data, 'Success', $page, $pageSize, $total);
+        $data = $this->dishInOrderService->getDrinkInOrder($categoryID, $status, $tableID);
+
+        return $this->successResponse($data, 'Success');
     }
 
     public function updateStatus()
