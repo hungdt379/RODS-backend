@@ -100,28 +100,6 @@ class OrderController extends Controller
         return $this->successResponseWithPaging($data->items(), 'Success', $data->currentPage(), $pageSize, $data->total());
     }
 
-    public function addNoteForRemainItem()
-    {
-        $param = request()->all();
-        $validator = Validator::make($param, [
-            'note' => 'required',
-            '_id' => 'required'
-        ]);
-        if ($validator->fails()) {
-            return $this->errorResponse($validator->errors(), null, false, Res::HTTP_BAD_REQUEST);
-        }
-        $note = $param['note'];
-        $orderID = $param['_id'];
-        $confirmOrder = $this->orderService->getConfirmOrderByID($orderID);
-        if ($confirmOrder) {
-            $this->orderService->addNoteForRemainItem($confirmOrder, $note);
-            return $this->successResponse(null, 'Success');
-        } else {
-            return $this->errorResponse('Not found confirm order', null, false, Res::HTTP_NO_CONTENT);
-        }
-
-    }
-
     public function addVoucherToConfirmOrder()
     {
         $param = request()->all();
@@ -141,8 +119,6 @@ class OrderController extends Controller
         } else {
             return $this->errorResponse('Not found confirm order', null, false, Res::HTTP_NO_CONTENT);
         }
-
-
     }
 
     public function updateQuantityOfItem()

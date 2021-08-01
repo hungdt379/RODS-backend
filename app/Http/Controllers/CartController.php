@@ -81,7 +81,7 @@ class CartController extends Controller
         if ($item['category_id'] == $category['_id']) {
             $quantity = JWTAuth::user()->number_of_customer;
         }
-        $note = $param['note'];
+        $note = isset($param['note']) ? $param['note'] : '';
         $cost = $param['cost'];
         $dishInCombo = isset($param['dish_in_combo']) ? $param['dish_in_combo'] : null;
         $cart = $this->cartService->getCartByTableID($tableID);
@@ -116,6 +116,7 @@ class CartController extends Controller
         $tableID = JWTAuth::user()->_id;
         if ($itemID == "") {
             $this->cartItemService->deleteAllItemByTableID($tableID);
+            return $this->successResponse(null, 'Delete Success');
         } else {
             $cartItem = $this->cartItemService->getListCartItemByItemID($tableID, $itemID)->toArray();
             if (count($itemID) == count($cartItem)) {

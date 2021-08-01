@@ -48,16 +48,6 @@ class OrderService
         return $this->orderRepository->getAllCompleteOrder($pageSize);
     }
 
-    public function getConfirmOrderByID($orderID)
-    {
-        return $this->orderRepository->getConfirmOrderByID($orderID);
-    }
-
-    public function getCompletedOrderByID($orderID)
-    {
-        return $this->orderRepository->getCompletedOrderByID($orderID);
-    }
-
     public function invoiceOrder($order)
     {
         if (!str_contains($order['table_id'], '--')) {
@@ -320,13 +310,6 @@ class OrderService
 
         $this->orderRepository->update($confirmOrder);
         $this->dishInOrderRepository->deleteMany($itemID, $confirmOrder['table_id']);
-    }
-
-    public function addNoteForRemainItem($confirmOrder, $note)
-    {
-        $confirmOrder->note = $note;
-
-        return $this->orderRepository->update($confirmOrder);
     }
 
     public function addVoucherToConfirmOrder($confirmOrder, $voucher)
