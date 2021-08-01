@@ -117,4 +117,9 @@ class DishInOrderService
     {
         $this->dishInOrderRepository->delete($id);
     }
+
+    public function getDrinkInOrder($categoryID, $status, $tableID)
+    {
+        return $this->dishInOrderRepository->getDrinkInOrder($categoryID, $status, $tableID);
+    }
 }

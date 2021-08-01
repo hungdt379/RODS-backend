@@ -91,4 +91,37 @@ class DishInOrderRepository
         DishInOrder::where('_id', $id)->delete();
     }
 
+    public function getDrinkInOrder($categoryID, $status, $tableID)
+    {
+        return DishInOrder::raw(function ($collection) use ($categoryID, $status, $tableID) {
+            return $collection->aggregate([
+                [
+                    '$addFields' => [
+                        'cat_id' => ['$toObjectId' => '$category_id']
+                    ]
+                ],
+                [
+                    '$match' => [
+                        'category_id' => ['$in' => $categoryID],
+                        'status' => $status,
+                        'table_id' => $tableID
+                    ]
+                ],
+                [
+                    '$lookup' => [
+                        'as' => 'category',
+                        'from' => 'category',
+                        'foreignField' => '_id',
+                        'localField' => 'cat_id'
+                    ]
+                ],
+                [
+                    '$sort' => ['ts' => 1]
+                ]
+
+            ]);
+        });
+
+    }
+
 }
