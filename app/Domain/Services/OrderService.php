@@ -189,8 +189,11 @@ class OrderService
             $totalCost += $value['total_cost'];
         }
 
+        $createOrderCode = $this->createOrderCode();
         $newConfirmOrder = new Order();
         $newConfirmOrder->arr_order_id = $arrOrderID;
+        $newConfirmOrder->numerical_order = $createOrderCode[0];
+        $newConfirmOrder->order_code = $createOrderCode[1];
         $newConfirmOrder->table_id = $tableID;
         $newConfirmOrder->table_name = $tableName;
         $newConfirmOrder->number_of_customer = $numberOfCustomer;
@@ -211,11 +214,27 @@ class OrderService
         return $this->orderRepository->getMatchingOrder($id);
     }
 
+    public function createOrderCode()
+    {
+        $numbericalOrder = $this->orderRepository->getMaxOrderCode();
+        if ($numbericalOrder) {
+            $newNumericalOrder = $numbericalOrder + 1;
+            $orderCode = 'O-' . $newNumericalOrder;
+        } else {
+            $newNumericalOrder = 1;
+            $orderCode = 'O-' . $newNumericalOrder;
+        }
+
+        return [$newNumericalOrder, $orderCode];
+    }
+
     public function addNewConfirmOrder($queueOrder)
     {
         $confirmOrder = new Order();
         $item = $queueOrder['item'];
-
+        $createOrderCode = $this->createOrderCode();
+        $confirmOrder->numerical_order = $createOrderCode[0];
+        $confirmOrder->order_code = $createOrderCode[1];
         $confirmOrder->table_id = $queueOrder['table_id'];
         $confirmOrder->table_name = $queueOrder['table_name'];
         $confirmOrder->number_of_customer = $queueOrder['number_of_customer'];
@@ -226,7 +245,7 @@ class OrderService
 
         $this->orderRepository->insert($confirmOrder);
 
-        $this->insertToDishInOrder($queueOrder, $confirmOrder->_id);
+        $this->insertToDishInOrder($queueOrder, $confirmOrder->_id, $confirmOrder->order_code);
 
     }
 
@@ -236,7 +255,7 @@ class OrderService
         $totalCost = 0;
         $length = count($item);
 
-        $this->insertToDishInOrder($queueOrder, $confirmOrder->_id);
+        $this->insertToDishInOrder($queueOrder, $confirmOrder->_id, $confirmOrder->order_code);
 
         for ($i = 0; $i < $length; $i++) {
             for ($j = $i + 1; $j < $length; $j++) {
@@ -260,11 +279,12 @@ class OrderService
         return $this->orderRepository->update($confirmOrder);
     }
 
-    public function insertToDishInOrder($queueOrder, $confirmOrderID)
+    public function insertToDishInOrder($queueOrder, $confirmOrderID, $orderCode)
     {
         foreach ($queueOrder['item'] as $value) {
             $dishInOrder = new DishInOrder();
             $dishInOrder->order_id = $confirmOrderID;
+            $dishInOrder->order_code = $orderCode;
             $dishInOrder->table_id = $queueOrder['table_id'];
             $dishInOrder->table_name = $queueOrder['table_name'];
             $dishInOrder->item_id = $value['item_id'];
@@ -279,6 +299,7 @@ class OrderService
                 for ($i = 0; $i < $length; $i++) {
                     $dishInOrder = new DishInOrder();
                     $dishInOrder->order_id = $confirmOrderID;
+                    $dishInOrder->order_code = $orderCode;
                     $dishInOrder->table_id = $queueOrder['table_id'];
                     $dishInOrder->table_name = $queueOrder['table_name'];
                     $dishInOrder->item_id = $value['item_id'];

@@ -190,7 +190,7 @@ class OrderController extends Controller
         $id = $param['_id'];
         $order = $this->orderService->getOrderByID($id);
 
-        if (!$order){
+        if (!$order) {
             return $this->errorResponse('Order not found', null, false, Res::HTTP_ACCEPTED);
         }
 
@@ -212,10 +212,11 @@ class OrderController extends Controller
 
         $data = $this->orderService->getOrderByID($param['_id']);
 
-        if (!$data){
+        if (!$data) {
             $this->errorResponse('Not found Order', null, false, Res::HTTP_ACCEPTED);
         }
 
         return $this->successResponse($data, 'Success');
     }
+
 }

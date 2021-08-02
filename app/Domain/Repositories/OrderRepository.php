@@ -71,4 +71,9 @@ class OrderRepository
     {
         return Order::whereIn('_id', $arrOrderID)->get();
     }
+
+    public function getMaxOrderCode()
+    {
+        return Order::max('numerical_order');
+    }
 }
