@@ -16,7 +16,7 @@ class Order extends Model
     protected $collection = 'order';
 
     protected $fillable = [
-        '_id', 'arr_order_id',
+        '_id', 'arr_order_id', 'numerical_order', 'order_code',
         'number_of_customer', 'table_id',
         'table_name', 'status',
         'item',
