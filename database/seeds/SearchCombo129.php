@@ -31,7 +31,11 @@ class SearchCombo129 extends Seeder
             $searchCombo129 = new SearchCombo129K();
             $searchCombo129->_id = $x->_id;
             $searchCombo129->name = $x->name;
-            $searchCombo129->cost = $x->cost;
+            if ($searchCombo129->name == 'Combo nướng 139k') {
+                $searchCombo129->cost = 0;
+            } else {
+                $searchCombo129->cost = $x->cost;
+            }
             $searchCombo129->image = $x->image;
             $searchCombo129->hotpot = $x->hotpot;
             $searchCombo129->category_id = $x->category_id;

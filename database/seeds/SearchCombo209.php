@@ -32,7 +32,11 @@ class SearchCombo209 extends Seeder
             $searchCombo209 = new SearchCombo209k();
             $searchCombo209->_id = $x->_id;
             $searchCombo209->name = $x->name;
-            $searchCombo209->cost = $x->cost;
+            if ($searchCombo209->name == 'Combo nướng 249k'){
+                $searchCombo209->cost = 0;
+            }else{
+                $searchCombo209->cost = $x->cost;
+            }
             $searchCombo209->image = $x->image;
             $searchCombo209->hotpot = $x->hotpot;
             $searchCombo209->category_id = $x->category_id;

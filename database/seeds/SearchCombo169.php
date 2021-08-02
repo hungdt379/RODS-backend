@@ -28,11 +28,15 @@ class SearchCombo169 extends Seeder
             ->orWhere('category_id', $beer->_id)
             ->orWhere('category_id', $fastFood->_id)->get();
 
-        foreach ($menu as $x){
+        foreach ($menu as $x) {
             $searchCombo169 = new SearchCombo169k();
             $searchCombo169->_id = $x->_id;
             $searchCombo169->name = $x->name;
-            $searchCombo169->cost = $x->cost;
+            if ($searchCombo169->name == 'Combo nướng 169k') {
+                $searchCombo169->cost = 0;
+            } else {
+                $searchCombo169->cost = $x->cost;
+            }
             $searchCombo169->image = $x->image;
             $searchCombo169->hotpot = $x->hotpot;
             $searchCombo169->category_id = $x->category_id;
