@@ -44,7 +44,7 @@ Route::group([
         Route::post('call/payment', 'NotificationController@callPayment');
         Route::get('cart', 'CartController@show');
         Route::post('cart/item/add', 'CartController@addItems');
-        Route::post('cart/item/delete', 'CartController@deleteItemInCart');
+        Route::post('cart/item/delete', 'CartController@deleteItemInCart')->name('delete-item-in-cart');
 
 
     });
@@ -64,7 +64,7 @@ Route::group([
         Route::get('table/id', 'UserController@getTableById');
         Route::get('table/order/queue/view', 'QueueOrderController@getQueueOrderByTableID');
         Route::post('table/order/queue/cancel', 'QueueOrderController@cancelQueueOrder');
-        Route::post('table/order/queue/confirm', 'QueueOrderController@confirmQueueOrder');
+        Route::post('table/order/queue/confirm', 'QueueOrderController@confirmQueueOrder')->name('confirm-queue-order');
         Route::post('table/order/confirm/item/delete', 'OrderController@deleteItemInConfirmOrder');
         Route::post('table/order/queue/item/delete', 'QueueOrderController@deleteItemInQueueOrder');
         Route::get('table/active/false', 'UserController@getTableNotActive');
@@ -111,7 +111,7 @@ Route::group(['middleware' => 'auth.jwt'], function () {
     Route::post('order/dish/status/update', 'DishInOrderController@updateStatus');
     Route::post('order/drink/status/update', 'DishInOrderController@updateStatus');
     Route::get('search', 'MenuController@searchItem');
-    Route::get('table/order/confirm/detail', 'OrderController@viewDetailConfirmOrder');
+    Route::get('table/order/confirm/detail', 'OrderController@viewDetailConfirmOrder')->name('detail-confirm-order');
     Route::get('table/order/detail', 'OrderController@getOrderByID');
     Route::get('order/confirm/list', 'OrderController@getListConfirmOrder');
     Route::post('order/dish/delete', 'DishInOrderController@deleteDishInOrder');
