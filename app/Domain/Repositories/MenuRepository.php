@@ -70,7 +70,7 @@ class MenuRepository
 
     public function searchCombo169($name)
     {
-        $fullTextResult = SearchCombo169K::whereRaw(array('$text' => array('$search' => $name)))->toArray();
+        $fullTextResult = SearchCombo169K::whereRaw(array('$text' => array('$search' => $name)))->get()->toArray();
         $likeResult = SearchCombo169K::where('name', 'LIKE', "%$name%")->get()->toArray();
 
         if (sizeof($fullTextResult) == 0) {
@@ -85,7 +85,7 @@ class MenuRepository
 
     public function searchCombo209($name)
     {
-        $fullTextResult =  SearchCombo209K::whereRaw(array('$text' => array('$search' => $name)))->get();
+        $fullTextResult =  SearchCombo209K::whereRaw(array('$text' => array('$search' => $name)))->get()->toArray();
         $likeResult = SearchCombo209K::where('name', 'LIKE', "%$name%")->get()->toArray();
 
         if (sizeof($fullTextResult) == 0) {
