@@ -47,4 +47,9 @@ class UserRepository
     {
         return User::where('role', 't')->where('is_active', false)->get();
     }
+
+    public function getUserUsername($username)
+    {
+        return User::where('username', $username)->first();
+    }
 }

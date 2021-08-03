@@ -217,4 +217,9 @@ class UserService
     {
         return $this->userRepository->getTableNotActive();
     }
+
+    public function getUserByUsername($username)
+    {
+        return $this->userRepository->getUserUsername($username);
+    }
 }

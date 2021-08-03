@@ -82,6 +82,7 @@ class AuthController extends Controller
     {
         $param = $request->all();
         $validator = Validator::make($param, [
+            'user_name' => 'required',
             'old_password' => 'required',
             'new_password' => 'required',
             'confirm_password' => 'required'
@@ -91,6 +92,14 @@ class AuthController extends Controller
             return $this->errorResponse('Invalid params', null, false, Res::HTTP_BAD_REQUEST);
         }
 
+        $user = $this->userService->getUserByUsername($param['user_name']);
+        if ($user == null) {
+            return $this->errorResponse('Username is invalid', null, false, Res::HTTP_BAD_REQUEST);
+        } elseif ($user != null && $user->role == 't') {
+            return $this->errorResponse('Username is invalid', null, false, Res::HTTP_BAD_REQUEST);
+        }
+
+
         if ($param['new_password'] == $param['old_password']) {
             return $this->errorResponse('Can not change when old password equal new password', null, false, Res::HTTP_BAD_REQUEST);
         }
@@ -99,8 +108,7 @@ class AuthController extends Controller
             return $this->errorResponse('Not match new password', null, false, Res::HTTP_BAD_REQUEST);
         }
 
-        if (Hash::check($param['old_password'], JWTAuth::user()->password)) {
-            $user = $this->userService->getUserById(JWTAuth::user()->_id);
+        if (Hash::check($param['old_password'], $user->password)) {
             $user->password = Hash::make($param['new_password']);
             $user->save();
             return $this->successResponse(null, 'Change password successful');
