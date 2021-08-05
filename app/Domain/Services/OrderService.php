@@ -290,6 +290,7 @@ class OrderService
             $dishInOrder->item_id = $value['item_id'];
             $dishInOrder->item_name = $value['detail_item']['name'];
             $dishInOrder->quantity = $value['quantity'];
+            $dishInOrder->note = $value['note'];
             $dishInOrder->status = DishInOrder::ORDER_ITEM_STATUS_PREPARE;
             $dishInOrder->category_id = $value['detail_item']['category_id'];
             $dishInOrder->ts = time();
@@ -305,6 +306,7 @@ class OrderService
                     $dishInOrder->item_id = $value['item_id'];
                     $dishInOrder->item_name = $value['dish_in_combo'][$i];
                     $dishInOrder->quantity = 1;
+                    $dishInOrder->note = $value['note'];
                     $dishInOrder->status = DishInOrder::ORDER_ITEM_STATUS_PREPARE;
                     $dishInOrder->category_id = $value['detail_item']['category_id'];
                     $dishInOrder->ts = time();
