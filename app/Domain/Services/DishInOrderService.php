@@ -98,6 +98,14 @@ class DishInOrderService
                     </tr>
                     <tr>
                         <td style="width: 40%">
+                            <b>Chú thích:</b>
+                        </td>
+                        <td style="width: 60%">
+                            ' . $dishInOrder->note . '
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 40%">
                             <b>Loại:</b>
                         </td>
                         <td style="width: 60%">
@@ -107,7 +115,7 @@ class DishInOrderService
                 </table>
         ';
 
-        $dompdf = PDF::loadHTML($html)->setPaper(array(0, 0, 180, 80 * 2.838), 'landscape');
+        $dompdf = PDF::loadHTML($html)->setPaper(array(0, 0, 180, 90 * 2.838), 'landscape');
         $nameFile = 'cd_' . time() . '.pdf';
         Storage::disk('completeDish')->put($nameFile, $dompdf->output());
         return $url = asset('completeDish/' . $nameFile);
