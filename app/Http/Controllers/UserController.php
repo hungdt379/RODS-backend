@@ -160,7 +160,7 @@ class UserController extends Controller
             return $this->errorResponse('Table existed', null, false, 409);
         }
 
-        $this->userService->addNewTable($username, $fullname, $param['max_customer']);
+        $this->userService->addNewTable($username, $fullname, (int)$param['max_customer']);
 
         return $this->successResponse('', 'Insert successful');
     }
