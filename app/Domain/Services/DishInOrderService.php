@@ -98,14 +98,6 @@ class DishInOrderService
                     </tr>
                     <tr>
                         <td style="width: 40%">
-                            <b>Số lượng:</b>
-                        </td>
-                        <td style="width: 60%">
-                            ' . ($dishInOrder->note == null) ? '' : $dishInOrder->note  . '
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="width: 40%">
                             <b>Loại:</b>
                         </td>
                         <td style="width: 60%">
