@@ -184,15 +184,16 @@ class QueueOrderController extends Controller
             return $this->errorResponse($validator->errors(), null, false, Res::HTTP_BAD_REQUEST);
         }
 
+        $user = JWTAuth::user();
         $tableID = $param['table_id'];
         $queueOrder = $this->queueOrderService->getQueueOrderByTableID($tableID);
         if ($queueOrder) {
-            $this->notificationService->notification(null, Notification::TITLE_CONFIRMED_ORDER_VN,
-                Notification::TITLE_CONFIRMED_ORDER_EN, JWTAuth::user(), Notification::RECEIVER_KITCHEN_MANAGER);
             $confirmOrder = $this->orderService->getConfirmOrderByTableID($tableID);
             if (!$confirmOrder) {
                 $this->orderService->addNewConfirmOrder($queueOrder);
                 $this->queueOrderService->delete($queueOrder['_id']);
+                $this->notificationService->notification(null, Notification::TITLE_CONFIRMED_ORDER_VN,
+                    Notification::TITLE_CONFIRMED_ORDER_EN, $user, [Notification::RECEIVER_KITCHEN_MANAGER]);
                 $this->notificationService->removeReferenceAfterRead('waiter/' . $tableID . '/send-order');
                 return $this->successResponse(null, 'Confirm Success');
             } else {
@@ -213,7 +214,8 @@ class QueueOrderController extends Controller
                 if (($tempConfirmCombo == $tempQueueCombo) || ($tempQueueCombo == '' && $tempConfirmCombo != '') || ($tempQueueCombo != '' && $tempConfirmCombo == '')) {
                     $this->orderService->mergeOrder($queueOrder, $confirmOrder);
                     $this->queueOrderService->delete($queueOrder['_id']);
-
+                    $this->notificationService->notification(null, Notification::TITLE_CONFIRMED_ORDER_VN,
+                        Notification::TITLE_CONFIRMED_ORDER_EN, $user, [Notification::RECEIVER_KITCHEN_MANAGER]);
                     $this->notificationService->removeReferenceAfterRead('waiter/' . $tableID . '/send-order');
                     return $this->successResponse(null, 'Confirm Success');
                 } else if ($tempQueueCombo != $tempConfirmCombo) {
