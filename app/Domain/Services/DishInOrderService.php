@@ -115,7 +115,7 @@ class DishInOrderService
                 </table>
         ';
 
-        $dompdf = PDF::loadHTML($html)->setPaper(array(0, 0, 180, 90 * 2.838), 'landscape');
+        $dompdf = PDF::loadHTML($html)->setPaper(array(0, 0, 180, 100 * 2.838), 'landscape');
         $nameFile = 'cd_' . time() . '.pdf';
         Storage::disk('completeDish')->put($nameFile, $dompdf->output());
         return $url = asset('completeDish/' . $nameFile);
