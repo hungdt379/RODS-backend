@@ -76,4 +76,9 @@ class OrderRepository
     {
         return Order::max('numerical_order');
     }
+
+    public function deleteConfirmOrder($id)
+    {
+        return Order::where('_id', $id)->delete();
+    }
 }

@@ -118,8 +118,11 @@ class QueueOrderService
         }
         $queueOrder['item'] = $item;
         $queueOrder['total_cost'] -= $itemDeletedCost;
-
-        $this->queueOrderRepository->update($queueOrder);
+        if ($item == null) {
+            $this->queueOrderRepository->delete($queueOrder->_id);
+        } else {
+            $this->queueOrderRepository->update($queueOrder);
+        }
     }
 
     public function increaseQuantity($queueOrder, $itemID)
@@ -174,7 +177,7 @@ class QueueOrderService
         $this->queueOrderRepository->update($queueOrderArray);
     }
 
-    public function insertNewItemInQueueOrder($queueOrderArray, $tableID, $item, $quantity, $cost, $dishInCombo, $note )
+    public function insertNewItemInQueueOrder($queueOrderArray, $tableID, $item, $quantity, $cost, $dishInCombo, $note)
     {
         $newQueueOrderItem['table_id'] = $tableID;
         $newQueueOrderItem['item_id'] = $item['_id'];

@@ -330,8 +330,12 @@ class OrderService
         }
         $confirmOrder['item'] = $item;
         $confirmOrder['total_cost'] -= $itemDeletedCost;
+        if ($item == null){
+            $this->orderRepository->deleteConfirmOrder($confirmOrder->_id);
+        }else{
+            $this->orderRepository->update($confirmOrder);
+        }
 
-        $this->orderRepository->update($confirmOrder);
         $this->dishInOrderRepository->deleteMany($itemID, $confirmOrder['table_id']);
     }
 
