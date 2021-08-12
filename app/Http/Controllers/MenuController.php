@@ -145,4 +145,30 @@ class MenuController
 
         return $this->successResponse($data, 'Success');
     }
+
+    public function updateItemSoldOutStatus12345()
+    {
+        $param = request()->all();
+        $validator = Validator::make($param, [
+            'item_id' => 'required|alpha_num',
+            'is_sold_out' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->errorResponse('Invalid param', null, false, 400);
+        }
+
+        $menuItem = $this->menuService->getItemByID($param['item_id']);
+        $dishItem = $this->dishInComboService->getDishInComboById($param['item_id']);
+        $dishItemInMenu = $this->dishInComboService->getDishInComboByName($menuItem['name']);
+        if ($menuItem == null && $dishItem == null && $dishItemInMenu == null) {
+            return $this->errorResponse('Not found items', null, false, Res::HTTP_NO_CONTENT);
+        }
+
+        if ($param['is_sold_out'] == 'true')
+            $this->menuService->updateItemSoldOutStatus($menuItem, $dishItem, $dishItemInMenu, true);
+        else $this->menuService->updateItemSoldOutStatus($menuItem, $dishItem, $dishItemInMenu, false);
+
+        return $this->successResponse(null, 'Update successful');
+    }
 }

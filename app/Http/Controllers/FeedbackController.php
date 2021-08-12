@@ -42,4 +42,12 @@ class FeedbackController extends Controller
         $data = $this->feedbackService->getAllFeedback($param);
         return $this->successResponseWithPaging($data->items(), 'Success', $data->currentPage(), $param['pageSize'], $data->total());
     }
+
+    public function addFeedback1234()
+    {
+        $param = request()->all();
+        $this->feedbackService->addFeedback($param);
+
+        return $this->successResponse('', 'Successfully');
+    }
 }

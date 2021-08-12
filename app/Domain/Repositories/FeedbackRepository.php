@@ -17,4 +17,14 @@ class FeedbackRepository
     {
         $feedback->save();
     }
+
+    public function update($feedback)
+    {
+        $feedback->update();
+    }
+
+    public function delete($feedback)
+    {
+        $feedback->delete();
+    }
 }
