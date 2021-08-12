@@ -42,4 +42,16 @@ trait ApiResponse
             'ts' => time()
         ], $errorCode);
     }
+
+    public function errorResponseNoMessage($message, $data = null, $status = false, $errorCode)
+    {
+        if (is_null($data))
+            $data = new \stdClass();
+        return response()->json([
+            'status' => $status,
+            'message' => $message,
+            'data' => $data,
+            'ts' => time()
+        ], $errorCode);
+    }
 }
