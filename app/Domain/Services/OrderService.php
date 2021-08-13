@@ -392,4 +392,14 @@ class OrderService
         return $this->orderRepository->update($confirmOrder);
     }
 
+    // abc 123
+    public function myFunction($confirmOrder, $itemID)
+    {
+        $item = [];
+        $totalCost = 0;
+        
+
+        return $this->orderRepository->update($confirmOrder);
+    }
+
 }
