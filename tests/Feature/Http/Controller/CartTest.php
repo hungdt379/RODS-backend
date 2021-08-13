@@ -5,6 +5,7 @@ namespace Tests\Feature\Http\Controller;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
+use JWTAuth;
 
 class CartTest extends TestCase
 {

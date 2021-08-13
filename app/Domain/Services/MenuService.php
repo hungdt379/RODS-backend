@@ -127,15 +127,16 @@ class MenuService
     public function getItemByName($name, $tableID)
     {
         $confirmOrder = $this->orderRepository->getConfirmOrder($tableID);
+        $cartItem = $this->cartItemService->getCartItemByTableID($tableID)->toArray();
         if (!$confirmOrder || !$this->in_array_field($this->categoryRepository->getCombo()->_id, 'category_id', $confirmOrder['item'])) {
-            $resultSearch = $this->menuRepository->getItemByName($name);
+            $resultSearch = $this->setChosenItemInMenu($cartItem, $this->menuRepository->getItemByName($name));
         } else {
             if ($this->in_array_field(Menu::COMBO_129, 'name', $confirmOrder['item'])) {
-                $resultSearch = $this->menuRepository->searchCombo129($name);
+                $resultSearch = $this->setChosenItemInMenu($cartItem, $this->menuRepository->searchCombo129($name));
             } else if ($this->in_array_field(Menu::COMBO_169, 'name', $confirmOrder['item'])) {
-                $resultSearch = $this->menuRepository->searchCombo169($name);
+                $resultSearch = $this->setChosenItemInMenu($cartItem, $this->menuRepository->searchCombo169($name));
             } else if ($this->in_array_field(Menu::COMBO_209, 'name', $confirmOrder['item'])) {
-                $resultSearch = $this->menuRepository->searchCombo209($name);
+                $resultSearch = $this->setChosenItemInMenu($cartItem, $this->menuRepository->searchCombo209($name));
             }
         }
 

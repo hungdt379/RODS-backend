@@ -14,7 +14,7 @@ class UserTest extends TestCase
     {
         $credentials = [
             'username' => 'TN',
-            'password' => '123'
+            'password' => '1234'
         ];
 
         $token = JWTAuth::attempt($credentials);
@@ -42,7 +42,7 @@ class UserTest extends TestCase
     {
         $credentials = [
             'username' => 'TN',
-            'password' => '123'
+            'password' => '1234'
         ];
 
         $token = JWTAuth::attempt($credentials);
@@ -70,7 +70,7 @@ class UserTest extends TestCase
     {
         $credentials = [
             'username' => 'TN',
-            'password' => '123'
+            'password' => '1234'
         ];
 
         $token = JWTAuth::attempt($credentials);
@@ -98,7 +98,7 @@ class UserTest extends TestCase
     {
         $credentials = [
             'username' => 'TN',
-            'password' => '123'
+            'password' => '1234'
         ];
 
         $token = JWTAuth::attempt($credentials);

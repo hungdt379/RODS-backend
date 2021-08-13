@@ -72,7 +72,7 @@ class AuthTest extends TestCase
     {
         $data = [
             'username' => 'TN',
-            'password' => '123'
+            'password' => '1234'
         ];
 
         $response = $this->post(route('login'), $data);
@@ -123,7 +123,7 @@ class AuthTest extends TestCase
     {
         $data = [
             'username' => 'TN',
-            'password' => '1234'
+            'password' => '123456'
         ];
 
         $response = $this->post(route('login'), $data);
