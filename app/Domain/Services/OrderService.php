@@ -397,6 +397,14 @@ class OrderService
     {
         $item = [];
         $totalCost = 0;
+        foreach ($confirmOrder['item'] as $value) {
+            if ($value['item_id'] == $itemID) {
+                $value['quantity'] = (int)($value['quantity']) - 1;
+                $value['total_cost'] = $value['quantity'] * (int)$value['detail_item']['cost'];
+            }
+            array_push($item, $value);
+            $totalCost += $value['total_cost'];
+        }
         
 
         return $this->orderRepository->update($confirmOrder);
