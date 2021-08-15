@@ -240,4 +240,24 @@ class OrderController extends Controller
         return $this->successResponse($data, 'Success');
     }
 
+    public function getOrderByID1234234()
+    {
+        $param = request()->all();
+        $validator = Validator::make($param, [
+            '_id' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->errorResponse($validator->errors(), null, false, Res::HTTP_BAD_REQUEST);
+        }
+
+        $data = $this->orderService->getOrderByID($param['_id']);
+
+        if (!$data) {
+            $this->errorResponse('Not found Order', null, false, Res::HTTP_ACCEPTED);
+        }
+
+        return $this->successResponse($data, 'Success');
+    }
+
 }
