@@ -35,4 +35,8 @@ class CartItemRepository
     public function getListCartItemByItemID($tableID, $itemID){
         return CartItem::where('table_id', $tableID)->whereIn('item_id',$itemID)->get();
     }
+
+    public function getListCartItemByItemID123($tableID, $itemID){
+        return CartItem::where('table_id', $tableID)->whereIn('item_id',$itemID)->get();
+    }
 }
