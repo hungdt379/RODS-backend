@@ -392,4 +392,49 @@ class OrderService
         return $this->orderRepository->update($confirmOrder);
     }
 
+    // abc 123
+    public function myFunction($confirmOrder, $itemID)
+    {
+        $item = [];
+        $totalCost = 0;
+        foreach ($confirmOrder['item'] as $value) {
+            if ($value['item_id'] == $itemID) {
+                $value['quantity'] = (int)($value['quantity']) - 1;
+                $value['total_cost'] = $value['quantity'] * (int)$value['detail_item']['cost'];
+            }
+            array_push($item, $value);
+            $totalCost += $value['total_cost'];
+        }
+        $confirmOrder->item = $item;
+        $confirmOrder->total_cost = $totalCost;
+        if ($confirmOrder->voucher >= 0) {
+            $confirmOrder->total_cost_of_voucher = (int)$confirmOrder['total_cost'] * $confirmOrder->voucher / 100;
+            $confirmOrder->new_total_cost = (int)$confirmOrder['total_cost'] - $confirmOrder->total_cost_of_voucher;
+        }
+
+        return $this->orderRepository->update($confirmOrder);
+    }
+
+    public function myFunction123($confirmOrder, $itemID)
+    {
+        $item = [];
+        $totalCost = 0;
+        foreach ($confirmOrder['item'] as $value) {
+            if ($value['item_id'] == $itemID) {
+                $value['quantity'] = (int)($value['quantity']) - 1;
+                $value['total_cost'] = $value['quantity'] * (int)$value['detail_item']['cost'];
+            }
+            array_push($item, $value);
+            $totalCost += $value['total_cost'];
+        }
+        $confirmOrder->item = $item;
+        $confirmOrder->total_cost = $totalCost;
+        if ($confirmOrder->voucher >= 0) {
+            $confirmOrder->total_cost_of_voucher = (int)$confirmOrder['total_cost'] * $confirmOrder->voucher / 100;
+            $confirmOrder->new_total_cost = (int)$confirmOrder['total_cost'] - $confirmOrder->total_cost_of_voucher;
+        }
+
+        return $this->orderRepository->update($confirmOrder);
+    }
+
 }

@@ -78,17 +78,27 @@ class MenuService
         return 0;
     }
 
-    private function setChosenItemInMenu($cartItem, $menuWithCategory)
+    private function setChosenItemInMenu($cartItem, $menuWithCategory, $search = false)
     {
+        $resultSearch = [];
         foreach ($menuWithCategory as $item) {
             $quantity = $this->in_menu_array_quantiy($item['_id'], 'item_id', $cartItem);
             if ($quantity > 0) {
                 $item['in_cart'] = true;
                 $item['quantity'] = $quantity;
+                if ($search == true){
+                    array_push($resultSearch, $item);
+                }
             } else {
                 $item['in_cart'] = false;
                 $item['quantity'] = 0;
+                if ($search == true){
+                    array_push($resultSearch, $item);
+                }
             }
+        }
+        if ($search == true){
+            return $resultSearch;
         }
 
         return $menuWithCategory;
@@ -129,14 +139,14 @@ class MenuService
         $confirmOrder = $this->orderRepository->getConfirmOrder($tableID);
         $cartItem = $this->cartItemService->getCartItemByTableID($tableID)->toArray();
         if (!$confirmOrder || !$this->in_array_field($this->categoryRepository->getCombo()->_id, 'category_id', $confirmOrder['item'])) {
-            $resultSearch = $this->setChosenItemInMenu($cartItem, $this->menuRepository->getItemByName($name));
+            $resultSearch = $this->setChosenItemInMenu($cartItem, $this->menuRepository->getItemByName($name), true);
         } else {
             if ($this->in_array_field(Menu::COMBO_129, 'name', $confirmOrder['item'])) {
-                $resultSearch = $this->setChosenItemInMenu($cartItem, $this->menuRepository->searchCombo129($name));
+                $resultSearch = $this->setChosenItemInMenu($cartItem, $this->menuRepository->searchCombo129($name), true);
             } else if ($this->in_array_field(Menu::COMBO_169, 'name', $confirmOrder['item'])) {
-                $resultSearch = $this->setChosenItemInMenu($cartItem, $this->menuRepository->searchCombo169($name));
+                $resultSearch = $this->setChosenItemInMenu($cartItem, $this->menuRepository->searchCombo169($name), true);
             } else if ($this->in_array_field(Menu::COMBO_209, 'name', $confirmOrder['item'])) {
-                $resultSearch = $this->setChosenItemInMenu($cartItem, $this->menuRepository->searchCombo209($name));
+                $resultSearch = $this->setChosenItemInMenu($cartItem, $this->menuRepository->searchCombo209($name), true);
             }
         }
 
