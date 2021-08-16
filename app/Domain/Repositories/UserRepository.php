@@ -14,7 +14,7 @@ class UserRepository
 
     public function getListTable($pageSize)
     {
-        return User::where('role', 't')
+        return User::where('role', 't')->orderBy('username', 'ASC')
             ->paginate((int)$pageSize);
     }
 
