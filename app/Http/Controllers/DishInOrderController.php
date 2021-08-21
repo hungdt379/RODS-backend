@@ -55,6 +55,29 @@ class DishInOrderController extends Controller
         return $this->successResponseWithPaging($data, 'Success', $page, $pageSize, $total);
     }
 
+    public function getDishInOrderByTableID()
+    {
+        $param = request()->all();
+        $validator = Validator::make($param, [
+            'status' => 'required',
+            'table_id' => 'required'
+        ]);
+        if ($validator->fails()) {
+            return $this->errorResponse($validator->errors(), null, false, Res::HTTP_BAD_REQUEST);
+        }
+
+        $status = $param['status'];
+        $tableID = $param['table_id'];
+        $categoryCombo = $this->categoryService->getComboCategory();
+        $categoryFast = $this->categoryService->getFastCategory();
+        $categoryNormal = $this->categoryService->getNormalCategory();
+        $categoryID = [$categoryCombo['_id'], $categoryFast['_id'], $categoryNormal['_id']];
+
+        $data = $this->dishInOrderService->getDishInOrderByTableID($categoryID, $status, $tableID);
+
+        return $this->successResponse($data, 'Success');
+    }
+
     public function getDrinkInOrder()
     {
         $param = request()->all();

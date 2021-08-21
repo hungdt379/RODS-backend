@@ -72,6 +72,7 @@ Route::group([
         Route::get('order/drink', 'DishInOrderController@getDrinkInOrder');
         Route::post('order/queue/item/quantity/update', 'QueueOrderController@updateQuantityOfItem');
         Route::post('table/queue/order/insert', 'QueueOrderController@insert');
+        Route::get('table/order/dish', 'DishInOrderController@getDishInOrderByTableID');
     });
 });
 

@@ -128,6 +128,12 @@ class DishInOrderService
 
     public function getDrinkInOrder($categoryID, $status, $tableID)
     {
-        return $this->dishInOrderRepository->getDrinkInOrder($categoryID, $status, $tableID);
+        return $this->dishInOrderRepository->getDishInOrderByTableID($categoryID, $status, $tableID);
     }
+
+    public function getDishInOrderByTableID($categoryID, $status, $tableID)
+    {
+        return $this->dishInOrderRepository->getDishInOrderByTableID($categoryID, $status, $tableID);
+    }
+
 }
