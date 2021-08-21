@@ -91,7 +91,7 @@ class DishInOrderRepository
         DishInOrder::where('_id', $id)->delete();
     }
 
-    public function getDrinkInOrder($categoryID, $status, $tableID)
+    public function getDishInOrderByTableID($categoryID, $status, $tableID)
     {
         return DishInOrder::raw(function ($collection) use ($categoryID, $status, $tableID) {
             return $collection->aggregate([
