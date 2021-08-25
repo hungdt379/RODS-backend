@@ -14,7 +14,10 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         'App\Console\Commands\DeleteNotificationCommand',
-        'App\Console\Commands\DeleteRememberToken'
+        'App\Console\Commands\DeleteRememberToken',
+        'App\Console\Commands\DeleteMatchingOrder',
+        'App\Console\Commands\DeleteDishInOrder',
+        'App\Console\Commands\CountDishInOrder',
     ];
 
     /**
