@@ -48,14 +48,14 @@ class CountDishInOrder extends Command
         $kt = User::where('username', 'QLB')->first();
 
         foreach ($dishInOrder as $item) {
-            if (time() - $item['ts'] >= 600 && $item['is_late'] != true) {
+            if (time() - $item['ts'] >= 600 && !isset($item['is_late'])) {
                 $notification->notification(null, Notification::TITLE_DISH_LATE_VN, Notification::TITLE_DISH_LATE_EN, $kt, [Notification::RECEIVER_KITCHEN_MANAGER]);
                 break;
             }
         }
 
         foreach ($dishInOrder as $item) {
-            if (time() - $item['ts'] >= 600 && $item['is_late'] != true) {
+            if (time() - $item['ts'] >= 600 && !isset($item['is_late'])) {
                 $groupByUserID = DishInOrder::where('status', DishInOrder::ORDER_ITEM_STATUS_PREPARE)->groupBy('user_id')->get()->toArray();
                 foreach ($groupByUserID as $value) {
                     $user = User::where('_id', $value['user_id'])->first();
