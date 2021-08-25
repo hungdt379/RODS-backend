@@ -43,7 +43,10 @@ class CountDishInOrder extends Command
             if (time() - $item['ts'] >= 600){
                 $item['is_late'] = true;
             }
-            $item->update();
+            $newItem = new DishInOrder();
+            $newItem = $item;
+            $newItem->save();
         }
+        DishInOrder::where('status', DishInOrder::ORDER_ITEM_STATUS_PREPARE)->delete();
     }
 }
