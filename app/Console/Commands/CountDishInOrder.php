@@ -58,7 +58,7 @@ class CountDishInOrder extends Command
             if (time() - $item['ts'] >= 600 && !isset($item['is_late'])) {
                 $groupByUserID = DishInOrder::where('status', DishInOrder::ORDER_ITEM_STATUS_PREPARE)->groupBy('table_id')->get()->toArray();
                 foreach ($groupByUserID as $value) {
-                    $user = User::where('_id', $value['user_id'])->first();
+                    $user = User::where('_id', $value['table_id'])->first();
                     $notification->notification(null, Notification::TITLE_DISH_LATE_VN, Notification::TITLE_DISH_LATE_EN, $user, [Notification::RECEIVER_WAITER]);
                 }
                 break;
