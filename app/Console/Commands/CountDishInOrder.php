@@ -65,26 +65,12 @@ class CountDishInOrder extends Command
             }
         }
 
-        DishInOrder::where('status', DishInOrder::ORDER_ITEM_STATUS_PREPARE)->delete();
         foreach ($dishInOrder as $item) {
             if (time() - $item['ts'] >= 600) {
-                $item['is_late'] = true;
+                $updateItem = DishInOrder::where('_id', $item['_id'])->first();
+                $updateItem->is_late = true;
+                $updateItem->save();
             }
-            $newItem = new DishInOrder();
-            $newItem->order_id = $item['order_id'];
-            $newItem->order_code = $item['order_code'];
-            $newItem->table_id = $item['table_id'];
-            $newItem->table_name = $item['table_name'];
-            $newItem->item_id = $item['item_id'];
-            $newItem->item_name = $item['item_name'];
-            $newItem->quantity = $item['quantity'];
-            $newItem->status = $item['status'];
-            $newItem->category_id = $item['category_id'];
-            $newItem->ts = $item['ts'];
-            $newItem->is_late = $item['is_late'];
-            $newItem->save();
         }
-
-
     }
 }
