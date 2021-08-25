@@ -40,7 +40,7 @@ class OrderRepository
 
     public function getAllConfirmOrder($pageSize)
     {
-        return Order::whereIn('status', [Order::ORDER_STATUS_CONFIRMED, Order::ORDER_STATUS_UNPAID])
+        return Order::where('status', Order::ORDER_STATUS_CONFIRMED)
             ->orderBy('ts', 'DESC')
             ->paginate((int)$pageSize);
     }

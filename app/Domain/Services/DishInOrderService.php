@@ -6,6 +6,8 @@ namespace App\Domain\Services;
 
 use App\Domain\Entities\DishInOrder;
 use App\Domain\Repositories\DishInOrderRepository;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 use PDF;
 use Illuminate\Support\Facades\Storage;
 
@@ -58,6 +60,10 @@ class DishInOrderService
     public function getDishInOrderByID($dishInOrderID)
     {
         return $this->dishInOrderRepository->getDishInOrderByID($dishInOrderID);
+    }
+
+    public function getListDishInOrderByID($id){
+        return $this->dishInOrderRepository->getListDishInOrderByID($id);
     }
 
     public function updateStatus($dishInOrder)
@@ -120,6 +126,46 @@ class DishInOrderService
         Storage::disk('completeDish')->put($nameFile, $dompdf->output());
         return $url = asset('completeDish/' . $nameFile);
     }
+
+    public function exportListDishInOrder($dishInOrder){
+        $tempPdf = new Dompdf();
+        $html = '
+                <div align="center" style="font-size: 12px; font-family: DejaVu Sans;"><b>DANH SÁCH MÓN</b></div>
+                <div align="center" style="font-size: 10px; font-family: DejaVu Sans;"><b>' . $dishInOrder[0]['table_name'] . '</b></div>
+                <br>
+                <div style="font-size: 10px; font-family: DejaVu Sans">Thời gian: ' . date('d-m-Y H:i:s', time()) . '</div>
+                <br>
+                <table style="font-size: 10px; width: 290px; font-family: DejaVu Sans; border: 1px solid black;">
+                    <tr>
+                        <th style="border-bottom: 1px solid black">Tên món</th>
+                        <th style="border-bottom: 1px solid black">SL</th>
+                    </tr>
+                    ';
+        for ($i = 0; $i < sizeof($dishInOrder); $i++) {
+            $html = $html . '<tr>
+                                <td style="border-bottom: 1px solid black">' . $dishInOrder[$i]['item_name'] . '</td>
+                                <td align="center" style="border-bottom: 1px solid black">' . $dishInOrder[$i]['quantity'] . '</td>
+                            </tr>';
+        }
+
+        $tempPdf->loadHtml($html);
+        $tempPdf->setPaper(array(0, 0, 150, 100 * 2.838), 'landscape');
+        $tempPdf->render();
+        $pageCount = $tempPdf->getCanvas()->get_page_count();
+        unset($tempPdf);
+
+        $option = new Options();
+        $option->setIsRemoteEnabled(true);
+        $pdf = new Dompdf($option);
+        $customPaper = array(0, 0, 150 * $pageCount / 1.7, 100 * 2.838);
+        $pdf->loadHtml($html);
+        $pdf->setPaper($customPaper, 'landscape');
+        $pdf->render();
+        $nameFile = 'cd_' . time() . '.pdf';
+        Storage::disk('completeDish')->put($nameFile, $pdf->output());
+        return asset('completeDish/' . $nameFile);
+    }
+
 
     public function deleteDishInOrder($id)
     {

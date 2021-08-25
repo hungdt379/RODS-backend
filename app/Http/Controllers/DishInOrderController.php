@@ -119,30 +119,47 @@ class DishInOrderController extends Controller
         $categoryID = [$categoryCombo['_id'], $categoryFast['_id'], $categoryNormal['_id']];
         if ($dishInOrder) {
             $this->dishInOrderService->updateStatus($dishInOrder);
-            $allDish = $this->dishInOrderService->getAllDishInOrderByTableID($dishInOrder['table_id']);
             if (in_array($dishInOrder['category_id'], $categoryID)) {
                 if ($dishInOrder['category_id'] == $categoryCombo['_id']) {
                     $data = $this->dishInOrderService->exportPdf($dishInOrder, $categoryCombo['name']);
                 } else {
                     $data = $this->dishInOrderService->exportPdf($dishInOrder, 'Thường');
                 }
-                if (sizeof($allDish) == 0) {
-                    $order = $this->orderService->getOrderByID($dishInOrder['order_id']);
-                    $order['status'] = Order::ORDER_STATUS_UNPAID;
-                    $this->orderService->updateOrder($order);
-                }
                 return $this->successResponse($data, 'Update Success');
-            }
-            if (sizeof($allDish) == 0) {
-                $order = $this->orderService->getOrderByID($dishInOrder['order_id']);
-                $order['status'] = Order::ORDER_STATUS_UNPAID;
-                $this->orderService->updateOrder($order);
             }
             return $this->successResponse(null, 'Update Success');
         } else {
             return $this->errorResponse('Not found dish in order', null, false, Res::HTTP_NO_CONTENT);
         }
 
+    }
+
+    public function matchingDishInOrder()
+    {
+        $param = request()->all();
+        $validator = Validator::make($param, [
+            '_id' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return $this->errorResponse($validator->errors(), null, false, Res::HTTP_BAD_REQUEST);
+        }
+        $dishInOrderID = $param['_id'];
+        $dishInOrder = $this->dishInOrderService->getListDishInOrderByID($dishInOrderID)->toArray();
+        for ($i = 0; $i < sizeof($dishInOrder) - 1; $i++) {
+            if ($dishInOrder[$i]['order_id'] != $dishInOrder[$i + 1]['order_id']) {
+                return $this->errorResponse('Can not merge dish in order', null, false, Res::HTTP_BAD_REQUEST);
+            }
+        }
+
+        if ($dishInOrder) {
+            foreach ($dishInOrder as $value) {
+                $this->dishInOrderService->updateStatus($value);
+            }
+            $url = $this->dishInOrderService->exportListDishInOrder($dishInOrder);
+            return $this->successResponse($url, 'Success');
+        } else {
+            return $this->errorResponse('Not found dish in order', null, false, Res::HTTP_NO_CONTENT);
+        }
     }
 
     public function deleteDishInOrder()

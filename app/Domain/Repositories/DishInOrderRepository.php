@@ -70,6 +70,11 @@ class DishInOrderRepository
         return DishInOrder::where('_id', $id)->first();
     }
 
+    public function getListDishInOrderByID($id)
+    {
+        return DishInOrder::whereIn('_id', $id)->get();
+    }
+
     public function getAllDishInOrderByTableID($tableID)
     {
         return DishInOrder::where('status', DishInOrder::ORDER_ITEM_STATUS_PREPARE)
