@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Domain\Entities\Order;
 use App\Domain\Services\CategoryService;
 use App\Domain\Services\DishInOrderService;
 use App\Domain\Services\OrderService;
@@ -118,14 +119,24 @@ class DishInOrderController extends Controller
         $categoryID = [$categoryCombo['_id'], $categoryFast['_id'], $categoryNormal['_id']];
         if ($dishInOrder) {
             $this->dishInOrderService->updateStatus($dishInOrder);
+            $allDish = $this->dishInOrderService->getAllDishInOrderByTableID($dishInOrder['table_id']);
             if (in_array($dishInOrder['category_id'], $categoryID)) {
                 if ($dishInOrder['category_id'] == $categoryCombo['_id']) {
                     $data = $this->dishInOrderService->exportPdf($dishInOrder, $categoryCombo['name']);
                 } else {
                     $data = $this->dishInOrderService->exportPdf($dishInOrder, 'Thường');
                 }
-
+                if (sizeof($allDish) == 0) {
+                    $order = $this->orderService->getOrderByID($dishInOrder['order_id']);
+                    $order['status'] = Order::ORDER_STATUS_UNPAID;
+                    $this->orderService->updateOrder($order);
+                }
                 return $this->successResponse($data, 'Update Success');
+            }
+            if (sizeof($allDish) == 0) {
+                $order = $this->orderService->getOrderByID($dishInOrder['order_id']);
+                $order['status'] = Order::ORDER_STATUS_UNPAID;
+                $this->orderService->updateOrder($order);
             }
             return $this->successResponse(null, 'Update Success');
         } else {

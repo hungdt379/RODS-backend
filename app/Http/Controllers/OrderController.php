@@ -4,6 +4,7 @@
 namespace App\Http\Controllers;
 
 
+use App\Domain\Entities\Order;
 use App\Domain\Services\NotificationService;
 use App\Domain\Services\OrderService;
 use App\Traits\ApiResponse;
