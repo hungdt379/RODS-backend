@@ -157,7 +157,7 @@ class DishInOrderService
         $option = new Options();
         $option->setIsRemoteEnabled(true);
         $pdf = new Dompdf($option);
-        $customPaper = array(0, 0, 150 * $pageCount / 1.7, 100 * 2.838);
+        $customPaper = array(0, 0, 150 * $pageCount/1.5, 100 * 2.838);
         $pdf->loadHtml($html);
         $pdf->setPaper($customPaper, 'landscape');
         $pdf->render();

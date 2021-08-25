@@ -25,7 +25,8 @@ class Order extends Model
         'voucher',
         'total_cost_of_voucher',
         'new_total_cost',
-        'ts'
+        'ts',
+        'done_dish'
     ];
 
     protected $hidden = ['arr_order_id', 'updated_at', 'created_at'];
