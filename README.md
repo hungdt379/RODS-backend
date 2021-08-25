@@ -38,13 +38,5 @@ php artisan db:seed --class=Category
 php artisan db:seed --class=Menu
 php artisan db:seed --class=DishInCombo
 ```
-- Seeding feedback
-```
-php artisan db:seed --class=Feedback
-```
 
-- Seeding order
-```
-php artisan db:seed --class=Order
-```
 - Enjoy it!
