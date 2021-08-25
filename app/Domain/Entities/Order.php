@@ -11,7 +11,6 @@ class Order extends Model
     const ORDER_STATUS_CONFIRMED = 'confirmed';
     const ORDER_STATUS_COMPLETED = 'completed';
     const ORDER_STATUS_MATCHING = 'matching';
-    const ORDER_STATUS_UNPAID = 'unpaid';
 
     protected $connection = 'mongodb';
     protected $collection = 'order';
