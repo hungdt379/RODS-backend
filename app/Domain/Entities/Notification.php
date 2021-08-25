@@ -12,11 +12,13 @@ class Notification extends Model
     const TITLE_CALL_PAYMENT_VN = 'Gọi thanh toán';
     const TITLE_SEND_ORDER_VN = 'Đặt món';
     const TITLE_CONFIRMED_ORDER_VN = 'Nhân viên đã xác nhận món mới';
+    const TITLE_DISH_LATE_VN = 'Các món phục vụ khách bị muộn';
 
     const TITLE_CALL_WAITER_EN = 'call-waiter';
     const TITLE_CALL_PAYMENT_EN = 'call-payment';
     const TITLE_SEND_ORDER_EN = 'send-order';
     const TITLE_CONFIRMED_ORDER_EN = 'confirmed-order';
+    const TITLE_DISH_LATE_EN = 'dish-late';
 
     const RECEIVER_WAITER = 'waiter';
     const RECEIVER_RECEPTIONIST = 'receptionist';

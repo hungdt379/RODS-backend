@@ -3,6 +3,10 @@
 namespace App\Console\Commands;
 
 use App\Domain\Entities\DishInOrder;
+use App\Domain\Entities\Notification;
+use App\Domain\Entities\User;
+use App\Domain\Repositories\NotificationRepository;
+use App\Domain\Services\NotificationService;
 use Illuminate\Console\Command;
 
 class CountDishInOrder extends Command
@@ -38,14 +42,35 @@ class CountDishInOrder extends Command
      */
     public function handle()
     {
+        $notificationRepo = new NotificationRepository();
+        $notification = new NotificationService($notificationRepo);
         $dishInOrder = DishInOrder::where('status', DishInOrder::ORDER_ITEM_STATUS_PREPARE)->get()->toArray();
+        $kt = User::where('username', 'QLB')->first();
+
+        foreach ($dishInOrder as $item) {
+            if (time() - $item['ts'] >= 600 && $item['is_late'] != true) {
+                $notification->notification(null, Notification::TITLE_DISH_LATE_VN, Notification::TITLE_DISH_LATE_EN, $kt, [Notification::RECEIVER_KITCHEN_MANAGER]);
+                break;
+            }
+        }
+
+        foreach ($dishInOrder as $item) {
+            if (time() - $item['ts'] >= 600 && $item['is_late'] != true) {
+                $groupByUserID = DishInOrder::where('status', DishInOrder::ORDER_ITEM_STATUS_PREPARE)->groupBy('user_id')->get()->toArray();
+                foreach ($groupByUserID as $value) {
+                    $user = User::where('_id', $value['user_id'])->first();
+                    $notification->notification(null, Notification::TITLE_DISH_LATE_VN, Notification::TITLE_DISH_LATE_EN, $user, [Notification::RECEIVER_WAITER]);
+                }
+                break;
+            }
+        }
+
         DishInOrder::where('status', DishInOrder::ORDER_ITEM_STATUS_PREPARE)->delete();
-        foreach ($dishInOrder as $item){
-            if (time() - $item['ts'] >= 600){
+        foreach ($dishInOrder as $item) {
+            if (time() - $item['ts'] >= 600) {
                 $item['is_late'] = true;
             }
             $newItem = new DishInOrder();
-            //$newItem->_id = $item['_id'];
             $newItem->order_id = $item['order_id'];
             $newItem->order_code = $item['order_code'];
             $newItem->table_id = $item['table_id'];
@@ -59,6 +84,7 @@ class CountDishInOrder extends Command
             $newItem->is_late = $item['is_late'];
             $newItem->save();
         }
+
 
     }
 }
