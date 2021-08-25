@@ -119,13 +119,24 @@ class DishInOrderController extends Controller
         $categoryID = [$categoryCombo['_id'], $categoryFast['_id'], $categoryNormal['_id']];
         if ($dishInOrder) {
             $this->dishInOrderService->updateStatus($dishInOrder);
+            $allDish = $this->dishInOrderService->getAllDishInOrderByTableID($dishInOrder['table_id']);
             if (in_array($dishInOrder['category_id'], $categoryID)) {
                 if ($dishInOrder['category_id'] == $categoryCombo['_id']) {
                     $data = $this->dishInOrderService->exportPdf($dishInOrder, $categoryCombo['name']);
                 } else {
                     $data = $this->dishInOrderService->exportPdf($dishInOrder, 'Thường');
                 }
+                if (sizeof($allDish) == 0) {
+                    $order = $this->orderService->getOrderByID($dishInOrder['order_id']);
+                    $order['done_dish'] = true;
+                    $this->orderService->updateOrder($order);
+                }
                 return $this->successResponse($data, 'Update Success');
+            }
+            if (sizeof($allDish) == 0) {
+                $order = $this->orderService->getOrderByID($dishInOrder['order_id']);
+                $order['done_dish'] = true;
+                $this->orderService->updateOrder($order);
             }
             return $this->successResponse(null, 'Update Success');
         } else {
@@ -153,9 +164,16 @@ class DishInOrderController extends Controller
 
         if ($dishInOrder) {
             foreach ($dishInOrder as $value) {
-                $this->dishInOrderService->updateStatus($value);
+                $itemDishInOrder = $this->dishInOrderService->getDishInOrderByID($value['_id']);
+                $this->dishInOrderService->updateStatus($itemDishInOrder);
             }
             $url = $this->dishInOrderService->exportListDishInOrder($dishInOrder);
+            $allDish = $this->dishInOrderService->getAllDishInOrderByTableID($dishInOrder[0]['table_id']);
+            if (sizeof($allDish) == 0) {
+                $order = $this->orderService->getOrderByID($dishInOrder['order_id']);
+                $order['done_dish'] = true;
+                $this->orderService->updateOrder($order);
+            }
             return $this->successResponse($url, 'Success');
         } else {
             return $this->errorResponse('Not found dish in order', null, false, Res::HTTP_NO_CONTENT);

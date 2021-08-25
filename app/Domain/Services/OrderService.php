@@ -279,7 +279,7 @@ class OrderService
         }
         $confirmOrder['item'] = array_values($item);
         $confirmOrder['total_cost'] = $totalCost;
-        $confirmOrder['status'] = Order::ORDER_STATUS_CONFIRMED;
+        $confirmOrder['done_dish'] = false;
 
         return $this->orderRepository->update($confirmOrder);
     }
