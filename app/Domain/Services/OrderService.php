@@ -48,6 +48,10 @@ class OrderService
         return $this->orderRepository->getAllCompleteOrder($pageSize);
     }
 
+    public function updateOrder($order){
+        return $this->orderRepository->update($order);
+    }
+
     public function invoiceOrder($order)
     {
         if (!str_contains($order['table_id'], '--')) {
@@ -275,6 +279,7 @@ class OrderService
         }
         $confirmOrder['item'] = array_values($item);
         $confirmOrder['total_cost'] = $totalCost;
+        $confirmOrder['status'] = Order::ORDER_STATUS_CONFIRMED;
 
         return $this->orderRepository->update($confirmOrder);
     }
