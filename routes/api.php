@@ -102,11 +102,11 @@ Route::group([
         Route::get('order/dish', 'DishInOrderController@getDishInOrder');
         Route::get('items/all', 'MenuController@getAllItem')->name('all-item');
         Route::get('items/update/sold', 'MenuController@updateItemSoldOutStatus');
-
+        Route::post('item/export/many', 'DishInOrderController@matchingDishInOrder');
     });
 });
 
-Route::post('item/export/many', 'DishInOrderController@matchingDishInOrder');
+
 
 Route::group(['middleware' => 'auth.jwt'], function () {
     Route::post('order/dish/status/update', 'DishInOrderController@updateStatus');
