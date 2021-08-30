@@ -130,6 +130,7 @@ class DishInOrderService
     public function exportListDishInOrder($dishInOrder){
         $tempPdf = new Dompdf();
         $html = '
+                <div align="center" style="font-size: 12px; font-family: DejaVu Sans;"><b>NHẤT NƯỚNG QUÁN</b></div>
                 <div align="center" style="font-size: 12px; font-family: DejaVu Sans;"><b>DANH SÁCH MÓN</b></div>
                 <div align="center" style="font-size: 10px; font-family: DejaVu Sans;"><b>' . $dishInOrder[0]['table_name'] . '</b></div>
                 <br>
@@ -157,7 +158,7 @@ class DishInOrderService
         $option = new Options();
         $option->setIsRemoteEnabled(true);
         $pdf = new Dompdf($option);
-        $customPaper = array(0, 0, 150 * $pageCount/1.5, 100 * 2.838);
+        $customPaper = array(0, 0, 150 * $pageCount/1.3, 100 * 2.838);
         $pdf->loadHtml($html);
         $pdf->setPaper($customPaper, 'landscape');
         $pdf->render();
