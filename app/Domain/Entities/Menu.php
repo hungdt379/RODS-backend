@@ -16,7 +16,7 @@ class Menu extends Model
     protected $collection = 'menu';
 
     protected $fillable = [
-        '_id', 'name', 'cost', 'image', 'hotpot', 'category_id'
+        '_id', 'name', 'cost', 'image', 'hotpot', 'category_id', 'is_sold_out', 'add_to_cart'
     ];
 
     protected $hidden = ['updated_at', 'created_at'];

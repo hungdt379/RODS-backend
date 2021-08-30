@@ -5,6 +5,9 @@ namespace App\Domain\Services;
 
 
 use App\Domain\Entities\Menu;
+use App\Domain\Entities\SearchCombo129K;
+use App\Domain\Entities\SearchCombo169K;
+use App\Domain\Entities\SearchCombo209K;
 use App\Domain\Repositories\CategoryRepository;
 use App\Domain\Repositories\DishInComboRepository;
 use App\Domain\Repositories\MenuRepository;
@@ -239,9 +242,43 @@ class MenuService
         } else if ($menuItem != null && $dishItem == null && $dishItemInMenu == null) {
             $menuItem->is_sold_out = $isSoldOut;
             $this->menuRepository->update($menuItem);
+
+            $searchCombo129k = SearchCombo129K::where('_id', $menuItem['_id'])->first();
+            if ($searchCombo129k){
+                $searchCombo129k->is_sold_out = $isSoldOut;
+                $searchCombo129k->update();
+            }
+            $searchCombo169k = SearchCombo169K::where('_id', $menuItem['_id'])->first();
+            if ($searchCombo169k){
+                $searchCombo169k->is_sold_out = $isSoldOut;
+                $searchCombo169k->update();
+            }
+            $searchCombo209k = SearchCombo209K::where('_id', $menuItem['_id'])->first();
+            if ($searchCombo209k) {
+                $searchCombo209k->is_sold_out = $isSoldOut;
+                $searchCombo209k->update();
+            }
+
         } else if ($menuItem != null && $dishItem == null && $dishItemInMenu != null) {
             $menuItem->is_sold_out = $isSoldOut;
             $this->menuRepository->update($menuItem);
+
+            $searchCombo129k = SearchCombo129K::where('_id', $menuItem['_id'])->first();
+            if ($searchCombo129k){
+                $searchCombo129k->is_sold_out = $isSoldOut;
+                $searchCombo129k->update();
+            }
+            $searchCombo169k = SearchCombo169K::where('_id', $menuItem['_id'])->first();
+            if ($searchCombo169k){
+                $searchCombo169k->is_sold_out = $isSoldOut;
+                $searchCombo169k->update();
+            }
+            $searchCombo209k = SearchCombo209K::where('_id', $menuItem['_id'])->first();
+            if ($searchCombo209k) {
+                $searchCombo209k->is_sold_out = $isSoldOut;
+                $searchCombo209k->update();
+            }
+
             $dishItemInMenu->is_sold_out = $isSoldOut;
             $this->dishInComboRepository->update($dishItemInMenu);
         }
