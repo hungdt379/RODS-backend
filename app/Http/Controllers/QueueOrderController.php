@@ -106,7 +106,8 @@ class QueueOrderController extends Controller
 
             }
         } else {
-            $this->queueOrderService->insertNewQueueOrder($tableID, $table, $item, $dishInCombo, $quantity, $cost, $note);
+            $confirmOrder = $this->orderService->getConfirmOrderByTableID($param['table_id']);
+            $this->queueOrderService->insertNewQueueOrder($tableID, $table, $item, $dishInCombo, $quantity, $cost, $note, $confirmOrder);
             return $this->successResponse(null, 'Successful');
         }
         return null;

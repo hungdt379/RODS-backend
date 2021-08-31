@@ -216,12 +216,13 @@ class QueueOrderService
         $this->queueOrderRepository->update($queueOrderArray);
     }
 
-    public function insertNewQueueOrder($tableID, $table, $item, $dishInCombo, $quantity, $cost, $note)
+    public function insertNewQueueOrder($tableID, $table, $item, $dishInCombo, $quantity, $cost, $note, $confirmOrder)
     {
+
         $newQueueOrder = new QueueOrder();
         $newQueueOrder->table_id = $tableID;
         $newQueueOrder->table_name = $table['full_name'];
-        $newQueueOrder->number_of_customer = $table['number_of_customer'];
+        $newQueueOrder->number_of_customer = ($confirmOrder) ? 0 : $table['number_of_customer'];
         $newQueueOrder->status = QueueOrder::QUEUE_ORDER_STATUS_QUEUED;
 
         $newQueueOrderItemArray = [];
