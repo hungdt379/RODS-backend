@@ -129,4 +129,10 @@ class DishInOrderRepository
 
     }
 
+    public function getAllDishInOrderByTableIDCompleted($tableID)
+    {
+        return DishInOrder::where('status', DishInOrder::ORDER_ITEM_STATUS_COMPLETED)
+            ->where('table_id', $tableID)->get();
+    }
+
 }

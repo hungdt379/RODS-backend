@@ -183,4 +183,18 @@ class DishInOrderService
         return $this->dishInOrderRepository->getDishInOrderByTableID($categoryID, $status, $tableID);
     }
 
+    public function getAllDishInOrderByTableIDCompleted($fromTableID)
+    {
+        return $this->dishInOrderRepository->getAllDishInOrderByTableIDCompleted($fromTableID);
+    }
+
+    public function updateDishInOrderCompletedToNewTable($dishInOrderCompleted, $toTable)
+    {
+        foreach ($dishInOrderCompleted as $value) {
+            $value->table_id = $toTable['_id'];
+            $value->table_name = $toTable['full_name'];
+            $this->dishInOrderRepository->update($value);
+        }
+    }
+
 }

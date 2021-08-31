@@ -273,8 +273,12 @@ class UserController extends Controller
             if ($fromOrder) {
                 $this->orderService->updateOrderToNewTable($fromOrder, $toTable);
                 $dishInOrder = $this->dishInOrderService->getAllDishInOrderByTableID($fromTableID);
+                $dishInOrderCompleted = $this->dishInOrderService->getAllDishInOrderByTableIDCompleted($fromTableID);
                 if ($dishInOrder->toArray() != []) {
                     $this->dishInOrderService->updateDishInOrderToNewTable($dishInOrder, $toTable);
+                }
+                if ($dishInOrderCompleted->toArray() != []) {
+                    $this->dishInOrderService->updateDishInOrderCompletedToNewTable($dishInOrderCompleted, $toTable);
                 }
             }
 
