@@ -66,7 +66,7 @@ class OrderController extends Controller
             $this->orderService->deleteItemInConfirmOrder($confirmOrder, $itemID);
             return $this->successResponse(null, 'Delete Success');
         } else {
-            return $this->errorResponse('Not found confirm order', null, false, Res::HTTP_NO_CONTENT);
+            return $this->errorResponse('Not found confirm order', null, false, 200);
         }
 
     }
@@ -118,7 +118,7 @@ class OrderController extends Controller
             $this->orderService->addVoucherToConfirmOrder($confirmOrder, $voucher);
             return $this->successResponse(null, 'Success');
         } else {
-            return $this->errorResponse('Not found confirm order', null, false, Res::HTTP_NO_CONTENT);
+            return $this->errorResponse('Not found confirm order', null, false, 200);
         }
     }
 
