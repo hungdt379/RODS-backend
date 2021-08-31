@@ -44,7 +44,7 @@ class OrderController extends Controller
         if ($data) {
             return $this->successResponse($data, 'Success');
         } else {
-            return $this->errorResponse('Not found confirm order', null, false, 200);
+            return $this->errorResponse('Not found confirm order', null, false, Res::HTTP_NO_CONTENT);
         }
     }
 
