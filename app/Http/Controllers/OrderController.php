@@ -106,7 +106,7 @@ class OrderController extends Controller
         $param = request()->all();
         $validator = Validator::make($param, [
             '_id' => 'required',
-            'voucher' => 'required|numeric|min:0|max:90'
+            'voucher' => 'required|numeric|min:0|max:100'
         ]);
         if ($validator->fails()) {
             return $this->errorResponse($validator->errors(), null, false, Res::HTTP_BAD_REQUEST);
