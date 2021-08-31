@@ -55,6 +55,26 @@ class MenuController
         return $this->successResponse($data, 'Success');
     }
 
+    public function getDetailItemWaiter()
+    {
+        $param = request()->all();
+        $validator = Validator::make($param, [
+            '_id' => 'required',
+            'table_id' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->errorResponse('Invalid param', null, false, 400);
+        }
+
+        $data = $this->menuService->getDetailItemByIDWaiter($param['_id'], $param['table_id']);
+        if (sizeof($data) == 0) {
+            return $this->errorResponse('Not found item', null, false, Res::HTTP_NO_CONTENT);
+        }
+
+        return $this->successResponse($data, 'Success');
+    }
+
     public function searchItem()
     {
         $param = request()->all();

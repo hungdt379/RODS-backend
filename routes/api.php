@@ -70,6 +70,7 @@ Route::group([
         Route::post('order/queue/item/quantity/update', 'QueueOrderController@updateQuantityOfItem');
         Route::post('table/queue/order/insert', 'QueueOrderController@insert');
         Route::get('table/order/dish', 'DishInOrderController@getDishInOrderByTableID');
+        Route::get('table/dish/detail', 'MenuControllerController@getDetailItemWaiter');
     });
 });
 

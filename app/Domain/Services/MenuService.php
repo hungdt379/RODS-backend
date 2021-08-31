@@ -197,7 +197,47 @@ class MenuService
         }
 
         $confirmOrder = $this->orderRepository->getConfirmOrder($tableID);
-        dd($confirmOrder);
+
+        if ($confirmOrder) {
+            foreach ($confirmOrder['item'] as $value) {
+                if (strpos($value['detail_item']['name'], 'Combo') !== false) {
+                    $category = $this->categoryRepository->getCombo();
+                    if ($item[0]['category_id'] == $category->_id) {
+                        $item[0]['cost'] = 0;
+                    }
+                }
+            }
+        }
+
+        return $item;
+    }
+
+    public function getDetailItemByIDWaiter($itemID, $tableID)
+    {
+        $cartItem = $this->cartItemService->getCartItemByTableID($tableID)->toArray();
+        $item = $this->menuRepository->getDetailItemByID($itemID);
+
+        foreach ($cartItem as $value) {
+            if ($item[0]['_id'] == $value['item_id']) {
+                $item[0]['quantity'] = $value['quantity'];
+                if ($value['dish_in_combo'] == null) {
+                    $value['dish_in_combo'] = [];
+                } else {
+                    $dishInCombo = $item[0]['dish_in_combo'];
+                    $length = sizeof($value['dish_in_combo']);
+                    for ($i = 0; $i < $length; $i++) {
+                        for ($j = 0; $j < sizeof($dishInCombo); $j++) {
+                            if ($value['dish_in_combo'][$i] == $dishInCombo[$j]['name']) {
+                                $dishInCombo[$j]['is_selected'] = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        $confirmOrder = $this->orderRepository->getConfirmOrder($tableID);
+
         if ($confirmOrder) {
             foreach ($confirmOrder['item'] as $value) {
                 if (strpos($value['detail_item']['name'], 'Combo') !== false) {
