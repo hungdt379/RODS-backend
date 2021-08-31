@@ -197,6 +197,7 @@ class MenuService
         }
 
         $confirmOrder = $this->orderRepository->getConfirmOrder($tableID);
+        dd($confirmOrder);
         if ($confirmOrder) {
             foreach ($confirmOrder['item'] as $value) {
                 if (strpos($value['detail_item']['name'], 'Combo') !== false) {
