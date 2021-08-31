@@ -154,7 +154,7 @@ class QueueOrderController extends Controller
         if ($queueOrder) {
             return $this->successResponse($queueOrder, 'Success');
         } else {
-            return $this->errorResponse('Not found queue order', null, false, Res::HTTP_NO_CONTENT);
+            return $this->errorResponse('Not found queue order', null, false, 200);
         }
 
     }
