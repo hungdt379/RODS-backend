@@ -75,8 +75,13 @@ class QueueOrderController extends Controller
         $quantity = (int)$param['quantity'];
         $item = $this->menuService->getItemByID($itemID);
         $categoryCombo = $this->categoryService->getComboCategory();
+        $confirmOrder = $this->orderService->getConfirmOrderByTableID($param['table_id']);
         if ($item['category_id'] == $categoryCombo['_id']) {
-            $quantity = $table['number_of_customer'];
+            if ($confirmOrder){
+                $quantity = 0;
+            }else{
+                $quantity = $table['number_of_customer'];
+            }
         }
         $note = isset($param['note']) ? $param['note'] : null;
         $cost = $param['cost'];
@@ -106,8 +111,7 @@ class QueueOrderController extends Controller
 
             }
         } else {
-            $confirmOrder = $this->orderService->getConfirmOrderByTableID($param['table_id']);
-            $this->queueOrderService->insertNewQueueOrder($tableID, $table, $item, $dishInCombo, $quantity, $cost, $note, $confirmOrder);
+            $this->queueOrderService->insertNewQueueOrder($tableID, $table, $item, $dishInCombo, $quantity, $cost, $note);
             return $this->successResponse(null, 'Successful');
         }
         return null;
