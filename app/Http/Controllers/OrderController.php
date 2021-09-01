@@ -48,6 +48,25 @@ class OrderController extends Controller
         }
     }
 
+    public function viewDetailConfirmOrderWaiter()
+    {
+        $param = request()->all();
+        $validator = Validator::make($param, [
+            'table_id' => 'required'
+        ]);
+        if ($validator->fails()) {
+            return $this->errorResponse($validator->errors(), null, false, Res::HTTP_BAD_REQUEST);
+        }
+        $tableID = $param['table_id'];
+
+        $data = $this->orderService->getConfirmOrderByTableID($tableID);
+        if ($data) {
+            return $this->successResponse($data, 'Success');
+        } else {
+            return $this->errorResponse('Not found confirm order', null, false, 200);
+        }
+    }
+
     public function deleteItemInConfirmOrder()
     {
         $param = request()->all();
